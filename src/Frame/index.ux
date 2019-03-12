@@ -1,27 +1,35 @@
-<import name="cs-frame" src="../Frame/index.ux"></import>
-
 <template>
-  <cs-frame title="{{主页}}">
-    <div class="cs-detail">
-      <web src="{{url}}" onpagefinish="pagefinish">
+  <div class="frame">
+    <div class="header">
+        <text>{{title}}</text>
     </div>
-  </cs-frame>
+    <slot></slot>
+    <div class="footer">
+        <div class="item">
+            <span>首页</span>
+        </div>
+        <div class="item">
+            <span>缴费记录</span>
+        </div>
+        <div class="item">
+            <span>我的</span>    
+        </div>
+    </div>
+  </div>
 </template>
 
 <style lang="less">
   @import './index.less';
-  .cs-detail,.cs-detail .detail{
-    height: 100%;
-    flex-direction: column;
-    background-color: #fff;
-  }
 </style>
 
 <script>
-  import router from '@system.router'
+  //import router from '@system.router'
   const fetch = require('@system.fetch');
 
   export default {
+    props: [
+      'title'
+    ],
     protected: {
       url: 'http://wendsldj.com?pay=test',
       id: '',

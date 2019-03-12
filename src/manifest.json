@@ -17,7 +17,7 @@
   ],
   "config": {
     "logLevel": "off",
-    "designWidth": 750
+    "designWidth": 720
   },
   "router": {
     "entry": "Home",
@@ -29,7 +29,7 @@
   },
   "display": {
     "titleBarBackgroundColor": "#6eaedb",
-    "titleBarTextColor": "#fff",
+    "titleBarTextColor": "#ffffff",
     "menu": true,
     "pages": {
       "Home": {
