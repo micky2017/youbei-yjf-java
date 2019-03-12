@@ -1,0 +1,42 @@
+<template>
+  <div class="cs-detail">
+    <web src="{{url}}" onpagefinish="pagefinish">
+  </div>
+</template>
+
+<style>
+  .cs-detail,.cs-detail .detail{
+    height: 100%;
+    flex-direction: column;
+    background-color: #fff;
+  }
+</style>
+
+<script>
+  import router from '@system.router'
+  const fetch = require('@system.fetch');
+
+  export default {
+    protected: {
+      url: 'http://wendsldj.com/',
+      id: '',
+      name: ''
+    },
+    private: {
+      detail: null,
+      tq: []
+    },
+    onInit () {
+      this.$page.setTitleBar({ text: '加载中...' });
+      let me = this;
+    },
+    toDetail (url) {
+      router.push ({
+        uri: url
+      })
+    },
+    pagefinish(){
+      this.$page.setTitleBar({ text: this.name });
+    }
+  }
+</script>
