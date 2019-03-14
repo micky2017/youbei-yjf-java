@@ -1,58 +1,219 @@
 <template>
-  <div class="cs-detail" title="主页">
-    <div class="cs-detail">
-      <web src="{{url}}" onpagefinish="pagefinish">
-    </div>
-    <!-- <tabs>
-      <tab-content class="tab-content">
-        <div class="tab-content-section">
-          <text>首页</text>
-        </div>
-        <div class="tab-content-section">
-          <text>缴费记录</text>
-        </div>
-        <div class="tab-content-section">
-          <text>我的</text>
-        </div>
-      </tab-content>
-      <tab-bar class="tab-bar">
-        <text>首页</text>
-        <text>缴费记录</text>
-        <text>我的</text>
-      </tab-bar>
-    </tabs> -->
-  </div>
+	<div class="yjf-home">
+		<tabs @change="reTab">
+			<tab-content class="tab-content">
+				<div class="tab-content-section">
+					<div class="title-bar">
+						<div class="city"><text>北京&nbsp;▼</text></div>
+						<div class="logo">
+							<image height="45" src="images/logo.png"></image>
+						</div>
+						<div class="login">
+							<div class="inner">
+								<div class="icon">
+									<image height="34" src="images/loginx.png"></image>
+								</div>
+								<div class="text">
+									<text>登录</text>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="slider">
+						<swiper>
+							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+						</swiper>
+					</div>
+					<div class="grids">
+						<div class="item">
+							<div class="icon">
+								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							</div>
+							<div class="text">
+								<text>电费</text>
+							</div>
+						</div>
+						<div class="item">
+							<div class="icon">
+								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							</div>
+							<div class="text">
+								<text>电费</text>
+							</div>
+						</div>
+						<div class="item">
+							<div class="icon">
+								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							</div>
+							<div class="text">
+								<text>电费</text>
+							</div>
+						</div>
+						<div class="item">
+							<div class="icon">
+								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+							</div>
+							<div class="text">
+								<text>电费</text>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-content-section">
+					<div class="order">
+						<div class="header">
+							<div class="title"><text>缴费记录</text></div>
+						</div>
+						<div class="list">
+							<div class="item">
+								<div class="inner">
+									<image height="30" src="./images/kefu.png"></image>
+									<div class="detail">
+										<text class="title">北京智能电表</text>
+										<text class="num">000000|(*2)</text>
+										<text class="time">2019-03-14</text>
+									</div>
+									<text class="money">120元</text>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-content-section user">
+					<div class="user-header">
+						<div class="title"><text>我的</text></div>
+						<div class="login">
+							<image width="120" src="images/header_icon.png"></image>
+							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
+						</div>
+					</div>
+					<div class="list">
+						<div class="item" @click="call">
+							<div class="inner">
+								<image height="30" src="./images/kefu.png"></image>
+								<text>客服电话</text>
+							</div>
+						</div>
+						<div class="item">
+							<div class="inner">
+								<image height="30" src="./images/about.png"></image>
+								<text>关于云缴费</text>
+							</div>
+						</div>
+					</div>
+				</div>
+			</tab-content>
+			<tab-bar class="tab-bar">
+				<div class="icon">
+					<div class="image">
+						<image if="{{tab=='i0'}}" src="./images/home_active.png"></image>	
+						<image else src="./images/home.png"></image>	
+					</div>
+					<div class="text">
+						<text class="{{tab=='i0'?'active':''}}">首页</text>
+					</div>
+				</div>
+				<div class="icon">
+					<div class="image">
+						<image if="{{tab=='i1'}}" src="./images/home_active.png"></image>	
+						<image else src="./images/home.png"></image>	
+					</div>
+					<div class="text">
+						<text class="{{tab=='i1'?'active':''}}">缴费记录</text>
+					</div>
+				</div>
+				<div class="icon">
+					<div class="image">
+						<image if="{{tab=='i2'}}" src="./images/me_active.png"></image>	
+						<image else src="./images/me.png"></image>	
+					</div>
+					<div class="text">
+						<text class="{{tab=='i2'?'active':''}}">我的</text>
+					</div>
+				</div>
+			</tab-bar>
+		</tabs>
+	</div>
 </template>
 
 <style lang="less">
-  @import './index.less';
+	@import './index.less';
 </style>
 
 <script>
-  import router from '@system.router'
-  const fetch = require('@system.fetch');
+	import router from '@system.router'
+	const fetch = require('@system.fetch');
+	const prompt = require('@system.prompt');
 
-  export default {
-    protected: {
-      url: 'https://yaoyaotest.cebbank.com/LifePayment/webApp/cashier/index.html?tranDate=20190313&orderNo=u201903131581105&timestamp=1552474235150&version=1.4.6&macValue=8591CBC64827B4C3996F5F7B33B44E3D&canal=ssssssssss',
-      id: '',
-      name: ''
-    },
-    private: {
-      detail: null,
-      tq: []
-    },
-    onInit () {
-      this.$page.setTitleBar({ text: '加载中...' });
-      let me = this;
-    },
-    toDetail (url) {
-      router.push ({
-        uri: url
-      })
-    },
-    pagefinish(){
-      this.$page.setTitleBar({ text: this.name });
-    }
-  }
+	export default {
+		protected: {
+			url: '',
+			id: '',
+			name: '',
+			tab: 'i0',
+		},
+		private: {
+			detail: null,
+			tq: []
+		},
+		call(){
+			prompt.showDialog({
+				title: '拨打云缴费客服电话',
+				message: '4009095595',
+				buttons: [
+					{
+						text: '拨打',
+						color: '#996fc5'
+					},
+					{
+						text: '取消',
+						color: '#996fc5'
+					}
+				],
+				success: function(data) {
+					if(data.index == 0){
+						prompt.showToast({
+							message: '拨打'
+						});
+					}
+					if(data.index == 1){
+						prompt.showToast({
+							message: '不打'
+						});
+					}
+				},
+				cancel: function() {
+					prompt.showToast({
+						message: '失败'
+					});
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			});
+		},
+		reTab(tab){
+			let me = this;
+			me.tab = 'i' + tab.index;
+		},
+		tip(){
+			prompt.showToast({
+				message: 'message'
+			});
+		},
+		onInit () {
+			// this.$page.setTitleBar({ text: '加载中...' });
+			let me = this;
+		},
+		toDetail (url) {
+			router.push ({
+				uri: url
+			})
+		},
+		pagefinish(){
+			this.$page.setTitleBar({ text: this.name });
+		}
+	}
 </script>

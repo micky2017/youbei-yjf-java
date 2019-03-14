@@ -28,7 +28,8 @@
     }
   },
   "display": {
-    "titleBarBackgroundColor": "#6eaedb",
+    "titleBar": false,
+    "titleBarBackgroundColor": "#996fc5",
     "titleBarTextColor": "#ffffff",
     "menu": true,
     "pages": {
