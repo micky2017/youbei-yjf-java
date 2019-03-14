@@ -1,20 +1,31 @@
-<import name="cs-frame" src="../Frame/index.ux"></import>
-
 <template>
-  <cs-frame title="{{主页}}">
+  <div class="cs-detail" title="主页">
     <div class="cs-detail">
       <web src="{{url}}" onpagefinish="pagefinish">
     </div>
-  </cs-frame>
+    <!-- <tabs>
+      <tab-content class="tab-content">
+        <div class="tab-content-section">
+          <text>首页</text>
+        </div>
+        <div class="tab-content-section">
+          <text>缴费记录</text>
+        </div>
+        <div class="tab-content-section">
+          <text>我的</text>
+        </div>
+      </tab-content>
+      <tab-bar class="tab-bar">
+        <text>首页</text>
+        <text>缴费记录</text>
+        <text>我的</text>
+      </tab-bar>
+    </tabs> -->
+  </div>
 </template>
 
 <style lang="less">
   @import './index.less';
-  .cs-detail,.cs-detail .detail{
-    height: 100%;
-    flex-direction: column;
-    background-color: #fff;
-  }
 </style>
 
 <script>
@@ -23,7 +34,7 @@
 
   export default {
     protected: {
-      url: 'http://wendsldj.com?pay=test',
+      url: 'https://yaoyaotest.cebbank.com/LifePayment/webApp/cashier/index.html?tranDate=20190313&orderNo=u201903131581105&timestamp=1552474235150&version=1.4.6&macValue=8591CBC64827B4C3996F5F7B33B44E3D&canal=ssssssssss',
       id: '',
       name: ''
     },
