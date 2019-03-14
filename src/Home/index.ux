@@ -67,7 +67,7 @@
 							<div class="title"><text>缴费记录</text></div>
 						</div>
 						<div class="list">
-							<div class="item">
+							<div class="item" @click="toDetail('Order')">
 								<div class="inner">
 									<image height="30" src="./images/kefu.png"></image>
 									<div class="detail">

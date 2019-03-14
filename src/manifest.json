@@ -17,13 +17,16 @@
   ],
   "config": {
     "logLevel": "off",
-    "designWidth": 720
+    "designWidth": 750
   },
   "router": {
     "entry": "Home",
     "pages": {
       "Home": {
         "component": "index"
+      },
+      "Order": {
+        "component": "detail"
       }
     }
   },
