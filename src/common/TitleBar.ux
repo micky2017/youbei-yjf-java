@@ -1,5 +1,5 @@
 <template>
-    <div class="TitleBar">
+    <div class="TitleBar" style="background-color: {{color}}">
         <div class="left" @click="back">
             <image height="30" src="/common/images/back.png"></image>
         </div>
@@ -40,7 +40,7 @@
 <script>
     const router = require('@system.router')
     export default {
-        props: ['title'],
+        props: ['title','color'],
         back(){
             router.back();
         }

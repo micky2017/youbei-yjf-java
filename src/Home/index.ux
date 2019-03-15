@@ -84,7 +84,7 @@
 				<div class="tab-content-section user">
 					<div class="user-header">
 						<div class="title"><text>我的</text></div>
-						<div class="login">
+						<div class="login" @click="toDetail('User/login')">
 							<image width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
 						</div>

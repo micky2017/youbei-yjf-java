@@ -1,0 +1,98 @@
+.login{
+    height: 100%;
+    flex-direction: column;
+    background-color: #f4f4f4;
+    .tabs{
+        width: 100%;
+        .tab-bar{
+            margin-bottom: 40px;
+            background-color: #fff;
+            .tab-item{
+                padding: 0 50px;
+                height: 100px;
+                text{
+                    font-size: 38px;
+                    width: 100%;
+                    border-bottom-width: 2px;
+                    border-bottom-color: transparent;
+                    text-align: center;
+                }
+                .active{
+                    color: #9370b9;
+                    border-bottom-color: #9370b9;
+                }
+            }
+        }
+        .tab-content{
+            flex-direction: column;
+            .tab-content-section{
+                flex-direction: column;
+                .input{
+                    height: 200px;
+                    width: 100%;
+                    background-color: #fff;
+                    border-top-width: 2px;
+                    border-top-color: #f0f0f0;
+                    .name{
+                        width: 30%;
+                        padding-left: 40px;
+                        text{
+                            font-size: 38px;
+                            color: #333;
+                        }
+                    }
+                    .content{
+                        width: 70%;
+                        input{
+                            height: 100%;
+                            width: 100%;
+                            font-size: 38px;
+                        }
+                    }
+                    .captcha{
+                        width: 70%;
+                        padding-right: 40px;
+                        input{
+                            width: 60%;
+                            font-size: 38px;
+                        }
+                        text{
+                            width: 40%;
+                            text-align: center;
+                            color: #996fc5;
+                            font-size: 38px;
+                        }
+                    }
+                }
+                .btn{
+                    width: 80%;
+                    height: 100px;
+                    align-self: center;
+                    margin-top: 200px;
+                    input{
+                        height: 100%;
+                        width: 100%;
+                        background-color: #996fc5;
+                        color: #fff;
+                        border-radius: 10px;
+                    }
+                }
+                .toReg{
+                    width: 100%;
+                    margin-top: 40px;
+                    align-items: center;
+                    align-content: center;
+                    text{
+                        width: 100%;
+                        text-align: center;
+                        font-size: 38px;
+                        a{
+                            font-style: italic;
+                            color: #996fc5;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

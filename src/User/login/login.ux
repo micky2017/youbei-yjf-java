@@ -1,0 +1,85 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="login">
+        <TitleBar title="登录" color="#fff"></TitleBar>
+        <tabs class="tabs" @change="reTab">
+            <tab-bar class="tab-bar">
+                <div class="tab-item">
+                    <text class="{{tab=='i0'?'active':''}}">账号登录</text>
+                </div>
+                <div class="tab-item">
+                    <text class="{{tab=='i1'?'active':''}}">短信登录</text>
+                </div>
+            </tab-bar>
+            <tab-content class="tab-content">
+                <div class="tab-content-section">
+                    <div class="input">
+                        <div class="name"><text>手机号</text></div>
+                        <div class="content">
+                            <input type="text" placeholder="请输入手机号">
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="name"><text>登录密码</text></div>
+                        <div class="content">
+                            <input type="password" placeholder="请输入登录密码">
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <input type="button" value="登录">
+                    </div>
+                    <div class="toReg">
+                        <text><a href="User/regist">没有账号？ 点击注册</a></text>
+                    </div>
+                </div>
+                <div class="tab-content-section">
+                    <div class="input">
+                        <div class="name"><text>手机号</text></div>
+                        <div class="content">
+                            <input type="text" placeholder="请输入验证码">
+
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="name"><text>验证码</text></div>
+                        <div class="captcha">
+                            <input type="password" placeholder="请输入验证码">
+                            <text>获取验证码</text>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <input type="button" value="登录">
+                    </div>
+                    <div class="toReg">
+                        <text><a href="User/regist">没有账号？ 点击注册</a></text>
+                    </div>
+                </div>
+            </tab-content>
+        </tabs>
+    </div>
+</template>
+
+<style lang="less">
+	@import './login.less';
+</style>
+
+<script>
+	import router from '@system.router'
+
+	export default {
+		protected: {
+			url: '',
+			id: '',
+			name: '',
+			tab: 'i0',
+		},
+		private: {
+			detail: null,
+			tq: []
+        },
+        reTab(tab){
+			let me = this;
+			me.tab = 'i' + tab.index;
+		}
+	}
+</script>
