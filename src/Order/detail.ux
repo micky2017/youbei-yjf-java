@@ -1,11 +1,7 @@
+<import src="../common/TitleBar.ux"></import>
 <template>
     <div class="order-detail">
-        <!-- <div class="header">
-            <div class="title">
-                <span>返回</span>
-                <text>缴费记录</text>
-            </div>
-        </div> -->
+        <TitleBar title="缴费详情"></TitleBar>
         <div class="detail">
             <div class="item top">
                 <div class="item-name"><text>支付金额：</text></div>
