@@ -27,36 +27,42 @@
 						</swiper>
 					</div>
 					<div class="grids">
-						<div class="item">
+						<div class="item" for="{{plist.slice(0,4)}}">
 							<div class="icon">
-								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+								<image width="66" heigth="66" src="{{$item.icon}}"></image>
 							</div>
 							<div class="text">
-								<text>电费</text>
+								<text>{{$item.name}}</text>
 							</div>
 						</div>
-						<div class="item">
+					</div>
+					<div class="grids">
+						<div class="item" for="{{plist.slice(4,8)}}">
 							<div class="icon">
-								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+								<image width="66" src="{{$item.icon}}"></image>
 							</div>
 							<div class="text">
-								<text>电费</text>
+								<text>{{$item.name}}</text>
 							</div>
 						</div>
-						<div class="item">
+					</div>
+					<div class="grids">
+						<div class="item" for="{{plist.slice(8,12)}}">
 							<div class="icon">
-								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+								<image width="66" src="{{$item.icon}}"></image>
 							</div>
 							<div class="text">
-								<text>电费</text>
+								<text>{{$item.name}}</text>
 							</div>
 						</div>
-						<div class="item">
+					</div>
+					<div class="grids">
+						<div class="item" for="{{plist.slice(12,16)}}">
 							<div class="icon">
-								<image width="96" src="https://cdn.lcyff.com/upload/images/2018-11-13/78eeab2d78483a1430ed6618453abe08.png?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
+								<image width="66" src="{{$item.icon}}"></image>
 							</div>
 							<div class="text">
-								<text>电费</text>
+								<text>{{$item.name}}</text>
 							</div>
 						</div>
 					</div>
@@ -117,8 +123,8 @@
 				</div>
 				<div class="icon">
 					<div class="image">
-						<image if="{{tab=='i1'}}" src="./images/home_active.png"></image>	
-						<image else src="./images/home.png"></image>	
+						<image if="{{tab=='i1'}}" src="./images/order_active.png"></image>
+						<image else src="./images/order.png"></image>	
 					</div>
 					<div class="text">
 						<text class="{{tab=='i1'?'active':''}}">缴费记录</text>
@@ -127,7 +133,7 @@
 				<div class="icon">
 					<div class="image">
 						<image if="{{tab=='i2'}}" src="./images/me_active.png"></image>	
-						<image else src="./images/me.png"></image>	
+						<image else src="./images/me.png"></image>
 					</div>
 					<div class="text">
 						<text class="{{tab=='i2'?'active':''}}">我的</text>
@@ -143,9 +149,11 @@
 </style>
 
 <script>
-	import router from '@system.router'
+	import router from '@system.router';
+	import getUserInfo from '../common/getuserid.js';
 	const fetch = require('@system.fetch');
 	const prompt = require('@system.prompt');
+	const device = require('@system.device');
 
 	export default {
 		protected: {
@@ -153,6 +161,73 @@
 			id: '',
 			name: '',
 			tab: 'i0',
+			plist: [
+				{
+					icon: '/Home/images/icon/water.png',
+					name: "水费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/power.png',
+					name: "电费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/ranqi.png',
+					name: "燃气费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/mobile.png',
+					name: "手机充值",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/tv.png',
+					name: "有线电视",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/jiayouka.png',
+					name: "加油卡",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/wuye.png',
+					name: "物业费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/dang.png',
+					name: "党费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/jiaoyu.png',
+					name: "教育考试",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/daishou.png',
+					name: "非税代收",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/qunuan.png',
+					name: "取暖费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/tongxu.png',
+					name: "通讯费",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/youku.png',
+					name: "优酷会员",
+					id: ""
+				}
+			]
 		},
 		private: {
 			detail: null,
@@ -204,6 +279,11 @@
 			});
 		},
 		onInit () {
+			getUserInfo((data) => {
+				prompt.showToast({
+					message: data.sid
+				});				
+			});
 			// this.$page.setTitleBar({ text: '加载中...' });
 			let me = this;
 		},
