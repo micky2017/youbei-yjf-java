@@ -224,7 +224,22 @@
 				},
 				{
 					icon: '/Home/images/icon/youku.png',
-					name: "优酷会员",
+					name: "优酷年卡",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/youku.png',
+					name: "优酷季卡",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/youku.png',
+					name: "优酷月卡",
+					id: ""
+				},
+				{
+					icon: '/Home/images/icon/youku.png',
+					name: "优酷周卡",
 					id: ""
 				}
 			]
@@ -265,7 +280,7 @@
 					});
 				},
 				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
+					console.log(`handling fail, code = ${code}`);
 				}
 			});
 		},
