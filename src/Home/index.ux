@@ -4,7 +4,7 @@
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
 					<div class="title-bar">
-						<div class="city"><text>北京&nbsp;▼</text></div>
+						<div class="city" @click="toDetail('Home/CityList')"><text>北京&nbsp;▼</text></div>
 						<div class="logo">
 							<image height="45" src="images/logo.png"></image>
 						</div>
@@ -27,7 +27,7 @@
 						</swiper>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(0,4)}}">
+						<div class="item" for="{{plist.slice(0,4)}}" @click="toDetail($item.path)">
 							<div class="icon">
 								<image width="66" heigth="66" src="{{$item.icon}}"></image>
 							</div>
@@ -165,7 +165,8 @@
 				{
 					icon: '/Home/images/icon/water.png',
 					name: "水费",
-					id: ""
+					id: "",
+					path:"Home/Water"
 				},
 				{
 					icon: '/Home/images/icon/power.png',
@@ -180,7 +181,8 @@
 				{
 					icon: '/Home/images/icon/mobile.png',
 					name: "手机充值",
-					id: ""
+					id: "",
+					path:"Home/Recharge"
 				},
 				{
 					icon: '/Home/images/icon/tv.png',

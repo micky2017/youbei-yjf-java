@@ -1,0 +1,93 @@
+<import src="../../common/TitleBar.ux"></import>
+<import name="Info" src="../../common/InfoList/index.ux"></import>
+
+<template>
+    <div class="inspect-body">
+        <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <div class="top-up_amount">
+            <text>请选择充值金额</text>
+            <div @click="pickerShow()">
+                <text>{{money}} ▼</text>
+            </div>
+        </div>
+        <Info infoList="{{info_list}}"></Info>
+        <text class="invoice">
+            这好像是要搞发票？
+        </text>
+        <div class="next-btn" @click="toOrders()">
+            <text>支付</text>
+        </div>
+
+        <!-- 选择金额 -->
+
+        <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+            <div class="picker-content" show="{{picker}}">
+                <div class="picker-title">
+                    <text></text>
+                    <text>选择金额</text>
+                    <text class="close-picker" @click="pickerShow()">✕</text>
+                </div>
+                <div class="picker-option">
+                    <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
+                        <text>{{item}}</text>
+                        <!-- <input type="radio" name="picker"> -->
+                        <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
+                        <text else></text>
+                    </div>
+                </div>
+                 <div class="next-btn" @click="pickerSelect()">
+                    <text>确定</text>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style lang="less">
+    @import "./inspect.less";
+</style>
+<script>
+    import router from '@system.router';
+    export default {
+        private: {
+            money:"30元",
+            selectMoney:"30元",
+            rangeData:[
+                "30元",
+                "50元",
+                "100元",
+                "200元",
+                "300元"
+            ],
+            picker:false,
+            info_list: [
+                {
+                    info_name:"充值号码",
+                    info_value:"13345678901",
+                },
+                {
+                    info_name:"运营商",
+                    info_value:"中国联通",
+                },
+                {
+                    info_name:"收费单位",
+                    info_value:"积分科技（北京）有限公司",
+                }
+            ]
+        },
+        toOrders(){
+            router.push({
+                uri:"Home/Orders"
+            })
+        },
+        pickerShow(){
+            this.picker = !this.picker;
+        },
+        pickerSelect(){
+            this.money = this.selectMoney;
+            this.picker = false;
+        },
+        changeMoney(value){
+            this.selectMoney = value;
+        }
+    }
+</script>

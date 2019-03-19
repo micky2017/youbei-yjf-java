@@ -16,7 +16,7 @@
     { "origin": "*" }
   ],
   "config": {
-    "logLevel": "off",
+    "logLevel": "debug",
     "designWidth": 750
   },
   "router": {
@@ -33,6 +33,24 @@
       },
       "User/regist": {
         "component": "regist"
+      },
+      "Home/Water": {
+        "component": "water"
+      },
+      "Home/Recharge": {
+        "component": "recharge"
+      },
+      "Home/Inspect": {
+        "component": "inspect"
+      },
+      "Home/Orders": {
+        "component": "order"
+      },
+      "Home/Finish": {
+        "component": "finish"
+      },
+      "Home/CityList": {
+        "component": "cityList"
       }
     }
   },

@@ -1,0 +1,47 @@
+<import src="../../common/TitleBar.ux"></import>
+<import src="../../common/Button.ux"></import>
+<template>
+    <div class="recharge">
+        <TitleBar title="手机充值" color="#fff"></TitleBar>
+        <div class="explain">
+            <div class="explain-left">
+                <text>！</text>
+            </div>
+            <div class="explain-right">
+                <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
+                <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
+                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
+            </div>
+        </div>
+        <div class="input-body">
+            <text>充值号码</text>
+            <input type="tel" placeholder="请输入充值号码" />
+        </div>
+        <div class="next-btn" @click="toInspect()">
+            <text>下一步</text>
+        </div>
+        <!-- <Button title="下一步"></Button> -->
+    </div>
+</template>
+
+<style lang="less">
+    @import './recharge.less';
+</style>
+
+<script>
+    import router from '@system.router'
+
+    export default {
+        protected: {
+            
+        },
+        private: {
+            
+        },
+        toInspect(){
+            router.push({
+                uri: "Home/Inspect"
+            })
+        }
+    }
+</script>

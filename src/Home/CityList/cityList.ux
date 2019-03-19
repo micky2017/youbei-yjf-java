@@ -1,0 +1,24 @@
+<import src="../../common/TitleBar.ux"></import>
+
+<template>
+    <div class="city-list_body">
+        <TitleBar title="选择城市" color="#fff"></TitleBar>
+        <div class="search-city">
+            <text>🔍</text>
+            <input type="text" placeholder="请输入城市名称"></input>
+        </div>
+    </div>
+</template>
+
+<style lang="less">
+    @import "./cityList.less";
+</style>
+
+<script>
+    const router = require('@system.router')
+    export default {
+        private: {
+            
+        }
+    }
+</script>

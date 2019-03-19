@@ -1,0 +1,57 @@
+<import src="../../common/TitleBar.ux"></import>
+<import name="InfoList" src="../../common/InfoList/index.ux"></import>
+
+<template>
+    <div class="order-body">
+        <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <div style="height:40px;"></div>
+        <InfoList style="margin-top:40px" infoList="{{info_list}}"></InfoList>
+        <text class="invoice">
+            这好像是要搞发票？
+        </text>
+        <div class="next-btn" @click="toFinish()">
+            <text>支付</text>
+        </div>
+    </div>
+</template>
+<style lang="less">
+    @import "./order.less";
+</style>
+<script>
+    import router from '@system.router';
+    export default {
+        private: {
+            info_list: [
+                {
+                    info_name: "充值号码",
+                    info_value: "13345678901",
+                },
+                {
+                    info_name: "运营商",
+                    info_value: "中国联通",
+                },
+                {
+                    info_name: "收费单位",
+                    info_value: "积分科技（北京）有限公司",
+                },
+                {
+                    info_name: "充值金额",
+                    info_value: "100元",
+                },
+                {
+                    info_name: "支付金额",
+                    info_value: "100元",
+                },
+                {
+                    info_name: "发票获取",
+                    info_value: "此业务不提供发票，如需发票请联系中国联通，其他问题咨询运营商  电话：010-68271260",
+                }
+            ]
+        },
+        toFinish(){
+            router.push({
+                uri:"Home/Finish"
+            })
+        }
+    }
+</script>

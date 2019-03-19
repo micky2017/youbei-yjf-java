@@ -1,0 +1,63 @@
+<import src="../../common/TitleBar.ux"></import>
+<import name="InfoList" src="../../common/InfoList/index.ux"></import>
+
+<template>
+    <div class="finish-body">
+        <TitleBar title="手机充值" color="#fff"></TitleBar>
+        <!-- 顶部轮播 -->
+        <div class="slider">
+            <swiper>
+                <image width="100%"
+                    src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750">
+                </image>
+                <image width="100%"
+                    src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750">
+                </image>
+                <image width="100%"
+                    src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750">
+                </image>
+            </swiper>
+        </div>
+        <!-- 成功提示 -->
+        <div class="pay-success_content">
+            <div class="pay-success_alert">
+                <text>您已成功完成缴费</text>
+            </div>
+            <div class="pay-success_money">
+                <text>￥100.00</text>
+            </div>
+        </div>
+        <!-- 订单信息 -->
+        <InfoList infoList="{{infolist}}"></InfoList>
+    </div>
+</template>
+
+<style lang="less">
+    @import "./finish.less";
+</style>
+
+<script>
+    const router = require('@system.router')
+    export default {
+        private: {
+            infolist:[
+                {
+                    info_name:"缴费项目",
+                    info_value:"手机缴费",
+                },
+                {
+                    info_name:"缴费单位",
+                    info_value:"中国联通",
+                },
+                {
+                    info_name:"缴费号码",
+                    info_value:"72500013456",
+                },
+                {
+                    info_name:"订单号码",
+                    info_value:"W2019031900000001",
+                }
+            ]
+        }
+    }
+</script>
