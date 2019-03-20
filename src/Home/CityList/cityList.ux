@@ -5,7 +5,7 @@
         <TitleBar title="选择城市" color="#fff"></TitleBar>
         <div class="search-city">
             <text>🔍</text>
-            <input type="text" @change="searchCity()" @blur="showList()" placeholder="请输入城市名称"></input>
+            <input type="text" @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
         </div>
         <div class="location">
             <text>您当前所在城市： 北京</text>
@@ -133,8 +133,8 @@
             list.scrollTo({index:index});
             
         },
-        searchCity(){
-            
+        searchCity(event){
+            console.log(event.text)
             this.showSearch = true;
         },
         showList(){

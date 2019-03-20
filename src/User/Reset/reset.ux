@@ -5,7 +5,7 @@
         <div class="input top">
             <div class="name"><text>手机号</text></div>
             <div class="captcha">
-                <input type="text" placeholder="请输入验证码">
+                <input type="text" placeholder="请输入手机号">
 
             </div>
         </div>

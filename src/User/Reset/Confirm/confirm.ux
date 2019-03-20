@@ -4,14 +4,14 @@
         <TitleBar title="修改登录密码" color="#fff"></TitleBar>
         <div class="input top">
             <div class="name"><text>原登录密码</text></div>
-            <div class="captcha">
+            <div class="content">
                 <input type="text" placeholder="请输入原登录密码">
 
             </div>
         </div>
         <div class="input">
             <div class="name"><text>新登录密码</text></div>
-            <div class="captcha">
+            <div class="content">
                 <input type="password" placeholder="8-20位数字/字母或符号组合">
                 <!-- <text>获取验证码</text> -->
             </div>
