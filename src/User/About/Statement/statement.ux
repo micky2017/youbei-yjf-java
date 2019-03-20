@@ -1,0 +1,60 @@
+<import src="../../../common/TitleBar.ux"></import>
+
+<template>
+    <div class="about-body">
+        <TitleBar title="隐私声明"></TitleBar>
+        <div class="article">
+        <text class="header">云缴费隐私条款</text>
+        <text class="content">云缴费尊重并致力于保护用户隐私，本隐私权条款解释了我们对用户数据收集、使用、保护的原则，建议您在使用云缴费前认真阅读，并同意后方可使用本服务。随着我们服务范围的扩大，此隐私条款也将不断优化改进，欢迎您随时回来查看本条款，以便更好地了解并保护个人隐私权利。</text>
+        <text class="title">信息的收集</text>
+        <text class="second-title">我们收集您的信息以改善服务质量，提升用户体验为目的，并将遵循“合法、透明”的原则。在您使用云缴费服务时，我们收集的信息主要包括： </text>
+        <text class="content">1、手机号码：为了向您提供个性化、便捷的缴费服务，我们需要识别您的身份。在使用云缴费的核心功能前需注册成为会员，目前您仅需向我们提供个人有效的手机号码即可完成注册。 </text>
+        <text class="content">2、位置及通讯录：为使您的交易过程更加顺畅，我们会在您的授权下使用定位和通讯录调用以简化您的操作。如果您不愿使用此功能，可在手机设置中关闭授权。 </text>
+        <text class="content">3、交易记录：为了便于查询您的缴费交易状态及历史记录，我们将严格按照法律法规的规定，妥善保存您在云缴费产生的交易信息。 </text>
+        <text class="content">4、其他信息：为了充分保护您的账户安全，我们可能会记录您操作的相关信息，包括但不限于手机型号、操作版本以及与云缴费相关的日志信息等。例如您在可疑操作环境下登录，云缴费系统可能监控到您的账户风险，采取一些措施避免您的损失。</text>
+        <text class="title">信息的使用</text>
+        <text class="second-title">为提升和改善我们的服务，我们可能会将您的个人信息用作以下用途： </text>
+        <text class="content">1、向您提供我们的产品或服务，并维护、改进这些服务； </text>
+        <text class="content">2、向您推介我们的产品或服务，包括缴费项目升级通知、缴费提醒、营销活动信息发布等； </text>
+        <text class="content">3、为您设计相关的产品、营销、奖励等服务，可能需要对用户信息进行综合统计分析、共享或披露； </text>
+        <text class="content">4、法律或者契约所要求的披露； </text>
+        <text class="content">5、与产品或服务相关的调研、访问； </text>
+        <text class="content">6、您所请求的特定行为； </text>
+        <text class="content">7、与上述有关的其他用途。 </text>
+        <text class="second-title">我们对您的信息承担保密义务，未经您的事先许可，我们不会将您的个人信息披露给任何第三方，但以下情形除外： </text>
+        <text class="content">1、法律法规所要求的披露； </text>
+        <text class="content">2、监管机关或其他有权机关所要求的披露； </text>
+        <text class="content">3、在紧急情形下为维护您的利益所进行的披露。</text>
+        <text class="title">信息的存储和保护</text>
+        <text class="content">为保障您的信息安全，我们努力采取各种合理的物理、电子和管理方面的安全措施来保护您的信息，使您的信息不会被泄漏、毁损或者丢失，包括但不限于SSL、 信息加密存储、数据中心的访问控制。我们对可能接触到您的信息的员工或外包人员采取了严格管理，包括但不限于根据岗位的不同采取不同的权限控制，与他们签署保密协议，监控他们的操作情况等措施。 云缴费会按现有技术提供相应的安全措施来保护您的信息，提供合理的安全保障，云缴费将在任何时候尽力做到使您的信息不被泄漏、毁损或丢失。</text>
+        <text class="title">免责条款</text>
+        <text class="second-title">在如下情况下，我们将不对您的隐私泄露承担责任： </text>
+        <text class="content">•您同意让第三方共享资料； </text>
+        <text class="content">•您同意公开您的个人资料，享受为您提供的产品和服务； </text>
+        <text class="content">•本站需要听从法庭传票、法律命令或遵循法律程序； </text>
+        <text class="content">•因黑客行为或用户的保管疏忽导致账号、密码遭他人非法使用。 </text>
+        <text class="content">•云缴费用户协议中列明的使用方式或免责情形。</text>
+        <text class="title">关于云缴费</text>
+        <text class="content">云缴费建立在中国最大的网络缴费输出平台“中国光大银行云缴费平台”基础上，是中国个人缴费业务的先行者，快应用缴费业务的独立提供者，涵盖了全国水、电、燃气、通讯、有线电视、加油卡、手机充值、流量充值、教育考试、物业费、党费、非税代收、交通罚款、电影票等共14大类，约1000余项公共事业缴费项目，基本全面覆盖老百姓日常缴费所需。使用专业安全的银联、微信、支付宝支付控件，支持多行卡支付的同时，保证信息和资金安全，客户只要下载该客户端并注册成功，就能够开始享受不受时间、地点限制的“轻松缴费之旅”。</text>
+        <text class="title">关于中国光大银行</text>
+        <text class="content">中国光大银行成立于1992年8月，总部设在北京，是经国务院批复并经人民银行批准设立的金融企业，为客户提供全面的商业银行产品与服务。</text>
+        <text class="title">联系我们</text>
+        <text class="content">联系电话：010-52702630</text>
+        <text class="title">本隐私条款于 2018年4月26日 更新。</text>
+        </div>
+    </div>
+</template>
+
+<style lang="less">
+   @import '../index.less';   
+</style>
+
+<script>
+    const router = require('@system.router')
+    export default {
+        private: {
+            
+        }
+       
+    }
+</script>

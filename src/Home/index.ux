@@ -8,7 +8,7 @@
 						<div class="logo">
 							<image height="45" src="images/logo.png"></image>
 						</div>
-						<div class="login">
+						<div class="login" @click="toDetail('User/login')">
 							<div class="inner">
 								<div class="icon">
 									<image height="34" src="images/loginx.png"></image>
@@ -27,7 +27,7 @@
 						</swiper>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(0,4)}}" @click="toDetail($item.path)">
+						<div class="item" for="{{plist.slice(0,4)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" heigth="66" src="{{$item.icon}}"></image>
 							</div>
@@ -37,7 +37,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(4,8)}}">
+						<div class="item" for="{{plist.slice(4,8)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(8,12)}}">
+						<div class="item" for="{{plist.slice(8,12)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -57,7 +57,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(12,16)}}">
+						<div class="item" for="{{plist.slice(12,16)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -102,7 +102,7 @@
 								<text>客服电话</text>
 							</div>
 						</div>
-						<div class="item">
+						<div class="item" @click="toDetail('User/About')">
 							<div class="inner">
 								<image height="30" src="./images/about.png"></image>
 								<text>关于云缴费</text>
@@ -166,7 +166,7 @@
 					icon: '/Home/images/icon/water.png',
 					name: "水费",
 					id: "",
-					path:"Home/Water"
+					path:"Home/Recharge"
 				},
 				{
 					icon: '/Home/images/icon/power.png',
@@ -304,10 +304,22 @@
 			// this.$page.setTitleBar({ text: '加载中...' });
 			let me = this;
 		},
-		toDetail (url) {
-			router.push ({
-				uri: url
-			})
+		toDetail (url,name) {
+			let obj
+			if(name){
+				obj = {
+					uri:url,
+					params:{
+						title:name
+					}
+				}
+			}else{
+				obj = {
+					uri:url
+				}
+			}
+			
+			router.push (obj)
 		},
 		pagefinish(){
 			this.$page.setTitleBar({ text: this.name });

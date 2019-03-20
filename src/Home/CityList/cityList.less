@@ -12,4 +12,82 @@
         font-size: 38px;
         padding: 20px;
     }
+    .location{
+        width: 100%;
+        height: 150px;
+        background-color: #fff;
+        justify-content: center;
+        margin-bottom:2px;
+    }
+    
+    .city-list{
+        flex-direction: column;
+        width: 100%;
+        .hot-city{
+            width: 100%;
+            // height: 300px;
+            background-color: #ffffff;
+            flex-direction: column;
+            padding: 20px;
+            .hot-city_items{
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 20px 0px 10px 25px;
+                .city-item{
+                    width: 200px;
+                    height: 100px;
+                    justify-content: center;
+                    border-radius: 10px;
+                    border: 2px solid #f4f4f4;
+                    margin: 20px 10px;
+                }
+            }
+        }
+        .city-group{
+            width: 100%;
+            flex-direction: column;
+            background-color: #fff;
+            .city-initial{
+                // width: 100%;
+                padding: 20px 30px;
+                background-color: #f4f4f4;
+                font-weight: bold;
+            }
+            .city-item{
+                width: 90%;
+                margin:0px 30px;
+                background-color: #fff;
+                padding: 30px 0px;
+                border-bottom-width: 2px;
+                border-bottom-color: #f4f4f4;
+            }
+        }
+    }
+    .navigation-right{
+        flex-direction: column;
+        position: fixed;
+        right: 10px;
+        top: 400px;
+        width: 40px;
+        z-index:99;
+        text-align: center;
+        >div{
+            >text{
+                font-size: 30px;
+                color: #9871c3;
+            }
+        }
+    }
+    .city-search_body{
+        flex-direction: column;
+        width: 100%;
+        background-color: #fff;
+        padding: 20px 40px;
+        .city-item{
+            border-bottom-width:2px;
+            border-bottom-color: #f4f4f4;
+            padding: 20px 20px; 
+        }
+    }
 }

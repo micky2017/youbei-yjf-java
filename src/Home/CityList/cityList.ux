@@ -5,7 +5,39 @@
         <TitleBar title="选择城市" color="#fff"></TitleBar>
         <div class="search-city">
             <text>🔍</text>
-            <input type="text" placeholder="请输入城市名称"></input>
+            <input type="text" @change="searchCity()" @blur="showList()" placeholder="请输入城市名称"></input>
+        </div>
+        <div class="location">
+            <text>您当前所在城市： 北京</text>
+        </div>
+       
+        <list show="{{!showSearch}}" id="list-body" class="city-list">
+            <list-item type="hot_city" class="hot-city">
+                <text>热门城市</text>
+                <div class="hot-city_items">
+                    <div class="city-item"  for="value in hot_city_list">
+                        <text>{{value}}</text> 
+                    </div>
+                </div>
+            </list-item>
+            <list-item type="city_group" class="city-group" for="item in city_list">
+                <div class="city-initial">
+                    <text>{{item.initial}}</text>
+                </div>
+                <div class="city-item" for="city in item.citys">
+                    <text>{{city}}</text>
+                </div>
+            </list-item>
+        </list>
+        <div  show="{{!showSearch}}"  class="navigation-right" @touchmove="selectCityGroup()">
+            <div for="item in city_list">
+                <text>{{item.initial}}</text>
+            </div>
+        </div>
+        <div class="city-search_body" show="{{showSearch}}">
+            <div class="city-item" for="city in hot_city_list">
+                <text>{{city}}</text>
+            </div>
         </div>
     </div>
 </template>
@@ -15,10 +47,98 @@
 </style>
 
 <script>
-    const router = require('@system.router')
+    const router = require('@system.router');
+
     export default {
         private: {
+            showSearch:false,
+            hot_city_list:[
+                "北京",
+                "上海",
+                "深圳",
+                "天津",
+                "广州",
+                "杭州",
+            ],
+            city_list:[
+                {
+                    initial:"A",
+                    citys:[
+                        "鞍山",
+                        "安庆",
+                        "安阳",
+                        "安顺",
+                    ]
+                },{
+                    initial:"B",
+                    citys:[
+                        "北京",
+                        "保定",
+                        "包头",
+                        "滨州",
+                    ]
+                },{
+                    initial:"C",
+                    citys:[
+                        "成都",
+                        "重庆",
+                        "沧州",
+                        "长春",
+                    ]
+                },{
+                    initial:"D",
+                    citys:[
+                        "大连",
+                        "东莞",
+                        "大庆",
+                        "大同",
+                        "大连",
+                        "东莞",
+                        "大庆",
+                        "大同",
+                    ]
+                },{
+                    initial:"E",
+                    citys:[
+                        "鄂尔多斯",
+                        "恩平",
+                        "峨眉山"
+                    ]
+                },{
+                    initial:"F",
+                    citys:[
+                        "佛山",
+                        "抚顺",
+                        "福州",
+                        "阜阳",
+                        "佛山",
+                        "抚顺",
+                        "福州",
+                        "阜阳",
+                        "佛山",
+                        "抚顺",
+                        "福州",
+                        "阜阳"
+                    ]
+                }
+            ]
+        },
+        selectCityGroup(event){
+            let y =event.changedTouches[0].pageY;
+            let index = parseInt((y - 400) / 40);
+            index = index > 0 ? (index > this.city_list.length ? this.city_list.length : index+1) : 1;
+            // const initial = this.city_list[index-1].initial;
+            const list = this.$element('list-body');
+            console.log(index,this.city_list.length)
+            list.scrollTo({index:index});
             
+        },
+        searchCity(){
+            
+            this.showSearch = true;
+        },
+        showList(){
+            this.showSearch = false;
         }
     }
 </script>

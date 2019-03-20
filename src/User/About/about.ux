@@ -1,0 +1,57 @@
+<import src="../../common/TitleBar.ux"></import>
+
+<template>
+    <div class="about-body">
+        <TitleBar title="关于云缴费"></TitleBar>
+        <div class="app-header">
+            <img class="app-icon" src="../../icon.png" alt="" >
+            <text class="app-name">云缴费</text>
+            <text class="app-version">v1.0.0</text>
+        </div>
+        <div class="table">
+            <div class="table-cell" for="item in item_list" @click="toDetail(item.path)">
+                <text>{{item.name}}</text>
+                <text>{{item.value}}</text>
+            </div>
+        </div>
+        <div class="about-footer">
+            <text>中国光大银行 版权所有</text>
+        </div>
+    </div>
+</template>
+
+<style lang="less">
+   @import './index.less';
+</style>
+
+<script>
+    const router = require('@system.router')
+    export default {
+        private: {
+            item_list:[
+                {
+                    name:"微信公众号",
+                    value:"yunjiaofeiguanfang",
+                    path:""
+                },{
+                    name:"用户协议",
+                    value:"查看 >",
+                    path:"User/About/Protocol"
+                },{
+                    name:"隐私声明",
+                    value:"查看 >",
+                    path:"User/About/Statement"
+                },
+            ]
+        },
+        toDetail(url){
+            console.log(url)
+            if(url){
+                router.push({
+                    uri:url
+                })
+            }
+            
+        }
+    }
+</script>

@@ -2,7 +2,7 @@
 <import src="../../common/Button.ux"></import>
 <template>
     <div class="recharge">
-        <TitleBar title="手机充值" color="#fff"></TitleBar>
+        <TitleBar title={{title}} color="#fff"></TitleBar>
         <div class="explain">
             <div class="explain-left">
                 <text>！</text>
@@ -33,9 +33,12 @@
 
     export default {
         protected: {
-            
+            title:""
         },
         private: {
+            
+        },
+        onInit() {
             
         },
         toInspect(){
