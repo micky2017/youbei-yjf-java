@@ -25,7 +25,9 @@
                 <div class="picker-title">
                     <text></text>
                     <text>选择金额</text>
-                    <text class="close-picker" @click="pickerShow()">✕</text>
+                    <div class="close-picker" @click="pickerShow()">
+                        <text >✕</text>
+                    </div>
                 </div>
                 <div class="picker-option">
                     <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">

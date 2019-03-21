@@ -12,7 +12,7 @@
         <div class="input">
             <div class="name"><text>新登录密码</text></div>
             <div class="content">
-                <input type="password" placeholder="8-20位数字/字母或符号组合">
+                <input type="password" placeholder="支持6-20位字母数字组合">
                 <!-- <text>获取验证码</text> -->
             </div>
         </div>

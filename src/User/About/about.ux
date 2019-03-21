@@ -4,7 +4,7 @@
     <div class="about-body">
         <TitleBar title="关于云缴费"></TitleBar>
         <div class="app-header">
-            <img class="app-icon" src="../../icon.png" alt="" >
+            <img class="app-icon" src="../../images/logo.png" alt="" >
             <text class="app-name">云缴费</text>
             <text class="app-version">v1.0.0</text>
         </div>

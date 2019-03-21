@@ -19,6 +19,7 @@
 							</div>
 						</div>
 					</div>
+					<list><list-item>
 					<div class="slider">
 						<swiper>
 							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
@@ -66,12 +67,15 @@
 							</div>
 						</div>
 					</div>
+					</list-item></list>
 				</div>
+				
 				<div class="tab-content-section">
 					<div class="order">
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
+						<list><list-item>
 						<div class="list">
 							<div class="item" @click="toDetail('Order')">
 								<div class="inner">
@@ -84,7 +88,19 @@
 									<text class="money">120元</text>
 								</div>
 							</div>
+							<div class="item" @click="toDetail('Order')">
+								<div class="inner">
+									<image height="30" src="./images/kefu.png"></image>
+									<div class="detail">
+										<text class="title">北京智能电表</text>
+										<text class="num">000000|(*2)</text>
+										<text class="time">2019-03-14</text>
+									</div>
+									<text class="money">120元</text>
+								</div>
+							</div>
 						</div>
+						</list-item></list>
 					</div>
 				</div>
 				<div class="tab-content-section user">
@@ -95,6 +111,7 @@
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
 						</div>
 					</div>
+					<list><list-item>
 					<div class="list">
 						<div class="item" @click="call">
 							<div class="inner">
@@ -108,7 +125,7 @@
 								<text>关于云缴费</text>
 							</div>
 						</div>
-					</div>
+					</div></list-item></list>
 				</div>
 			</tab-content>
 			<tab-bar class="tab-bar">

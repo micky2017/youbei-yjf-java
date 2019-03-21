@@ -44,7 +44,9 @@
                         <div class="name"><text>验证码</text></div>
                         <div class="captcha">
                             <input type="password" placeholder="请输入验证码">
-                            <text>获取验证码</text>
+                            <!-- <text>获取验证码</text> -->
+                            <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
+                            <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
                         </div>
                     </div>
                     <div class="btn">
@@ -78,11 +80,35 @@
 		},
 		private: {
 			detail: null,
-			tq: []
+            tq: [],
+            codeText:"获取验证码",
+            clickable:true,
+            timer:''
+        },
+        onDestroy(){
+            clearInterval(this.timer);
         },
         reTab(tab){
 			let me = this;
 			me.tab = 'i' + tab.index;
-		}
+        },
+        countdown(){
+            this.clickable = false;
+            if(this.codeText.indexOf("获取") != -1){
+                this.codeText = "60S"
+            }
+            this.timer = setInterval(() =>{
+                let code = Number(this.codeText.substring(0,2));
+                if(code <= 1){
+                    clearInterval(this.timer);
+                    this.clickable = true;
+                    this.codeText = "重新获取"
+                }else{
+                    const sec = code -1 
+                    this.codeText =  (sec < 10 ? '0' + sec : sec)  + "S"
+                }
+            },1000)
+            
+        }
 	}
 </script>

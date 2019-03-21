@@ -2,13 +2,14 @@
 
 <template>
     <div class="city-list_body">
-        <TitleBar title="选择城市" color="#fff"></TitleBar>
+        <TitleBar title="选择城市" color="#fff" @click="hideInput"></TitleBar>
         <div class="search-city">
             <text>🔍</text>
-            <input type="text" @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
+            <input id="search-city" type="text" value="{{search_value}}"  @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
+            <text show="{{show_close}}" @click="clearCityValue">❎</text>
         </div>
-        <div class="location">
-            <text>您当前所在城市： 北京</text>
+        <div class="location" @click="hideInput">
+            <text>您当前所在城市： {{city_name}}</text>
         </div>
        
         <list show="{{!showSearch}}" id="list-body" class="city-list">
@@ -35,7 +36,7 @@
             </div>
         </div>
         <div class="city-search_body" show="{{showSearch}}">
-            <div class="city-item" for="city in hot_city_list">
+            <div class="city-item" @click="selectCity(city)" for="city in hot_city_list">
                 <text>{{city}}</text>
             </div>
         </div>
@@ -52,6 +53,9 @@
     export default {
         private: {
             showSearch:false,
+            show_close:false,
+            search_value:"",
+            city_name:"北京",
             hot_city_list:[
                 "北京",
                 "上海",
@@ -133,12 +137,31 @@
             list.scrollTo({index:index});
             
         },
-        searchCity(event){
-            console.log(event.text)
-            this.showSearch = true;
+        hideInput(){
+            this.$element('search-city').focus({focus:false})
+        },
+        selectCity(city){
+            this.city_name = city;
+            this.showSearch = false;
+            this.search_value = "";
+            this.hideInput()
+        },
+        searchCity(response){
+            this.search_value = response ? response.value : this.search_value;
+            if(response.value != ""){
+                this.show_close = true;
+                this.showSearch = true;
+            }else{
+                this.show_close = false;
+                this.showSearch = false;
+            }
+        },
+        clearCityValue(){
+            this.search_value = "";
+            this.hideInput()
         },
         showList(){
-            this.showSearch = false;
+            // this.showSearch = false;
         }
     }
 </script>
