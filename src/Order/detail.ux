@@ -5,7 +5,7 @@
         <div class="detail">
             <div class="item top">
                 <div class="item-name"><text>支付金额：</text></div>
-                <div class="item-content"><text><span class="purple">{{detail.price}}</span> 元</text></div>
+                <div class="item-content"><text><span class="purple">{{detail.payAmount}}</span> 元</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费状态：</text></div>
@@ -13,35 +13,35 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>交易时间：</text></div>
-                <div class="item-content"><text>{{detail.date}}</text></div>
+                <div class="item-content"><text>{{detail.paymentDate}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费项目：</text></div>
-                <div class="item-content"><text>{{detail.subject}}</text></div>
+                <div class="item-content"><text>{{detail.paymentItemName}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>收费单位：</text></div>
-                <div class="item-content"><text>{{detail.company}}</text></div>
+                <div class="item-content"><text>{{detail.companyName}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费号码：</text></div>
-                <div class="item-content"><text>{{detail.user_number}}</text></div>
+                <div class="item-content"><text>{{detail.orderNo}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>用户名：</text></div>
-                <div class="item-content"><text>{{detail.user_name}}</text></div>
+                <div class="item-content"><text>{{detail.payAmount}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>收费方式：</text></div>
-                <div class="item-content"><text>{{detail.payment}}</text></div>
+                <div class="item-content"><text>{{detail.payAmount}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>订单号：</text></div>
-                <div class="item-content"><text>{{detail.order_id}}</text></div>
+                <div class="item-content"><text>{{detail.orderNo}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费金额：</text></div>
-                <div class="item-content"><text>{{detail.price}}</text></div>
+                <div class="item-content"><text>{{detail.payAmount}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>发票获取：</text></div>
@@ -57,28 +57,42 @@
 
 <script>
 	import router from '@system.router'
+    import request from '../utils/request'
 
 	export default {
 		protected: {
 			url: '',
 			id: '',
-			name: '',
-			tab: 'i0',
+			title: '',
+            tab: 'i0',
+            detail: {
+                status: 3,
+                orderNo: '',
+                payAmount: '',
+                paymentItemName: '',
+                companyName: '',
+                billKey: '',
+                tranDate: '',
+                paymentDate: '',
+                pictureUrl: '',
+                invoice:""
+            },
 		},
 		private: {
-			detail: {
-                price: "100.00",
-                status: "成功",
-                date: "2019-02-25 18:17:16",
-                subject: "北京市智能电表",
-                company: "国网北京市电力公司",
-                user_number: "8024137000",
-                user_name: "**2室",
-                payment: "支付宝支付",
-                order_id: "AXS9898TNK878LKS",
-                invoice: "发票获取"
-            },
+			
 			tq: []
-		}
+        },
+        onInit() {
+            // /payment-records
+            // 缴费记录
+			request.post('order/detail').then(res => {
+                console.log(res)
+				if(res.code == 200){
+                    this.detail = res.data.detail
+                    console.log(this.detail)
+				}
+			})
+            console.log(this.title)
+        },
 	}
 </script>

@@ -28,7 +28,7 @@
 						</swiper>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(0,4)}}" @click="toDetail('Home/Recharge',$item.name)">
+						<div class="item" for="{{cebPaymentCategoriesList.slice(0,4)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" heigth="66" src="{{$item.icon}}"></image>
 							</div>
@@ -38,7 +38,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(4,8)}}" @click="toDetail('Home/Recharge',$item.name)">
+						<div class="item" for="{{cebPaymentCategoriesList.slice(4,8)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -48,7 +48,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(8,12)}}" @click="toDetail('Home/Recharge',$item.name)">
+						<div class="item" for="{{cebPaymentCategoriesList.slice(8,12)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -58,7 +58,7 @@
 						</div>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{plist.slice(12,16)}}" @click="toDetail('Home/Recharge',$item.name)">
+						<div class="item" for="{{cebPaymentCategoriesList.slice(12,16)}}" @click="toDetail('Home/Recharge',$item.name)">
 							<div class="icon">
 								<image width="66" src="{{$item.icon}}"></image>
 							</div>
@@ -77,28 +77,18 @@
 						</div>
 						<list><list-item>
 						<div class="list">
-							<div class="item" @click="toDetail('Order')">
+							<div class="item" @click="toDetail('Order',item.orderNo)" for="item in orderPagingH5Model.orderH5ModelList">
 								<div class="inner">
-									<image height="30" src="./images/kefu.png"></image>
+									<image height="30" src="{{item.pictureUrl}}"></image>
 									<div class="detail">
-										<text class="title">北京智能电表</text>
-										<text class="num">000000|(*2)</text>
-										<text class="time">2019-03-14</text>
+										<text class="title">{{item.paymentItemName}}</text>
+										<text class="num">{{item.orderNo}}</text>
+										<text class="time">{{item.paymentDate}}</text>
 									</div>
-									<text class="money">120元</text>
+									<text class="money">{{item.payAmount}} 元</text>
 								</div>
 							</div>
-							<div class="item" @click="toDetail('Order')">
-								<div class="inner">
-									<image height="30" src="./images/kefu.png"></image>
-									<div class="detail">
-										<text class="title">北京智能电表</text>
-										<text class="num">000000|(*2)</text>
-										<text class="time">2019-03-14</text>
-									</div>
-									<text class="money">120元</text>
-								</div>
-							</div>
+							
 						</div>
 						</list-item></list>
 					</div>
@@ -167,6 +157,7 @@
 
 <script>
 	import router from '@system.router';
+    import request from '../utils/request'
 	import getUserInfo from '../common/getuserid.js';
 	const fetch = require('@system.fetch');
 	const prompt = require('@system.prompt');
@@ -178,90 +169,12 @@
 			id: '',
 			name: '',
 			tab: 'i0',
-			plist: [
-				{
-					icon: '/Home/images/icon/water.png',
-					name: "水费",
-					id: "",
-					path:"Home/Recharge"
-				},
-				{
-					icon: '/Home/images/icon/power.png',
-					name: "电费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/ranqi.png',
-					name: "燃气费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/mobile.png',
-					name: "手机充值",
-					id: "",
-					path:"Home/Recharge"
-				},
-				{
-					icon: '/Home/images/icon/tv.png',
-					name: "有线电视",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/jiayouka.png',
-					name: "加油卡",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/wuye.png',
-					name: "物业费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/dang.png',
-					name: "党费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/jiaoyu.png',
-					name: "教育考试",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/daishou.png',
-					name: "非税代收",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/qunuan.png',
-					name: "取暖费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/tongxu.png',
-					name: "通讯费",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/youku.png',
-					name: "优酷年卡",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/youku.png',
-					name: "优酷季卡",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/youku.png',
-					name: "优酷月卡",
-					id: ""
-				},
-				{
-					icon: '/Home/images/icon/youku.png',
-					name: "优酷周卡",
-					id: ""
-				}
-			]
+			cebPaymentCategoriesList: [
+			],
+			orderPagingH5Model:{
+				pageInfo: {},
+				orderH5ModelList:[]
+			}
 		},
 		private: {
 			detail: null,
@@ -313,6 +226,19 @@
 			});
 		},
 		onInit () {
+			// 缴费类别
+			request.post('jiaofei/pay-type-lst').then(res => {
+				if(res.code == 200){
+					this.cebPaymentCategoriesList = res.data.cebPaymentCategoriesList;
+				}
+			})
+			// 缴费记录
+			request.post('order/payment-records').then(res => {
+				if(res.code == 200){
+					this.orderPagingH5Model = res.data.orderPagingH5Model
+				}
+			})
+			
 			getUserInfo((data) => {
 				prompt.showToast({
 					message: data.sid

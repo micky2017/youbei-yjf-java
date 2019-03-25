@@ -16,27 +16,27 @@
             <list-item type="hot_city" class="hot-city">
                 <text>热门城市</text>
                 <div class="hot-city_items">
-                    <div class="city-item"  for="value in hot_city_list">
+                    <div class="city-item" @click="selectCity(value)"  for="value in cityHotCategoryModelList">
                         <text>{{value}}</text> 
                     </div>
                 </div>
             </list-item>
-            <list-item type="city_group" class="city-group" for="item in city_list">
+            <list-item type="city_group" class="city-group" for="(index , item) in cityModelList">
                 <div class="city-initial">
-                    <text>{{item.initial}}</text>
+                    <text>{{section[index]}}</text>
                 </div>
-                <div class="city-item" for="city in item.citys">
+                <div class="city-item" @click="selectCity(city)" for="city in item">
                     <text>{{city}}</text>
                 </div>
             </list-item>
         </list>
         <div  show="{{!showSearch}}"  class="navigation-right" @touchmove="selectCityGroup()">
-            <div for="item in city_list">
-                <text>{{item.initial}}</text>
+            <div for="item in section">
+                <text>{{item}}</text>
             </div>
         </div>
         <div class="city-search_body" show="{{showSearch}}">
-            <div class="city-item" @click="selectCity(city)" for="city in hot_city_list">
+            <div class="city-item" @click="selectCity(city)" for="city in cityHotCategoryModelList">
                 <text>{{city}}</text>
             </div>
         </div>
@@ -49,91 +49,48 @@
 
 <script>
     const router = require('@system.router');
-
+    import request from '../../utils/request'
     export default {
-        private: {
+        protected: {
             showSearch:false,
             show_close:false,
             search_value:"",
             city_name:"北京",
-            hot_city_list:[
-                "北京",
-                "上海",
-                "深圳",
-                "天津",
-                "广州",
-                "杭州",
+            cityHotCategoryModelList:[
+                // "北京",
+                // "上海",
+                // "深圳",
+                // "天津",
+                // "广州",
+                // "杭州",
             ],
-            city_list:[
-                {
-                    initial:"A",
-                    citys:[
-                        "鞍山",
-                        "安庆",
-                        "安阳",
-                        "安顺",
-                    ]
-                },{
-                    initial:"B",
-                    citys:[
-                        "北京",
-                        "保定",
-                        "包头",
-                        "滨州",
-                    ]
-                },{
-                    initial:"C",
-                    citys:[
-                        "成都",
-                        "重庆",
-                        "沧州",
-                        "长春",
-                    ]
-                },{
-                    initial:"D",
-                    citys:[
-                        "大连",
-                        "东莞",
-                        "大庆",
-                        "大同",
-                        "大连",
-                        "东莞",
-                        "大庆",
-                        "大同",
-                    ]
-                },{
-                    initial:"E",
-                    citys:[
-                        "鄂尔多斯",
-                        "恩平",
-                        "峨眉山"
-                    ]
-                },{
-                    initial:"F",
-                    citys:[
-                        "佛山",
-                        "抚顺",
-                        "福州",
-                        "阜阳",
-                        "佛山",
-                        "抚顺",
-                        "福州",
-                        "阜阳",
-                        "佛山",
-                        "抚顺",
-                        "福州",
-                        "阜阳"
-                    ]
+            // section: ['A', 'B', 'C', 'D', 'E', 'F'],
+            section: [],
+		    cityModelList: [
+			//   ['鞍山', '安庆', '安阳', '安顺'],
+			//   ['北京', '保定', '包头', '滨州'],
+			//   ['成都', '重庆', '沧州', '长春'],
+			//   ['大连', '东莞', '大庆', '大同', '大连', '东莞', '大庆', '大同'],
+			//   ['鄂尔多斯', '恩平', '峨眉山'],
+			//   ['佛山', '抚顺', '福州', '阜阳', '佛山', '抚顺', '福州', '阜阳', '佛山', '抚顺', '福州', '阜阳']
+		    ]
+        },
+        onReady(){
+            request.get("jiaofei/get-city-list",{}).then(res => {
+                if(res.code == 200){
+                        this.section = res.data.section;
+                        this.cityModelList = res.data.cityModelList;
+                        this.cityHotCategoryModelList = res.data.cityHotCategoryModelList;
                 }
-            ]
+            })
         },
         selectCityGroup(event){
             let y =event.changedTouches[0].pageY;
             let index = parseInt((y - 400) / 40);
-            index = index > 0 ? (index > this.city_list.length ? this.city_list.length : index+1) : 1;
+            index = index > 0 ? (index > this.cityModelList.length ? this.cityModelList.length : index+1) : 1;
             // const initial = this.city_list[index-1].initial;
             const list = this.$element('list-body');
-            console.log(index,this.city_list.length)
+            console.log(index,this.cityModelList.length)
             list.scrollTo({index:index});
             
         },
