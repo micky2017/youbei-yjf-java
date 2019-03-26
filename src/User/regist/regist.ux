@@ -1,18 +1,19 @@
 <import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 <template>
     <div class="regist">
         <TitleBar title="注册" color="#fff"></TitleBar>
         <div class="input top">
             <div class="name"><text>手机号</text></div>
             <div class="content">
-                <input type="text" placeholder="请输入手机注册号码">
+                <input value="{{sms_phone}}" @change="smsPhone" type="number" placeholder="请输入手机注册号码">
 
             </div>
         </div>
         <div class="input">
             <div class="name"><text>验证码</text></div>
             <div class="captcha">
-                <input type="password" placeholder="请输入验证码">
+                <input value="{{sms_code}}" @change="smsCode" type="number" placeholder="请输入验证码">
                 <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
                 <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
             </div>
@@ -20,18 +21,19 @@
 		<div class="input top">
             <div class="name"><text>登录密码</text></div>
             <div class="content">
-                <input type="password" placeholder="支持6-20位字母数字组合">
+                <input value="{{password}}" @change="getPassword" type="password" placeholder="支持6-20位字母数字组合">
             </div>
         </div>
 		<div class="input">
             <div class="name"><text>密码确认</text></div>
             <div class="content">
-                <input type="password" placeholder="请再次输入登录密码">
+                <input value="{{confirm_password}}" @change="getConPassword" type="password" placeholder="请再次输入登录密码">
             </div>
         </div>
         <div class="btn">
-            <input type="button" value="注册">
+            <input @click="register" type="button" value="注册">
         </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
 </template>
 
@@ -41,13 +43,18 @@
 
 <script>
 	import router from '@system.router'
+    import request from '../../utils/request';
+    import storage from"@system.storage";
 
 	export default {
 		protected: {
-			url: '',
-			id: '',
-			name: '',
-			tab: 'i0',
+            tab: 'i0',
+            sms_phone: '',
+            sms_code: '',
+            password:'',
+            confirm_password:'',
+            show_toast:false,
+            toast_text:'',
 		},
 		private: {
 			detail: null,
@@ -59,23 +66,95 @@
         onDestroy(){
             clearInterval(this.timer);
         },
-        countdown(){
-            this.clickable = false;
-            if(this.codeText.indexOf("获取") != -1){
-                this.codeText = "60S"
-            }
-            this.timer = setInterval(() =>{
-                let code = Number(this.codeText.substring(0,2));
-                if(code <= 1){
-                    clearInterval(this.timer);
-                    this.clickable = true;
-                    this.codeText = "重新获取"
+        smsPhone(response){
+            this.sms_phone = response ? response.value : this.sms_phone;
+        },
+        smsCode(response){
+            this.sms_code = response ? response.value : this.sms_code;
+        },
+        getPassword(response){
+            this.password = response ? response.value : this.password;
+        },
+        getConPassword(response){
+            this.confirm_password = response ? response.value : this.confirm_password;
+        },
+        // 显示toast
+        showToast(text){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+            },1500)
+        },
+        verifyPhone(){
+            if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+                    this.showToast("手机号码有误，请重填");
+                    return false; 
                 }else{
-                    const sec = code -1 
-                    this.codeText =  (sec < 10 ? '0' + sec : sec)  + "S"
+                    request.post('user/sms',{mobile:this.sms_phone}).then((res) => {
+                        this.showToast("验证码发送成功！");
+                    })
+                    return true;
+                } 
+        },
+        countdown(){
+            if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+                this.clickable = false;
+                if(this.codeText.indexOf("获取") != -1){
+                    this.codeText = "60S"
                 }
-            },1000)
+                this.timer = setInterval(() =>{
+                    let code = Number(this.codeText.substring(0,2));
+                    if(code <= 1){
+                        clearInterval(this.timer);
+                        this.clickable = true;
+                        this.codeText = "重新获取"
+                    }else{
+                        const sec = code -1 
+                        this.codeText =  (sec < 10 ? '0' + sec : sec)  + "S"
+                    }
+                },1000)
+            }
             
+        },
+        register(){
+            if(this.password != this.confirm_password){
+                this.showToast("两次输入密码不一致");
+                return false;
+            }
+            if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+                this.showToast("手机号码有误，请重填");
+                return false; 
+            }
+            if(this.sms_code.length != 4){
+                this.showToast("请填写4位验证码");
+                return false; 
+            }
+            const params = {
+                mobile:this.sms_phone,
+                code:this.sms_code,
+                password:this.password,
+                confirmPassword:this.confirm_password,
+            }
+            request.post('user/reg',params).then(res => {
+                if(res.status == 200){
+                    this.showToast("注册成功");
+                    storage.set({
+                        key: 'sid',
+                        value: res.data._id,
+                    })
+                    storage.set({
+                        key: 'mobile',
+                        value: res.data.mobile,
+                    })
+                    router.push({
+                        uri:"/"
+                    })
+                }else{
+                    this.showToast(res.msg);
+                }
+                
+            })
         }
 	}
 </script>

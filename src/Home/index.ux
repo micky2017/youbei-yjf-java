@@ -8,7 +8,7 @@
 						<div class="logo">
 							<image height="45" src="images/logo.png"></image>
 						</div>
-						<div class="login" @click="toDetail('User/login')">
+						<div class="login" if="{{!isLogin}}" @click="toDetail('User/login')">
 							<div class="inner">
 								<div class="icon">
 									<image height="34" src="images/loginx.png"></image>
@@ -18,6 +18,7 @@
 								</div>
 							</div>
 						</div>
+						<div class="login" if="{{isLogin}}"></div>
 					</div>
 					<list><list-item>
 					<div class="slider">
@@ -96,9 +97,13 @@
 				<div class="tab-content-section user">
 					<div class="user-header">
 						<div class="title"><text>我的</text></div>
-						<div class="login" @click="toDetail('User/login')">
+						<div class="login" if="{{!mobile}}" @click="toDetail('User/login')">
 							<image width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
+						</div>
+						<div class="login" if="{{mobile}}" @click="toDetail('User/login')">
+							<image width="120" src="images/header_icon.png"></image>
+							<text>{{mobile}}</text>
 						</div>
 					</div>
 					<list><list-item>
@@ -159,15 +164,18 @@
 	import router from '@system.router';
     import request from '../utils/request'
 	import getUserInfo from '../common/getuserid.js';
+	import geolocation from '@system.geolocation';
+	import storage from"@system.storage";
+
 	const fetch = require('@system.fetch');
 	const prompt = require('@system.prompt');
 	const device = require('@system.device');
 
 	export default {
 		protected: {
-			url: '',
-			id: '',
-			name: '',
+			isLogin: false,
+			sid: '',
+			mobile: '',
 			tab: 'i0',
 			cebPaymentCategoriesList: [
 			],
@@ -226,14 +234,52 @@
 			});
 		},
 		onInit () {
+			storage.get({
+				key:"sid",
+				success: (data) => {
+					this.sid = data;
+					if(this.sid){
+						this.isLogin = true;
+					}
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+			storage.get({
+				key:"mobile",
+				success: (data) => {
+					this.mobile = data;
+					// if(this.sid){
+					// 	this.isLogin = true;
+					// }
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+			geolocation.getLocation({
+				success: function(data) {
+					console.log(
+					`handling success: longitude = ${data.longitude}, latitude = ${
+						data.latitude
+					}`
+					)
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+				})
+			// this.encryptStr("pwd")
+			// console.log()
 			// 缴费类别
-			request.post('jiaofei/pay-type-lst').then(res => {
+			request.post('jiaofei/pay-type-lst',{}).then(res => {
 				if(res.code == 200){
 					this.cebPaymentCategoriesList = res.data.cebPaymentCategoriesList;
 				}
 			})
 			// 缴费记录
-			request.post('order/payment-records').then(res => {
+			request.post('order/payment-records',{}).then(res => {
 				if(res.code == 200){
 					this.orderPagingH5Model = res.data.orderPagingH5Model
 				}

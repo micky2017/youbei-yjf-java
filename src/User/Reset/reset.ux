@@ -1,18 +1,19 @@
 <import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 <template>
     <div class="regist">
         <TitleBar title="忘记登录密码" color="#fff"></TitleBar>
         <div class="input top">
             <div class="name"><text>手机号</text></div>
             <div class="captcha">
-                <input type="text" placeholder="请输入手机号">
+                <input value="{{mobile}}" @change="getMobile" type="number" placeholder="请输入手机号">
 
             </div>
         </div>
         <div class="input">
             <div class="name"><text>验证码</text></div>
             <div class="captcha">
-                <input type="password" placeholder="请输入验证码">
+                <input value="{{code}}" @change="getCode" type="password" placeholder="请输入验证码">
                 <!-- <text>获取验证码</text> -->
                 <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
                 <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
@@ -33,6 +34,7 @@
         <div class="btn">
             <input type="button" value="下一步" @click="nextTo()" />
         </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
 </template>
 
@@ -42,13 +44,16 @@
 
 <script>
 	import router from '@system.router'
+    import request from '../../utils/request';
 
 	export default {
 		protected: {
 			url: '',
-			id: '',
-			name: '',
-			tab: 'i0',
+			mobile: '',
+			code: '',
+            tab: 'i0',
+            show_toast:false,
+            toast_text:'',
 		},
 		private: {
 			detail: null,
@@ -57,32 +62,82 @@
             clickable:true,
             timer:''
         },
+        getMobile(response){
+            this.mobile = response ? response.value : this.mobile;
+        },
+        getCode(response){
+            this.code = response ? response.value : this.code;
+        },
+        // 显示toast
+        showToast(text){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+            },1500)
+        },
+        verifyPhone(){
+            if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
+                    this.showToast("手机号码有误，请重填");
+                    return false; 
+                }else{
+                    request.post('user/sms',{mobile:this.mobile}).then((res) => {
+                        this.showToast("验证码发送成功！");
+                    })
+                    return true;
+                } 
+        },
         onDestroy(){
             clearInterval(this.timer);
         },
         countdown(){
-            this.clickable = false;
-            if(this.codeText.indexOf("获取") != -1){
-                this.codeText = "60S"
-            }
-            this.timer = setInterval(() =>{
-                let code = Number(this.codeText.substring(0,2));
-                if(code <= 1){
-                    clearInterval(this.timer);
-                    this.clickable = true;
-                    this.codeText = "重新获取"
-                }else{
-                    const sec = code -1 
-                    this.codeText =  (sec < 10 ? '0' + sec : sec)  + "S"
+            if(this.verifyPhone()){
+                
+                this.clickable = false;
+                if(this.codeText.indexOf("获取") != -1){
+                    this.codeText = "60S"
                 }
-            },1000)
+                this.timer = setInterval(() =>{
+                    let code = Number(this.codeText.substring(0,2));
+                    if(code <= 1){
+                        clearInterval(this.timer);
+                        this.clickable = true;
+                        this.codeText = "重新获取"
+                    }else{
+                        const sec = code -1 
+                        this.codeText =  (sec < 10 ? '0' + sec : sec)  + "S"
+                    }
+                },1000)
             
+            }
         },
         nextTo(){
-            console.log(111)
-            router.push({
-                uri:"User/Reset/Confirm"
-            })
+            if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
+                this.showToast("手机号码有误，请重填");
+                return false; 
+            }
+            if(this.code.length != 4){
+                this.showToast("请填写4位验证码");
+                return false; 
+            }
+            const params = {
+                mobile:this.mobile,
+                code:this.code
+                }
+            request.post('user/confirm-password',params).then((res) => {
+                        if(res.status == 200){
+                            router.push({
+                                uri:"User/Reset/Confirm",
+                                params:{
+                                    mobile:this.mobile,
+                                    code:this.code,
+                                }
+                            })
+                        }else{
+                            this.showToast(res.msg)
+                        }
+                    })
+            
         }
 	}
 </script>

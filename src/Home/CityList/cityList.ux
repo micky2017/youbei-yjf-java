@@ -90,7 +90,6 @@
             index = index > 0 ? (index > this.cityModelList.length ? this.cityModelList.length : index+1) : 1;
             // const initial = this.city_list[index-1].initial;
             const list = this.$element('list-body');
-            console.log(index,this.cityModelList.length)
             list.scrollTo({index:index});
             
         },
