@@ -66,7 +66,7 @@
 			title: '',
             tab: 'i0',
             detail: {
-                status: 3,
+                status: '',
                 orderNo: '',
                 payAmount: '',
                 paymentItemName: '',
@@ -82,12 +82,13 @@
 			
 			tq: []
         },
-        onInit() {
+        onReady() {
             // /payment-records
             // 缴费记录
-			request.post('order/detail').then(res => {
+            console.log(this.title)
+			request.post('order/detail',{orderNo:this.title}).then(res => {
                 console.log(res)
-				if(res.code == 200){
+				if(res.status == 200){
                     this.detail = res.data.detail
                     console.log(this.detail)
 				}

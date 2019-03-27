@@ -11,7 +11,11 @@
     { "name": "system.shortcut" },
     {"name": "system.webview"},
     { "name": "system.fetch" },
-    { "name": "system.storage" }
+    { "name": "system.storage" },
+    {"name": "system.device"},
+    {"name": "system.network"},
+    {"name": "service.account"},
+    {"name": "system.shortcut"}
 
   ],
   "permissions": [

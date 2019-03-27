@@ -1,13 +1,14 @@
 import fetch from '@system.fetch';
 import storage from"@system.storage";
 
-function requestHandle(params) {
+ function requestHandle(params) {
     // console.log(fetch)
-    console.log(params)
+
     let sid;
-    storage.get({
+     storage.get({
       key:"sid",
       success: function(data) {
+        console.log(data)
         sid = data;
       },
       fail: function(data, code) {
@@ -26,7 +27,6 @@ function requestHandle(params) {
       }).then(response => {
         const result = response.data
         const content = result.data
-        console.log(content)
         return  resolve(content)
       }).catch((error, code) => {
         console.log(`🐛 request fail, code = ${code}`)
@@ -50,14 +50,14 @@ function requestHandle(params) {
     post: function(url, params) {
       return requestHandle({
         method: 'post',
-        url: `http://192.168.1.109:7010/${url}`,
+        url: `http://192.168.1.111:7010/${url}`,
         data: params
       })
     },
     get: function(url, params) {
       return requestHandle({
         method: 'get',
-        url: queryString(`http://192.168.1.109:7010/${url}`, params),
+        url: queryString(`http://192.168.1.111:7010/${url}`, params),
         data:{},
       })
     }
