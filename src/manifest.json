@@ -6,17 +6,15 @@
   "minPlatformVersion": "101",
   "icon": "icon.png",
   "features": [
-    { "name": "system.prompt" },
-    { "name": "system.router" },
-    { "name": "system.shortcut" },
-    {"name": "system.webview"},
     { "name": "system.fetch" },
     { "name": "system.storage" },
     {"name": "system.device"},
     {"name": "system.network"},
+    {"name": "system.webview"},
     {"name": "service.account"},
-    {"name": "system.shortcut"}
-
+    { "name": "system.prompt" },
+    { "name": "system.router" },
+    { "name": "system.shortcut" }
   ],
   "permissions": [
     { "origin": "*" }

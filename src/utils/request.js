@@ -1,37 +1,46 @@
 import fetch from '@system.fetch';
 import storage from"@system.storage";
 
- function requestHandle(params) {
+const  requestHandle = (params)  => {
     // console.log(fetch)
 
     let sid;
-     storage.get({
-      key:"sid",
-      success: function(data) {
-        console.log(data)
-        sid = data;
-      },
-      fail: function(data, code) {
-        console.log(`handling fail, code = ${code}`)
-      }
-    })
     return new Promise((resolve, reject) => {
-      fetch.fetch({
-        url: params.url,
-        header: {
-          cookie: `sid=${sid}`
-        },
-        method: params.method,
-        data: params.data || {},
-        responseType: 'json',
-      }).then(response => {
-        const result = response.data
-        const content = result.data
-        return  resolve(content)
-      }).catch((error, code) => {
-        console.log(`🐛 request fail, code = ${code}`)
-        return reject(error)
+      storage.get({
+        key:"sid",
+      }).then(res => {
+        return fetch.fetch({
+            url: params.url,
+            header: {
+              cookie: `sid=${res.data}`
+            },
+            method: params.method,
+            data: params.data || {},
+            responseType: 'json',
+          }).then(response => {
+            const result = response.data
+            const content = result.data
+            return  resolve(content)
+          }).catch((error, code) => {
+            console.log(`🐛 request fail, code = ${code}`)
+            return reject(error)
+          })
+      }).catch(res => {
+        return fetch.fetch({
+          url: params.url,
+          method: params.method,
+          data: params.data || {},
+          responseType: 'json',
+        }).then(response => {
+          const result = response.data
+          const content = result.data
+          return  resolve(content)
+        }).catch((error, code) => {
+          console.log(`🐛 request fail, code = ${code}`)
+          return reject(error)
+        })
       })
+      
     })
   }
   function queryString(url, query) {

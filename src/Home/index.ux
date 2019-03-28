@@ -76,22 +76,29 @@
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
-						<list><list-item>
-						<div class="list">
-							<div class="item" @click="toDetail('Order',item.orderNo)" for="item in orderPagingH5Model.orderH5ModelList">
-								<div class="inner">
-									<image height="30" src="{{item.pictureUrl}}"></image>
-									<div class="detail">
-										<text class="title">{{item.paymentItemName}}</text>
-										<text class="num">{{item.orderNo}}</text>
-										<text class="time">{{item.paymentDate}}</text>
+						<list onscrollbottom="renderMoreListItem">
+						<list-item>
+							<div class="list">
+								<div class="item" @click="toDetail('Order',item.orderNo)" for="item in orderPagingH5Model.orderH5ModelList">
+									<div class="inner">
+										<image height="30" src="{{item.pictureUrl}}"></image>
+										<div class="detail">
+											<text class="title">{{item.paymentItemName}}</text>
+											<text class="num">{{item.orderNo}}</text>
+											<text class="time">{{item.paymentDate}}</text>
+										</div>
+										<text class="money">{{item.payAmount}} 元</text>
 									</div>
-									<text class="money">{{item.payAmount}} 元</text>
 								</div>
+								
 							</div>
-							
-						</div>
-						</list-item></list>
+						</list-item>
+							<list-item type="loadStatus" class="load-status">
+								<progress type="circular" show="{{hasMoreData}}"></progress>
+								<text show="{{hasMoreData}}">加载更多</text>
+								<text show="{{!hasMoreData}}">没有更多了~</text>
+							</list-item>
+						</list>
 					</div>
 				</div>
 				<div class="tab-content-section user">
@@ -177,6 +184,9 @@
 			sid: '',
 			mobile: '',
 			tab: 'i0',
+			pageSize:10,
+			currentPage:1,
+			hasMoreData:true,
 			cebPaymentCategoriesList: [
 			],
 			orderPagingH5Model:{
@@ -292,7 +302,10 @@
 				currentPage:1,
 			}).then(res => {
 				if(res.status == 200){
-					this.orderPagingH5Model = res.data.orderPagingH5Model
+					this.orderPagingH5Model = res.data.orderPagingH5Model;
+					if(res.data.orderPagingH5Model.orderH5ModelList.length <this.pageSize){
+						this.hasMoreData = false;
+					}
 				}
 			})
 			
@@ -303,6 +316,28 @@
 			});
 			// this.$page.setTitleBar({ text: '加载中...' });
 			let me = this;
+		},
+		renderMoreListItem(){
+			if(this.currentPage < this.orderPagingH5Model.pageInfo.totalPage){
+				
+				this.currentPage += 1;
+				// 缴费记录
+				request.post('order/payment-records',{
+					pageSize:this.pageSize,
+					currentPage:this.currentPage,
+				}).then(res => {
+					if(res.status == 200){
+						this.orderPagingH5Model.pageInfo = res.data.orderPagingH5Model.pageInfo
+						this.orderPagingH5Model.orderH5ModelList = this.orderPagingH5Model.orderH5ModelList.concat(res.data.orderPagingH5Model.orderH5ModelList)
+						if(res.data.orderPagingH5Model.orderH5ModelList.length < this.pageSize){
+							this.hasMoreData = false;
+						}
+					}
+				})
+
+			}else{
+				this.hasMoreData = false;
+			}
 		},
 		toDetail (url,name) {
 			let obj
