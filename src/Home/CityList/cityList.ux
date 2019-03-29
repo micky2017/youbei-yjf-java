@@ -50,7 +50,7 @@
 <script>
     const router = require('@system.router');
     import request from '../../utils/request'
-    export default {
+    export default Custom_page ({
         protected: {
             showSearch:false,
             show_close:false,
@@ -119,5 +119,5 @@
         showList(){
             // this.showSearch = false;
         }
-    }
+    })
 </script>

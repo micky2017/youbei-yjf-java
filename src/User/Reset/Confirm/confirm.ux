@@ -13,19 +13,19 @@
         <div class="input">
             <div class="name"><text>新登录密码</text></div>
             <div class="content">
-                <input value="{{password}}" @change="getPassword" type="password" placeholder="支持6-20位字母数字组合">
+                <input value="{{password}}" @change="getPassword" type="password" placeholder="支持6-20位字母数字组合" />
                 <!-- <text>获取验证码</text> -->
             </div>
         </div>
 		<div class="input">
             <div class="name"><text>确认新密码</text></div>
             <div class="content">
-                <input value="{{repassword}}" @change="getRePassword" type="password" placeholder="请再次输入新密码">
+                <input value="{{repassword}}" @change="getRePassword" type="password" placeholder="请再次输入新密码" />
             </div>
         </div>
 		
         <div class="btn" >
-            <input type="button" value="修改登录密码" @click="goHome()">
+            <input type="button" value="修改登录密码" @click="goHome()" />
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
@@ -40,7 +40,7 @@
 	import router from '@system.router'
     import request from '../../../utils/request';
 
-	export default {
+	export default Custom_page ({
 		protected: {
 			mobile: '',
 			code: '',
@@ -90,5 +90,5 @@
                 })
             
         }
-	}
+	})
 </script>

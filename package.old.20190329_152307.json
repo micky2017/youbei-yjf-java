@@ -14,13 +14,11 @@
     "debug": "hap debug"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.12.1",
+    "eslint-plugin-hybrid": "0.0.5",
     "hap-toolkit": "0.3.1",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0"
-  },
-  "dependencies": {
-    "babel-loader": "^8.0.5",
-    "eslint": "^5.15.3",
-    "webpack": "^4.29.6"
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3"
   }
 }

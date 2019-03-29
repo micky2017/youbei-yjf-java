@@ -46,7 +46,7 @@
     import request from '../../utils/request';
     import storage from"@system.storage";
 
-	export default {
+	export default Custom_page ({
 		protected: {
             tab: 'i0',
             sms_phone: '',
@@ -156,5 +156,5 @@
                 
             })
         }
-	}
+	})
 </script>

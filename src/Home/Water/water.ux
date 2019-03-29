@@ -40,12 +40,12 @@
 
 <script>
 
-    export default {
+    export default Custom_page ({
         protected: {
             
         },
         private: {
            
         }
-    }
+    })
 </script>

@@ -51,10 +51,10 @@
 
 <script>
     const router = require('@system.router')
-    export default {
+    export default Custom_page ({
         private: {
             
         }
        
-    }
+    })
 </script>

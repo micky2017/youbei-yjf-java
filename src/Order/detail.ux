@@ -59,7 +59,7 @@
 	import router from '@system.router'
     import request from '../utils/request'
 
-	export default {
+	export default Custom_page ({
 		protected: {
 			url: '',
 			id: '',
@@ -95,5 +95,5 @@
 			})
             console.log(this.title)
         },
-	}
+	})
 </script>

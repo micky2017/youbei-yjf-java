@@ -75,7 +75,7 @@
     import request from '../../utils/request';
     import storage from"@system.storage";
 
-	export default {
+	export default Custom_page ({
 		protected: {
 			show_toast: false,
 			toast_text: '',
@@ -221,5 +221,5 @@
             
             }
         }
-	}
+	})
 </script>

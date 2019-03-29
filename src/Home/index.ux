@@ -178,7 +178,7 @@
 	const prompt = require('@system.prompt');
 	const device = require('@system.device');
 
-	export default {
+	export default Custom_page ({
 		protected: {
 			isLogin: false,
 			sid: '',
@@ -359,5 +359,5 @@
 		pagefinish(){
 			this.$page.setTitleBar({ text: this.name });
 		}
-	}
+	})
 </script>

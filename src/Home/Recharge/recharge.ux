@@ -1,5 +1,4 @@
 <import src="../../common/TitleBar.ux"></import>
-<import src="../../common/Button.ux"></import>
 <template>
     <div class="recharge">
         <TitleBar title={{title}} color="#fff"></TitleBar>
@@ -20,7 +19,6 @@
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
-        <!-- <Button title="下一步"></Button> -->
     </div>
 </template>
 
@@ -31,7 +29,7 @@
 <script>
     import router from '@system.router'
 
-    export default {
+    export default Custom_page ({
         protected: {
             title:""
         },
@@ -46,5 +44,5 @@
                 uri: "Home/Inspect"
             })
         }
-    }
+    })
 </script>

@@ -49,7 +49,7 @@
 </style>
 <script>
     import router from '@system.router';
-    export default {
+    export default Custom_page ({
         private: {
             money:"30元",
             selectMoney:"30元",
@@ -91,5 +91,5 @@
         changeMoney(value){
             this.selectMoney = value;
         }
-    }
+    })
 </script>

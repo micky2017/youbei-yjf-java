@@ -19,7 +19,7 @@
 </style>
 <script>
     import router from '@system.router';
-    export default {
+    export default Custom_page ({
         private: {
             info_list: [
                 {
@@ -53,5 +53,5 @@
                 uri:"Home/Finish"
             })
         }
-    }
+    })
 </script>
