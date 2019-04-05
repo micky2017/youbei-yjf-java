@@ -63,13 +63,19 @@
             height: 280px;
         }
         .grids{
-            flex-direction: row;margin: 0px 30px 50px 30px;
+            margin: 0px 30px 50px 30px;
+            justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: wrap;
             .item{
                 width: 25%;
                 flex-direction: column;
-                /*margin-bottom: 30px;*/
+                height: 146px;
                 .icon{
                     margin-bottom: 20px;
+                    >image{
+                        width: 25%;
+                    }
                 }
                 .icon,
                 .text{

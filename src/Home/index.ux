@@ -4,7 +4,7 @@
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
 					<div class="title-bar">
-						<div class="city" @click="toDetail('Home/CityList')"><text>北京&nbsp;▼</text></div>
+						<div class="city" @click="toDetail('Home/CityList')"><text>{{cityName}}&nbsp;▼</text></div>
 						<div class="logo">
 							<image height="45" src="images/logo.png"></image>
 						</div>
@@ -29,42 +29,12 @@
 						</swiper>
 					</div>
 					<div class="grids">
-						<div class="item" for="{{cebPaymentCategoriesList.slice(0,4)}}" @click="toDetail('Home/Recharge',$item.name)">
+						<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type)">
 							<div class="icon">
-								<image width="66" heigth="66" src="{{$item.icon}}"></image>
+								<image src="{{$item.icon}}"></image>
 							</div>
 							<div class="text">
-								<text>{{$item.name}}</text>
-							</div>
-						</div>
-					</div>
-					<div class="grids">
-						<div class="item" for="{{cebPaymentCategoriesList.slice(4,8)}}" @click="toDetail('Home/Recharge',$item.name)">
-							<div class="icon">
-								<image width="66" src="{{$item.icon}}"></image>
-							</div>
-							<div class="text">
-								<text>{{$item.name}}</text>
-							</div>
-						</div>
-					</div>
-					<div class="grids">
-						<div class="item" for="{{cebPaymentCategoriesList.slice(8,12)}}" @click="toDetail('Home/Recharge',$item.name)">
-							<div class="icon">
-								<image width="66" src="{{$item.icon}}"></image>
-							</div>
-							<div class="text">
-								<text>{{$item.name}}</text>
-							</div>
-						</div>
-					</div>
-					<div class="grids">
-						<div class="item" for="{{cebPaymentCategoriesList.slice(12,16)}}" @click="toDetail('Home/Recharge',$item.name)">
-							<div class="icon">
-								<image width="66" src="{{$item.icon}}"></image>
-							</div>
-							<div class="text">
-								<text>{{$item.name}}</text>
+								<text>{{$item.typeName}}</text>
 							</div>
 						</div>
 					</div>
@@ -186,9 +156,10 @@
 			tab: 'i0',
 			pageSize:10,
 			currentPage:1,
+			cityName:"北京市",
+            cityId:"101701",
 			hasMoreData:true,
-			cebPaymentCategoriesList: [
-			],
+			cebPaymentCategoriesList: [],
 			orderPagingH5Model:{
 				pageInfo: {},
 				orderH5ModelList:[]
@@ -252,6 +223,7 @@
 			});
 		},
 		onInit () {
+			// 数据获取
 			storage.get({
 				key:"sid",
 				success: (data) => {
@@ -268,14 +240,39 @@
 				key:"mobile",
 				success: (data) => {
 					this.mobile = data;
-					// if(this.sid){
-					// 	this.isLogin = true;
-					// }
 				},
 				fail: function(data, code) {
 					console.log(`handling fail, code = ${code}`)
 				}
 			})
+			storage.get({
+				key:"cityName",
+				success: (data) => {
+					if(data){
+						this.cityName = data;
+					}else{
+						storage.set({
+							key:"cityName",
+							value:"北京市",
+						})
+					}
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+			storage.get({
+				key:"cityId",
+				success: (data) => {
+					if(data){
+						this.cityId = data;
+					}
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+			// 定位
 			geolocation.getLocation({
 				success: function(data) {
 					console.log(
@@ -291,15 +288,16 @@
 			// this.encryptStr("pwd")
 			// console.log()
 			// 缴费类别
-			request.post('jiaofei/pay-type-lst',{}).then(res => {
-				if(res.code == 200){
-					this.cebPaymentCategoriesList = res.data.cebPaymentCategoriesList;
+			request.post('jiaofei/pay-type-lst',{cityName:this.cityName}).then(res => {
+				if(res.status == 200){
+					this.cebPaymentCategoriesList = res.data;
 				}
 			})
+
 			// 缴费记录
 			request.post('order/payment-records',{
 				pageSize:10,
-				currentPage:1,
+				currentPage:1
 			}).then(res => {
 				if(res.status == 200){
 					this.orderPagingH5Model = res.data.orderPagingH5Model;
@@ -354,6 +352,16 @@
 				}
 			}
 			
+			router.push (obj)
+		},
+		toJFDetail(url,name,type){
+			const obj = {
+				uri:url,
+				params:{
+					title:name,
+					type,
+				}
+			}
 			router.push (obj)
 		},
 		pagefinish(){

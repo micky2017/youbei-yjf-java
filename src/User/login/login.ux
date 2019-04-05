@@ -140,7 +140,7 @@
                     this.showToast("登录成功");
                     storage.set({
                         key: 'sid',
-                        value: res.data._id,
+                        value: res.data.sessionId,
                     })
                     storage.set({
                         key: 'mobile',
@@ -173,7 +173,7 @@
                     this.showToast("登录成功");
                     storage.set({
                         key: 'sid',
-                        value: res.data._id,
+                        value: res.data.sessionId,
                     })
                     storage.set({
                         key: 'mobile',

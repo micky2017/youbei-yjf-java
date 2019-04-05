@@ -16,28 +16,28 @@
             <list-item type="hot_city" class="hot-city">
                 <text>热门城市</text>
                 <div class="hot-city_items">
-                    <div class="city-item" @click="selectCity(value)"  for="value in cityHotCategoryModelList">
-                        <text>{{value}}</text> 
+                    <div class="city-item" @click="selectCity(item.cityName,item.cityId)"  for="item in cityHotCategoryModelList">
+                        <text>{{item.cityName}}</text> 
                     </div>
                 </div>
             </list-item>
             <list-item type="city_group" class="city-group" for="(index , item) in cityModelList">
                 <div class="city-initial">
-                    <text>{{section[index]}}</text>
+                    <text>{{item.cityFlag}}</text>
                 </div>
-                <div class="city-item" @click="selectCity(city)" for="city in item">
-                    <text>{{city}}</text>
+                <div class="city-item" @click="selectCity(city.cityName,city.cityId)" for="city in item.children">
+                    <text>{{city.cityName}}</text>
                 </div>
             </list-item>
         </list>
         <div  show="{{!showSearch}}"  class="navigation-right" @touchmove="selectCityGroup()">
-            <div for="item in section">
-                <text>{{item}}</text>
+            <div for="item in cityModelList">
+                <text>{{item.cityFlag}}</text>
             </div>
         </div>
         <div class="city-search_body" show="{{showSearch}}">
-            <div class="city-item" @click="selectCity(city)" for="city in cityHotCategoryModelList">
-                <text>{{city}}</text>
+            <div class="city-item" @click="selectCity(city.cityName,city.cityId)" for="city in cityRenCategoryModelList">
+                <text>{{city.cityName}}</text>
             </div>
         </div>
     </div>
@@ -49,38 +49,33 @@
 
 <script>
     const router = require('@system.router');
-    import request from '../../utils/request'
+    import request from '../../utils/request';
+	import storage from"@system.storage";
     export default Custom_page ({
         protected: {
             showSearch:false,
             show_close:false,
             search_value:"",
-            city_name:"北京",
-            cityHotCategoryModelList:[
-                // "北京",
-                // "上海",
-                // "深圳",
-                // "天津",
-                // "广州",
-                // "杭州",
-            ],
-            // section: ['A', 'B', 'C', 'D', 'E', 'F'],
+            city_name:"北京市",
+            cityId:"101701",
+            cityHotCategoryModelList:[],
             section: [],
-		    cityModelList: [
-			//   ['鞍山', '安庆', '安阳', '安顺'],
-			//   ['北京', '保定', '包头', '滨州'],
-			//   ['成都', '重庆', '沧州', '长春'],
-			//   ['大连', '东莞', '大庆', '大同', '大连', '东莞', '大庆', '大同'],
-			//   ['鄂尔多斯', '恩平', '峨眉山'],
-			//   ['佛山', '抚顺', '福州', '阜阳', '佛山', '抚顺', '福州', '阜阳', '佛山', '抚顺', '福州', '阜阳']
-		    ]
+            cityModelList: [],
+            cityRenCategoryModelList:[]
         },
+
         onReady(){
             request.get("jiaofei/get-city-list",{}).then(res => {
-                if(res.code == 200){
-                        this.section = res.data.section;
-                        this.cityModelList = res.data.cityModelList;
+                if(res.status == 200){ 
+                    // cityRenCategoryModelList  最近常用城市
+                    // cityHotCategoryModelList  热门城市
+                    // cityCategoryModelList  城市列表
+                        // this.section = res.data.section;
                         this.cityHotCategoryModelList = res.data.cityHotCategoryModelList;
+                        this.cityModelList = res.data.cityCategoryModelList;
+                        this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
+                        this.cacheRenList = res.data.cityRenCategoryModelList;
+
                 }
             })
         },
@@ -96,18 +91,42 @@
         hideInput(){
             this.$element('search-city').focus({focus:false})
         },
-        selectCity(city){
-            this.city_name = city;
+        selectCity(cityName,cityId){
+            this.city_name = cityName;
+            this.cityId = cityId;
+            storage.set({
+                key: 'cityName',
+                value: cityName,
+            })
+            storage.set({
+                key: 'cityId',
+                value: cityId,
+            })
+            router.push({
+                uri:"/"
+            })
             this.showSearch = false;
             this.search_value = "";
             this.hideInput()
         },
         searchCity(response){
             this.search_value = response ? response.value : this.search_value;
+            let cityRenCategoryModelList = [];
+            for(let i = 0;i<this.cityModelList.length;i++){
+                cityRenCategoryModelList = cityRenCategoryModelList.concat(this.cityModelList[i].children)
+            }
             if(response.value != ""){
                 this.show_close = true;
                 this.showSearch = true;
+                let newRenList = []
+                for(let i = 0;i<cityRenCategoryModelList.length;i++){
+                    if(cityRenCategoryModelList[i].cityName.indexOf(response.value) != -1){
+                        newRenList.push(cityRenCategoryModelList[i])
+                    }
+                }
+                this.cityRenCategoryModelList = newRenList
             }else{
+                this.cityRenCategoryModelList = this.cacheRenList;
                 this.show_close = false;
                 this.showSearch = false;
             }

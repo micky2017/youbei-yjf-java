@@ -1,23 +1,124 @@
 <import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
+
 <template>
     <div class="recharge">
         <TitleBar title={{title}} color="#fff"></TitleBar>
-        <div class="explain">
-            <div class="explain-left">
+        <div class="explain" if="{{paymentItem.description}}">
+
+            <!-- <div class="explain-left">
                 <text>！</text>
-            </div>
-            <div class="explain-right">
-                <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
+            </div> -->
+            <div class="explain-right" >
+                <text>{{paymentItem.description}}</text>
+                <!-- <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
                 <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
-                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
+                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div> -->
             </div>
         </div>
-        <div class="input-body">
+        <!-- <div class="input-body">
             <text>充值号码</text>
             <input type="tel" placeholder="请输入充值号码" />
+        </div> -->
+        <div class="payment-body">
+            <div class="payment-item">
+                <div class="payment-item_name">
+                    <text>缴费城市:</text>
+                </div>
+                <div class="payment-item_content">
+                    <text>{{cityName}}</text>
+                </div>
+            </div>
+            <!-- <div class="payment-item">
+                <div class="payment-item_name">
+                    <text>缴费金额:</text>
+                </div>
+                <div class="payment-item_content">
+                    <input type="text" />
+                </div>
+            </div> -->
+            <div class="payment-item">
+                <div class="payment-item_name">
+                    <text>缴费项目:</text>
+                </div>
+                <div class="payment-item_content">
+                    <div if="paymentItemList.length > 1" onclick="selectItem">
+                        <text>{{itemName}}</text>
+                    </div>
+                    <div if="paymentItemList.length == 1">
+                        <text>{{paymentItemList[0]}}</text>
+                    </div>
+                    <div if="paymentItem.paymentConstraint" class="paymentConstraint">
+                        <text>{{paymentItem.paymentConstraint}}</text>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-item">
+                <div class="payment-item_name">
+                    <text>收费单位:</text>
+                </div>
+                <div class="payment-item_content">
+                    <text>{{paymentItem.companyName}}</text>
+                </div>
+            </div>
+
+            <div class="payment-item" for="item in paymentItem.queryPaymentBillParamModelList">
+                <div class="payment-item_name">
+                    <text>{{item.name}}:</text>
+                </div>
+                <div class="payment-item_content">
+                    <div if="item.filedType == 0">
+                        <input type="number" placeholder="{{item.description}}" />
+                        <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
+                        <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
+                    </div>
+                    <div onclick="changeItem(item)" elif="item.filedType == 1">
+                        <text if="billItem != null">{{billItem}}</text>
+                        <text if="billItem == null">{{item.listBoxOptions.split('|')[0]}}</text>
+
+                        <!-- <select>
+                            <option value="$item" for="item.listBoxOptions.split('|')">{{$item}}</option>
+                        </select> -->
+                    </div>
+                    <div elif="item.filedType == 2">
+                        <input type="checkbox" name="" id="" />
+                    </div>
+                    <div elif="item.filedType == 3">
+                        <input type="radio" name="" id="" />
+                    </div>
+                    <div else>
+                        <text>{{item.filedType}}</text>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
+        </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
+        <!-- 选择器 -->
+        <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+            <div class="picker-content" show="{{picker}}">
+                <div class="picker-title">
+                    <text></text>
+                    <text>{{pickerTitle}}</text>
+                    <div class="close-picker" @click="pickerShow()">
+                        <text >✕</text>
+                    </div>
+                </div>
+                <div class="picker-option">
+                    <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
+                        <text>{{item}}</text>
+                        <!-- <input type="radio" name="picker"> -->
+                        <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
+                        <text else></text>
+                    </div>
+                </div>
+                 <div class="next-btn" @click="pickerSelect()">
+                    <text>确定</text>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -28,13 +129,108 @@
 
 <script>
     import router from '@system.router'
-
+    import request from '../../utils/request'
+	import storage from"@system.storage";
     export default Custom_page ({
         protected: {
-            title:""
+            picker:false,
+            show_toast:false,
+            pickerTitle:'',
+            toast_text:'',
+            itemName:'',
+            selectMoney:'',
+            billItem:null,
+            title:"",
+            type:"",
+            cityName:"",
+            paymentItemModelList:[],
+            listPageModelList:[],
+            paymentItemList:[],
+            cityModel:{},
+            paymentItem:{},
+            rangeData:[],
         },
         private: {
             
+        },
+        changeItem(item){
+            this.rangeData = item.listBoxOptions.split('|');
+            this.billItem = this.rangeData[0];
+            this.pickerShow(item.name)
+        },
+        pickerShow(text){
+            this.pickerTitle = text;
+            this.picker = !this.picker;
+        },
+        pickerSelect(){
+            if(this.pickerTitle == "缴费项目"){
+                this.itemName = this.selectMoney;
+                for(let i = 0;i< this.paymentItemList.length;i++){
+                    if(this.paymentItemList[i] == this.selectMoney){
+                        this.paymentItem = this.paymentItemModelList[i]
+                    }
+                }
+            }else{
+                this.billItem = this.selectMoney;
+                console.log(this.billItem)
+            }
+            
+            this.picker = false;
+        },
+        changeMoney(value){
+            this.selectMoney = value;
+        },
+        onReady() {
+            storage.get({
+				key:"cityName",
+				success: (data) => {
+					if(data){
+                        this.cityName = data;
+                        this.getTypeDetail()
+					}
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+            
+        },
+        selectItem(){
+            this.rangeData = this.paymentItemList;
+            this.pickerShow("缴费项目")
+        },
+        // 显示toast
+        showToast(text,back){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+                if(back){
+                    router.back()
+                }
+            },1500)
+        },
+        getTypeDetail(){
+            // 缴费记录
+            request.post('jiaofei/pay-type-detail',{
+                cityName:this.cityName,
+                type:this.type,
+            }).then(res => {
+                console.log(res)
+                if(res.status == 200){
+                    const item = res.data.paymentItemPagingModel;
+                    this.paymentItemList = res.data.paymentItemList;
+                    this.rangeData = this.paymentItemList;
+                    this.itemName = this.paymentItemList[0];
+                    this.paymentItemModelList = item.paymentItemModelList;
+                    this.listPageModelList = item.listPageModelList;
+                    this.cityModel = item.cityModel;
+                    this.paymentItem = this.paymentItemModelList[0];
+                    console.log(this.paymentItemList)
+                }else{
+                    this.showToast(res.msg,"back")
+                }
+            })
         },
         onInit() {
             

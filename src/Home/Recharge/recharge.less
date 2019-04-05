@@ -3,10 +3,12 @@
     flex-direction: column;
     background-color: #f4f4f4;
     padding-top: 100px;
+    align-items: center;
     .explain{
+        width: 100%;
         background-color: #fef9db;
         padding: 20px 10px 10px 50px;
-        margin: 20px 0 20px 0;
+        // margin: 0px 0 20px 0;
         font-size: 38px;
         .explain-left{
             font-weight: bold;
@@ -29,6 +31,103 @@
             color: #000000;
             font-size: 38px;
             font-weight: bold;
+        }
+    }
+    .payment-body{
+        width: 96%;
+        margin: 20px 2%;
+        border-radius: 10px;
+        border-width: 1px;
+        background-color: #fff;
+        border-color: #9871c3;
+        flex-direction: column;
+        align-items: center;
+        .payment-item{
+            width:99%;
+            // height: 80px;
+            line-height: 80px;
+            border-bottom-width: 1px;
+            border-bottom-color: #9871c3;
+            padding: 10px 20px;
+            &:last-child{
+                border-bottom-width: 0px;
+            }
+            .payment-item_name{
+                width: 30%;
+            }
+            .payment-item_content{
+                flex:1;
+                flex-direction: column;
+                .paymentConstraint{
+                    >text{
+                        color:#ff0000;
+                        font-size: 24px;
+                    }
+                }
+            }
+        }
+    }
+    // 选择框
+    .picker-body{
+        background-color: rgba(0,0,0,0.6);
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        z-index: 99;
+        height: 100%;
+        overflow: scroll;
+        .picker-content{
+            height: 1000px;
+            background-color: #fff;
+            width: 100%;
+            position: fixed;
+            left: 0px;
+            bottom: 0px;
+            flex-direction: column;
+            animation: pickerTop 1s;
+            .picker-title{
+                justify-content: space-between;
+                height: 80px;
+                width: 100%;
+                border-bottom-width: 1px;
+                border-bottom-color: #f4f4f4;
+                font-size: 40px;
+                font-weight: bold;
+                .close-picker{
+                    width: 80px;
+                    justify-content: center;
+                    align-items: center;
+                    // padding-right: 20px;
+                }
+            }
+            .picker-option{
+                height: 700px;
+                width: 100%;
+                flex-direction: column;
+                font-size: 38px;
+                .picker-item{
+                    padding: 20px;
+                    justify-content: space-between;
+                    height: 120px;
+                    >text{
+                        font-size: 38px;
+                    }
+                }
+            }
+            .next-btn{
+                justify-content: center;
+                >text{
+                    width: 90%;
+                    border-radius: 10px;
+                    height: 80px;
+                    margin: 60px 5%;
+                    text-align: center;
+                    background-color: #9871c3;
+                    color: #fff;
+                    font-size: 38px;
+                    font-weight: bold;
+                }
+            }
         }
     }
     .next-btn{
