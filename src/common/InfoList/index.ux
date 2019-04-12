@@ -17,7 +17,7 @@
         ],
         data: {},
         onInit(){
-            console.info("aaaaa"+this.infolist)
+            // console.info("aaaaa"+this.infolist)
         }
     }
 </script>

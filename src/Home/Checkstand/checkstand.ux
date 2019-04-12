@@ -1,0 +1,25 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="checkstand-body">
+        <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <web src="{{src}}"></web>
+    </div>
+</template>
+<style lang="less">
+    @import "./checkstand.less";
+</style>
+<script>
+    import router from '@system.router';
+    import webview from '@system.webview'
+     export default Custom_page ({
+         protected: {
+             src: ''
+         },
+         onReady() {
+            //  webview.loadUrl({
+            //     url: this.src,
+            //     allowthirdpartycookies: true
+            // })
+         },
+     })
+</script>

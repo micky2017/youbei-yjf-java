@@ -1,5 +1,7 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="InfoList" src="../../common/InfoList/index.ux"></import>
+<import name="PayTypeList" src="../PayTypeList/index.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 
 <template>
     <div class="order-body">
@@ -7,11 +9,36 @@
         <div style="height:40px;"></div>
         <InfoList style="margin-top:40px" infoList="{{info_list}}"></InfoList>
         <text class="invoice">
-            这好像是要搞发票？
+            {{address}}
         </text>
         <div class="next-btn" @click="toFinish()">
             <text>支付</text>
         </div>
+        <!-- <PayTypeList /> -->
+        <!-- <div class="payType-body"> -->
+            <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+                <div class="picker-content" show="{{picker}}">
+                    <div class="picker-title">
+                        <text></text>
+                        <text>确认付款</text>
+                        <div class="close-picker" @click="pickerShow()">
+                            <text >✕</text>
+                        </div>
+                    </div>
+                    <div class="picker-option">
+                        <div class="picker-item" for="item in paytype_list" @click="changeMoney(item.payTypeName)">
+                            <text>{{item.payTypeName}}</text>
+                            <text if="{{item.payTypeName == this.selectValue}}" style="color:#9871c3">✔️</text>
+                            <text else></text>
+                        </div>
+                    </div>
+                    <div class="next-btn" @click="pickerSelect()">
+                        <text>确定</text>
+                    </div>
+                </div>
+            </div>
+        <!-- </div> -->
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
 </template>
 <style lang="less">
@@ -19,39 +46,125 @@
 </style>
 <script>
     import router from '@system.router';
+    import request from '../../utils/request'
+    import webview from '@system.webview'
     export default Custom_page ({
-        private: {
-            info_list: [
+        protected: {
+            data:{},
+            show_toast:false,
+            toast_text:'',
+            payAmountValue:'',
+            address:'',
+            info_list: [],
+            filed:[],
+            picker:false,
+            payTypeName:'微信支付',
+            selectValue:'',
+            paytype_list: [
                 {
-                    info_name: "充值号码",
-                    info_value: "13345678901",
+                    payTypeName: "微信支付",
+                    payType: "1",
                 },
                 {
-                    info_name: "运营商",
-                    info_value: "中国联通",
+                    payTypeName: "支付宝支付",
+                    payType: "2",
+                },
+                {
+                    payTypeName: "银联",
+                    payType: "3",
+                }
+            ]
+        },
+        // 显示toast
+        showToast(text,back){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+                if(back){
+                    router.back()
+                }
+            },1500)
+        },
+        onReady() {
+            this.data = JSON.parse(this.data);
+            const data = this.data.billQueryResultModel;
+            // this.address = data.item7 || "";
+            // printAddress
+            this.info_list = [
+                {
+                    info_name: "缴费号码",
+                    info_value: data.billKey,
+                },
+                {
+                    info_name: "缴费项目",
+                    info_value: data.paymentItemName,
                 },
                 {
                     info_name: "收费单位",
-                    info_value: "积分科技（北京）有限公司",
+                    info_value: data.companyName,
                 },
                 {
                     info_name: "充值金额",
-                    info_value: "100元",
+                    info_value: `${this.payAmountValue}元`,
                 },
                 {
                     info_name: "支付金额",
-                    info_value: "100元",
+                    info_value: `${this.payAmountValue}元`,
                 },
                 {
                     info_name: "发票获取",
-                    info_value: "此业务不提供发票，如需发票请联系中国联通，其他问题咨询运营商  电话：010-68271260",
+                    info_value: data.printAddress,
                 }
             ]
         },
         toFinish(){
+            // this.pickerShow()
+            // merOrderNo  merOrderDate  payAmount  paymentItemCode  paymentItemId  billKey   billAmount  queryAcqSsn  contractNo  filed
+            const data = this.data.billQueryResultModel;
+            const params = {
+                merOrderNo:'123453654323245532',
+                merOrderDate:'20190412',
+                payAmount:this.payAmountValue,
+                paymentItemCode:data.paymentItemCode,
+                paymentItemId:data.paymentItemId,
+                billKey:data.billKey,
+                billAmount:data.billQueryResultDataModelList[0].payAmount,
+                queryAcqSsn:this.data.qryAcqSsn,
+                contractNo:data.billQueryResultDataModelList[0].contractNo,
+                filed:this.filed,
+            }
+
+            request.post('pay/creat',params).then(res => {
+                console.log(res)
+                if(res.status == 200){
+                    // router.push({
+                    //     uri:'Home/Checkstand',
+                    //     params:{
+                    //         src:res.data.url
+                    //     }
+                    // })
+                     webview.loadUrl({
+                        url: res.data.url,
+                        allowthirdpartycookies: true
+                    })
+                }else{
+                    this.showToast(res.msg)
+                }
+            })
+        },
+        pickerShow(){
+            this.picker = !this.picker;
+        },
+        pickerSelect(){
+            this.payTypeName = this.selectMoney;
+            this.picker = false;
             router.push({
                 uri:"Home/Finish"
             })
+        },
+        changeMoney(value){
+            this.selectValue = value;
         }
     })
 </script>

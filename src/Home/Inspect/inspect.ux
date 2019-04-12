@@ -1,22 +1,31 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="Info" src="../../common/InfoList/index.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 
 <template>
     <div class="inspect-body">
         <TitleBar title="确认信息" color="#fff"></TitleBar>
-        <div class="top-up_amount">
-            <text>请选择充值金额</text>
+        <div if="!inputValue" class="top-up_amount">
+            <text>选择充值金额</text>
             <div @click="pickerShow()">
                 <text>{{money}} ▼</text>
             </div>
         </div>
+        <div if="inputValue" class="top-up_amount">
+            <text>输入充值金额</text>
+            <div>
+                <input value="{{payAmountValue}}" onchange="payAmount" type="number" name="" id="">
+            </div>
+        </div>
         <Info infoList="{{info_list}}"></Info>
         <text class="invoice">
-            这好像是要搞发票？
+            {{paymentItem.paymentConstraint}}
         </text>
         <div class="next-btn" @click="toOrders()">
             <text>支付</text>
         </div>
+
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
 
         <!-- 选择金额 -->
 
@@ -49,10 +58,19 @@
 </style>
 <script>
     import router from '@system.router';
+    import request from '../../utils/request'
+
     export default Custom_page ({
-        private: {
-            money:"30元",
-            selectMoney:"30元",
+        protected: {
+            show_toast:false,
+            toast_text:'',
+            money:"",
+            selectMoney:"",
+            payAmountValue:'',
+            inputValue:true,
+            paymentItem:{},
+            amountLimit:'',
+            itemValue:'',
             rangeData:[
                 "30元",
                 "50元",
@@ -76,10 +94,92 @@
                 }
             ]
         },
+        onReady() {
+            this.paymentItem = JSON.parse(this.paymentItem)
+            console.log(this.paymentItem)
+            const newInfo = [{
+                info_name:this.itemValue.split(":")[0],
+                info_value:this.itemValue.split(":")[1],
+            },{
+                info_name:"缴费项目",
+                info_value:this.paymentItem.paymentItemName,
+            },{
+                info_name:"收费单位",
+                info_value:this.paymentItem.companyName,
+            }];
+            this.info_list = newInfo;
+            // 缴费
+            this.payItem = this.paymentItem.createPaymentBillParamsModelList[0];
+            this.amountLimit = this.payItem.amountLimit.split('-');
+            // this.payAmountValue = Number(this.amountLimit[0]);
+            if(this.payItem.chooseAmount){
+                this.inputValue = false;
+                this.rangeData = this.payItem.chooseAmount.split("|");
+                this.money = this.rangeData[0];
+                this.selectMoney = this.rangeData[0];
+            }else{
+                this.inputValue = true;
+            }
+        },
+        payAmount(response){
+            this.payAmountValue = response ? response.value : this.payAmountValue;
+            if(Number(this.payAmountValue)<Number(this.amountLimit[0])){
+                this.payAmountValue = Number(this.amountLimit[0]);
+                this.showToast(`最低金额限制为:${this.amountLimit[0]}`)
+            }else if(Number(this.payAmountValue)>Number(this.amountLimit[1])){
+                this.payAmountValue = Number(this.amountLimit[1]);
+                this.showToast(`最高金额限制为:${this.amountLimit[1]}`)
+            }
+        },
         toOrders(){
-            router.push({
-                uri:"Home/Orders"
+            if(this.inputValue){
+                if(!this.payAmountValue){
+                    this.showToast("请输入充值金额")
+                    return false;
+                }
+            }
+            // console.log(this.paymentItem)
+            const params = {
+                itemCode:this.paymentItem.paymentItemId,
+                billKey:this.itemValue.split(":")[1],
+                flag:1,
+                filed:[]
+            }
+            const billList = this.paymentItem.queryPaymentBillParamModelList
+            for(let i = 0;i<billList.length;i++){
+                // billList[i].filedNum
+                params.filed.push(billList[i].filedNum)
+            }
+            if(this.paymentItem.paymentItemName.indexOf("手机") != -1){
+                params.type = 0
+            }else if(this.paymentItem.paymentItemName.indexOf("电") != -1){
+                params.type = 1
+            }else{
+                params.type = 2
+            }
+            // console.log(res)
+            // 查缴
+            request.post('jiaofei/generate-bill',params).then(res => {
+
+                if(res.status == 200){
+                    if(res.data.msg.indexOf("成功") != -1){
+                        router.push({
+                            uri:"Home/Orders",
+                            params:{
+                                data:res.data,
+                                payAmountValue:this.payAmountValue,
+                                filed:params.filed
+                            }
+                        })
+                    }else{
+                        this.showToast(res.data.msg)
+                    }
+                    
+                }else{
+                        this.showToast(res.data.msg)
+                }
             })
+            
         },
         pickerShow(){
             this.picker = !this.picker;
@@ -90,6 +190,17 @@
         },
         changeMoney(value){
             this.selectMoney = value;
-        }
+        },
+        // 显示toast
+        showToast(text,back){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+                if(back){
+                    router.back()
+                }
+            },1500)
+        },
     })
 </script>

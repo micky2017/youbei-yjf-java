@@ -84,15 +84,16 @@
         },
         onReady() {
             // /payment-records
+            this.detail = this.name;
             // 缴费记录
             console.log(this.title)
-			request.post('order/detail',{orderNo:this.title}).then(res => {
-                console.log(res)
-				if(res.status == 200){
-                    this.detail = res.data.detail
-                    console.log(this.detail)
-				}
-			})
+			// request.post('order/detail',{orderNo:this.title}).then(res => {
+            //     console.log(res)
+			// 	if(res.status == 200){
+            //         this.detail = res.data.detail
+            //         console.log(this.detail)
+			// 	}
+			// })
             console.log(this.title)
         },
 	})

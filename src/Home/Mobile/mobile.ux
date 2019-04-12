@@ -1,0 +1,110 @@
+<import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
+
+<template>
+    <div class="recharge">
+        <TitleBar title={{title}} color="#fff"></TitleBar>
+        <div class="explain" >
+
+            <!-- <div class="explain-left">
+                <text>！</text>
+            </div> -->
+            <div class="explain-right" >
+                <!-- <text>{{paymentItem.description}}</text> -->
+                <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
+                <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
+                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
+            </div>
+        </div>
+        <div class="input-body">
+            <text>充值号码</text>
+            <input onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
+        </div>
+        <div class="next-btn" @click="toInspect()">
+            <text>下一步</text>
+        </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
+        
+    </div>
+</template>
+
+<style lang="less">
+    @import './mobile.less';
+</style>
+
+<script>
+    import router from '@system.router'
+    import request from '../../utils/request'
+	import storage from"@system.storage";
+    export default Custom_page ({
+        protected: {
+            picker:false,
+            show_toast:false,
+            pickerTitle:'',
+            toast_text:'',
+            itemName:'',
+            selectMoney:'',
+            billItem:null,
+            title:"",
+            type:"",
+            cityName:"",
+            paymentItemModelList:[],
+            listPageModelList:[],
+            paymentItemList:[],
+            cityModel:{},
+            paymentItem:{},
+            rangeData:[],
+            itemValue:'',
+        },
+        onReady() {
+            storage.get({
+				key:"cityName",
+				success: (data) => {
+					if(data){
+                        this.cityName = data;
+					}
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+            
+        },
+        changeItem(response){
+            this.itemValue = response ? response.value : this.itemValue;
+        },
+        // 显示toast
+        showToast(text,back){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+                if(back){
+                    router.back()
+                }
+            },1500)
+        },
+        onInit() {
+            
+        },
+        toInspect(){
+
+            if(!(/^1[34578]\d{9}$/.test(this.itemValue))){ 
+                this.showToast("手机号码有误，请重填");
+                return false; 
+            }
+
+            if(this.itemValue){
+                router.push({
+                    uri: "Home/MobilePay",
+                    params:{
+                        mobile:this.itemValue
+                    }
+                })
+            }else{
+                this.showToast('您有信息未填写')
+            }
+            
+        }
+    })
+</script>

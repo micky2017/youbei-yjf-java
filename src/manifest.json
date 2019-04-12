@@ -3,7 +3,7 @@
   "name": "光大云缴费",
   "versionName": "1.0.0",
   "versionCode": "1",
-  "minPlatformVersion": "101",
+  "minPlatformVersion": "1020",
   "icon": "icon.png",
   "features": [
     { "name": "system.fetch" },
@@ -60,6 +60,12 @@
       "Home/Recharge": {
         "component": "recharge"
       },
+      "Home/Mobile": {
+        "component": "mobile"
+      },
+      "Home/MobilePay": {
+        "component": "mobilePay"
+      },
       "Home/Inspect": {
         "component": "inspect"
       },
@@ -68,6 +74,9 @@
       },
       "Home/Finish": {
         "component": "finish"
+      },
+      "Home/Checkstand": {
+        "component": "checkstand"
       },
       "Home/CityList": {
         "component": "cityList"

@@ -23,10 +23,10 @@
         <div class="payment-body">
             <div class="payment-item">
                 <div class="payment-item_name">
-                    <text>缴费城市:</text>
+                    <text>充值号码:</text>
                 </div>
                 <div class="payment-item_content">
-                    <text>{{cityName}}</text>
+                    <text>{{mobile}}</text>
                 </div>
             </div>
             <!-- <div class="payment-item">
@@ -39,7 +39,7 @@
             </div> -->
             <div class="payment-item">
                 <div class="payment-item_name">
-                    <text>缴费项目:</text>
+                    <text>运营商:</text>
                 </div>
                 <div class="payment-item_content">
                     <div if="paymentItemList.length > 1" onclick="selectItem">
@@ -62,25 +62,25 @@
                 </div>
             </div>
 
-            <div class="payment-item" for="item in paymentItem.queryPaymentBillParamModelList">
+            <div class="payment-item" for="item in paymentItem.createPaymentBillParamsModelList">
                 <div class="payment-item_name">
-                    <text>{{item.name}}:</text>
+                    <text>充值金额:</text>
                 </div>
                 <div class="payment-item_content">
-                    <div if="item.filedType == 0">
+                    <div if="!item.chooseAmount">
                         <input onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
-                    <div onclick="changeItem1(item)" elif="item.filedType == 1">
-                        <text if="billItem != null">{{billItem}}</text>
-                        <text if="billItem == null">{{item.listBoxOptions.split('|')[0]}}</text>
+                    <div onclick="changeItem1(item)" if="item.chooseAmount">
+                        <text if="billItem != null">{{billItem}}元</text>
+                        <text if="billItem == null">{{item.chooseAmount.split('|')[0]}}元</text>
 
                         <!-- <select>
                             <option value="$item" for="item.listBoxOptions.split('|')">{{$item}}</option>
                         </select> -->
                     </div>
-                    <div elif="item.filedType == 2">
+                    <!-- <div elif="item.filedType == 2">
                         <input type="checkbox" name="" id="" />
                     </div>
                     <div elif="item.filedType == 3">
@@ -88,7 +88,7 @@
                     </div>
                     <div else>
                         <text>{{item.filedType}}</text>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -124,7 +124,7 @@
 </template>
 
 <style lang="less">
-    @import './recharge.less';
+    @import './mobilePay.less';
 </style>
 
 <script>
@@ -150,21 +150,23 @@
             paymentItem:{},
             rangeData:[],
             itemValue:'',
+            mobile:''
         },
         private: {
             
         },
         changeItem1(item){
-            this.rangeData = item.listBoxOptions.split('|');
+            console.log(item);
+            this.rangeData = item.chooseAmount.split('|');
             this.billItem = this.rangeData[0];
-            this.pickerShow(item.name)
+            this.pickerShow("充值金额")
         },
         pickerShow(text){
             this.pickerTitle = text;
             this.picker = !this.picker;
         },
         pickerSelect(){
-            if(this.pickerTitle == "缴费项目"){
+            if(this.pickerTitle == "运营商"){
                 this.itemName = this.selectMoney;
                 for(let i = 0;i< this.paymentItemList.length;i++){
                     if(this.paymentItemList[i] == this.selectMoney){
@@ -201,7 +203,7 @@
         },
         selectItem(){
             this.rangeData = this.paymentItemList;
-            this.pickerShow("缴费项目")
+            this.pickerShow("运营商")
         },
         // 显示toast
         showToast(text,back){
@@ -216,14 +218,14 @@
         },
         getTypeDetail(){
             // 缴费项目信息
-            request.post('jiaofei/pay-type-detail',{
-                cityName:this.cityName,
-                type:this.type,
+            request.post('jiaofei/mobile-pay',{
+                mobile:this.mobile,
             }).then(res => {
                 console.log(res)
                 if(res.status == 200){
-                    const item = res.data.paymentItemPagingModel;
+                    const item = res.data.mobileRechargeModel;
                     this.paymentItemList = res.data.paymentItemList;
+                    console.log(this.paymentItemList)
                     this.rangeData = this.paymentItemList;
                     this.itemName = this.paymentItemList[0];
                     this.paymentItemModelList = item.paymentItemModelList;
@@ -241,13 +243,13 @@
         },
         toInspect(){
             if(this.itemValue){
-                router.push({
-                    uri: "Home/Inspect",
-                    params:{
-                        paymentItem:this.paymentItem,
-                        itemValue:this.itemValue
-                    }
-                })
+                // router.push({
+                //     uri: "Home/Inspect",
+                //     params:{
+                //         paymentItem:this.paymentItem,
+                //         itemValue:this.itemValue
+                //     }
+                // })
             }else{
                 this.showToast('您有信息未填写')
             }

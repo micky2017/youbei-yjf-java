@@ -286,9 +286,9 @@
 				}
 				})
 			// this.encryptStr("pwd")
-			// console.log()
 			// 缴费类别
 			request.post('jiaofei/pay-type-lst',{cityName:this.cityName}).then(res => {
+				console.log(res)
 				if(res.status == 200){
 					this.cebPaymentCategoriesList = res.data;
 				}
@@ -362,7 +362,17 @@
 					type,
 				}
 			}
-			router.push (obj)
+			if(name.indexOf("手机") != -1){
+				obj.uri = "Home/Mobile"
+			}
+			console.log(obj)
+			if(this.isLogin){
+				router.push (obj)
+			}else{
+				router.push({
+					uri:'User/login'
+				})
+			}
 		},
 		pagefinish(){
 			this.$page.setTitleBar({ text: this.name });
