@@ -39,6 +39,7 @@
 
 	import router from '@system.router'
     import request from '../../../utils/request';
+    import storage from"@system.storage";
 
 	export default Custom_page ({
 		protected: {
@@ -82,9 +83,15 @@
             }
             request.post('user/repassword',params).then((res) => {
                     if(res.status == 200){
-                        this.showToast("密码修改成功")
-                        router.push({
-                                uri:"User/login"
+                        this.showToast("密码修改成功");
+                        storage.delete({
+                            key: 'sid'
+                        })
+                        storage.delete({
+                            key: 'mobile'
+                        })
+                        router.back({
+                                path:"User/login"
                             })
                     }
                 })

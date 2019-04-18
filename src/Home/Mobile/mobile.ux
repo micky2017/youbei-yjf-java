@@ -35,7 +35,9 @@
 <script>
     import router from '@system.router'
     import request from '../../utils/request'
-	import storage from"@system.storage";
+    import storage from"@system.storage";
+    import webview from '@system.webview'
+
     export default Custom_page ({
         protected: {
             picker:false,
@@ -89,6 +91,19 @@
         },
         toInspect(){
 
+                    // router.push({
+                    //     uri:'Home/Checkstand',
+                    //     params:{
+                    //         src:'http://192.168.1.111:7010/pay/cb'
+                    //     }
+                    // })
+            // webview.loadUrl({
+            //     // url: 'https://yaoyaotest.cebbank.com/LifePayment/webApp/cashier/index.html?tranDate=20190415&orderNo=1201904151605131&timestamp=1555320203185&version=1.4.6&macValue=167E7F9BB5B279CC5E4F276841E24104&canal=fastapp',
+            // url: 'http://192.168.1.111:7010/pay/cb',
+            // // trustedurl:'https://mcashier.test.95516.com',
+            // allowthirdpartycookies: true
+            // })
+            // return ;
             if(!(/^1[34578]\d{9}$/.test(this.itemValue))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 

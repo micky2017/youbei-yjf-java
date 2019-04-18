@@ -1,8 +1,8 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="checkstand-body">
-        <TitleBar title="确认信息" color="#fff"></TitleBar>
-        <web src="{{src}}"></web>
+        <TitleBar title="云缴费" color="#fff"></TitleBar>
+        <web id='syt' src="{{src}}"></web>
     </div>
 </template>
 <style lang="less">
@@ -15,7 +15,13 @@
          protected: {
              src: ''
          },
-         onReady() {
+         onInit() {
+             const that = this;
+             setTimeout(() => {
+                const list = that.$element('syt');
+                list.reload();
+             },5000)
+              
             //  webview.loadUrl({
             //     url: this.src,
             //     allowthirdpartycookies: true

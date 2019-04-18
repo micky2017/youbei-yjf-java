@@ -3,7 +3,7 @@
 
 <template>
     <div class="recharge">
-        <TitleBar title={{title}} color="#fff"></TitleBar>
+        <TitleBar title='确认信息' color="#fff"></TitleBar>
         <div class="explain" if="{{paymentItem.description}}">
 
             <!-- <div class="explain-left">
@@ -43,13 +43,13 @@
                 </div>
                 <div class="payment-item_content">
                     <div if="paymentItemList.length > 1" onclick="selectItem">
-                        <text>{{itemName}}</text>
+                        <text>{{itemName}}▼</text>
                     </div>
                     <div if="paymentItemList.length == 1">
                         <text>{{paymentItemList[0]}}</text>
                     </div>
-                    <div if="paymentItem.paymentConstraint" class="paymentConstraint">
-                        <text>{{paymentItem.paymentConstraint}}</text>
+                    <div if="payTimeTips" class="paymentConstraint">
+                        <text>{{payTimeTips}}</text>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
                     <div onclick="changeItem1(item)" if="item.chooseAmount">
-                        <text if="billItem != null">{{billItem}}元</text>
+                        <text if="billItem != null">{{itemValue}}元</text>
                         <text if="billItem == null">{{item.chooseAmount.split('|')[0]}}元</text>
 
                         <!-- <select>
@@ -91,19 +91,21 @@
                     </div> -->
                 </div>
             </div>
-
         </div>
+        <text class="invoice">
+            {{paymentItem.printAddress}}
+        </text>
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
         <!-- 选择器 -->
-        <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+        <div class="picker-body" show="{{picker}}" @click="pickerShow('')">
             <div class="picker-content" show="{{picker}}">
                 <div class="picker-title">
                     <text></text>
                     <text>{{pickerTitle}}</text>
-                    <div class="close-picker" @click="pickerShow()">
+                    <div class="close-picker" @click="pickerShow('')">
                         <text >✕</text>
                     </div>
                 </div>
@@ -130,7 +132,9 @@
 <script>
     import router from '@system.router'
     import request from '../../utils/request'
-	import storage from"@system.storage";
+    import storage from"@system.storage";
+    import webview from '@system.webview'
+    
     export default Custom_page ({
         protected: {
             picker:false,
@@ -143,6 +147,7 @@
             title:"",
             type:"",
             cityName:"",
+            payTimeTips:'',
             paymentItemModelList:[],
             listPageModelList:[],
             paymentItemList:[],
@@ -159,6 +164,7 @@
             console.log(item);
             this.rangeData = item.chooseAmount.split('|');
             this.billItem = this.rangeData[0];
+            this.itemValue = this.rangeData[0];
             this.pickerShow("充值金额")
         },
         pickerShow(text){
@@ -174,7 +180,7 @@
                     }
                 }
             }else{
-                this.billItem = this.selectMoney;
+                this.itemValue = this.selectMoney;
                 console.log(this.billItem)
             }
             
@@ -199,7 +205,7 @@
             
         },
         changeItem(item,response){
-            this.itemValue = response ? `${item}:${response.value}` : this.itemValue;
+            this.itemValue = response ? response.value : this.itemValue;
         },
         selectItem(){
             this.rangeData = this.paymentItemList;
@@ -232,7 +238,8 @@
                     this.listPageModelList = item.listPageModelList;
                     this.cityModel = item.cityModel;
                     this.paymentItem = this.paymentItemModelList[0];
-                    console.log(this.paymentItemList)
+                    this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
+                    this.itemValue = this.paymentItem.createPaymentBillParamsModelList[0].chooseAmount.split('|')[0] || '';
                 }else{
                     this.showToast(res.msg,"back")
                 }
@@ -243,13 +250,57 @@
         },
         toInspect(){
             if(this.itemValue){
-                // router.push({
-                //     uri: "Home/Inspect",
-                //     params:{
-                //         paymentItem:this.paymentItem,
-                //         itemValue:this.itemValue
-                //     }
-                // })
+                // 订单日期
+                const date = new Date();
+                const year = date.getFullYear();  // 获取完整的年份(4位,1970)
+                const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0'+(date.getMonth() + 1);  // 获取月份(0-11,0代表1月,用的时候记得加上1)
+                const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                const merOrderDate = year+month+day;
+                // 基础数据
+                const data = this.paymentItem;
+
+                let outTradeNo="";  //订单号
+                for(let i=0;i<6;i++) //6位随机数，用以加在时间戳后面。
+                {
+                    outTradeNo += Math.floor(Math.random()*10);
+                }
+                outTradeNo = new Date().getTime() + outTradeNo; 
+                
+                const params = {
+                    merOrderNo:outTradeNo,
+                    merOrderDate,
+                    payAmount:this.itemValue,
+                    paymentItemCode:data.paymentItemCode,
+                    paymentItemId:data.paymentItemId,
+                    billKey:this.mobile,
+                    billAmount:'',
+                    queryAcqSsn:'',
+                    contractNo:'',
+                    filed:this.filed || [],
+                    type:'1'
+                }
+                request.post('pay/creat',params).then(res => {
+                    console.log(res)
+                    if(res.status == 200){
+                        if(res.data.url){
+                            webview.loadUrl({
+                                url: res.data.url,
+                                trustedurl:['https://test-api.ubaycn.com/pay/cb'],
+                                allowthirdpartycookies: true
+                            })
+                            // router.push({
+                            //     uri:'Home/Checkstand',
+                            //     params:{
+                            //         src:res.data.url
+                            //     }
+                            // })
+                        }else{
+                            this.showToast(res.data.respMsg)
+                        }
+                    }else{
+                        this.showToast(res.msg)
+                    }
+                })
             }else{
                 this.showToast('您有信息未填写')
             }

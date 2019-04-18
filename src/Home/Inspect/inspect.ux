@@ -14,12 +14,13 @@
         <div if="inputValue" class="top-up_amount">
             <text>输入充值金额</text>
             <div>
-                <input value="{{payAmountValue}}" onchange="payAmount" type="number" name="" id="">
+                <input value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" id="">
+                <text>元</text>
             </div>
         </div>
         <Info infoList="{{info_list}}"></Info>
         <text class="invoice">
-            {{paymentItem.paymentConstraint}}
+            {{data.printAddress}}
         </text>
         <div class="next-btn" @click="toOrders()">
             <text>支付</text>
@@ -65,12 +66,15 @@
             show_toast:false,
             toast_text:'',
             money:"",
+            data:{},
+            reqData:{},
             selectMoney:"",
             payAmountValue:'',
             inputValue:true,
             paymentItem:{},
             amountLimit:'',
             itemValue:'',
+            qryAcqSsn:'',
             rangeData:[
                 "30元",
                 "50元",
@@ -96,20 +100,26 @@
         },
         onReady() {
             this.paymentItem = JSON.parse(this.paymentItem)
-            console.log(this.paymentItem)
+            this.data = JSON.parse(this.data)
+            const billObj = this.data.billQueryResultDataModelList[0];
             const newInfo = [{
                 info_name:this.itemValue.split(":")[0],
                 info_value:this.itemValue.split(":")[1],
             },{
-                info_name:"缴费项目",
-                info_value:this.paymentItem.paymentItemName,
+                info_name:"用户名",
+                info_value:billObj.customerName,
             },{
-                info_name:"收费单位",
-                info_value:this.paymentItem.companyName,
+                info_name:"账单金额",
+                info_value:billObj.payAmount/100 + '元',
+            },{
+                info_name:"账期",
+                info_value:`${billObj.beginDate}-${billObj.endDate}`,
             }];
             this.info_list = newInfo;
+            // this.payAmountValue = billObj.payAmount /100;
             // 缴费
-            this.payItem = this.paymentItem.createPaymentBillParamsModelList[0];
+            this.payItem = this.data.createPaymentBillParamsModel;
+            this.description = this.payItem.description;
             this.amountLimit = this.payItem.amountLimit.split('-');
             // this.payAmountValue = Number(this.amountLimit[0]);
             if(this.payItem.chooseAmount){
@@ -124,10 +134,10 @@
         payAmount(response){
             this.payAmountValue = response ? response.value : this.payAmountValue;
             if(Number(this.payAmountValue)<Number(this.amountLimit[0])){
-                this.payAmountValue = Number(this.amountLimit[0]);
+                // this.payAmountValue = Number(this.amountLimit[0]);
                 this.showToast(`最低金额限制为:${this.amountLimit[0]}`)
             }else if(Number(this.payAmountValue)>Number(this.amountLimit[1])){
-                this.payAmountValue = Number(this.amountLimit[1]);
+                // this.payAmountValue = Number(this.amountLimit[1]);
                 this.showToast(`最高金额限制为:${this.amountLimit[1]}`)
             }
         },
@@ -137,48 +147,51 @@
                     this.showToast("请输入充值金额")
                     return false;
                 }
-            }
-            // console.log(this.paymentItem)
-            const params = {
-                itemCode:this.paymentItem.paymentItemId,
-                billKey:this.itemValue.split(":")[1],
-                flag:1,
-                filed:[]
-            }
-            const billList = this.paymentItem.queryPaymentBillParamModelList
-            for(let i = 0;i<billList.length;i++){
-                // billList[i].filedNum
-                params.filed.push(billList[i].filedNum)
-            }
-            if(this.paymentItem.paymentItemName.indexOf("手机") != -1){
-                params.type = 0
-            }else if(this.paymentItem.paymentItemName.indexOf("电") != -1){
-                params.type = 1
             }else{
-                params.type = 2
-            }
-            // console.log(res)
-            // 查缴
-            request.post('jiaofei/generate-bill',params).then(res => {
-
-                if(res.status == 200){
-                    if(res.data.msg.indexOf("成功") != -1){
-                        router.push({
-                            uri:"Home/Orders",
-                            params:{
-                                data:res.data,
-                                payAmountValue:this.payAmountValue,
-                                filed:params.filed
-                            }
-                        })
-                    }else{
-                        this.showToast(res.data.msg)
-                    }
-                    
-                }else{
-                        this.showToast(res.data.msg)
+                if(!this.money){
+                    this.showToast("请选择充值金额")
+                    return false;
                 }
-            })
+            }
+            // 查缴
+            // request.post('jiaofei/generate-bill',params).then(res => {
+                const params={
+                    data:this.data,
+                    payAmount:this.payAmountValue,
+                    qryAcqSsn:this.qryAcqSsn
+                }
+                if(this.inputValue){
+                    params.payAmount = this.payAmountValue;
+                }else{
+                    params.payAmount = this.money;
+                }
+                params.reqData = this.reqData;
+
+                 if(this.paymentItem.businessFlow== 2){
+                     const reqData = {
+                         itemCode:this.paymentItem.paymentItemId,
+                         flag:2,
+                         type:1,
+                        //  qryAcqSsn:this.data.qryAcqSsn,
+                     }
+                     Object.assign(reqData,this.reqData)
+                    request.post('jiaofei/generate-bill',reqData).then(res => {
+                        if(res.status == 200){
+                            params.data = res.data.billQueryResultModel
+                            params.qryAcqSsn = res.data.qryAcqSsn
+                            router.push({
+                                uri:"Home/Orders",
+                                params,
+                            })
+                        }
+                    })
+                }else{
+                    router.push({
+                        uri:"Home/Orders",
+                        params,
+                    })
+                }
+                
             
         },
         pickerShow(){

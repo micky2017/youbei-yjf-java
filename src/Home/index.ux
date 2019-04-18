@@ -6,7 +6,7 @@
 					<div class="title-bar">
 						<div class="city" @click="toDetail('Home/CityList')"><text>{{cityName}}&nbsp;▼</text></div>
 						<div class="logo">
-							<image height="45" src="images/logo.png"></image>
+							<image width="230" src="images/logo.png"></image>
 						</div>
 						<div class="login" if="{{!isLogin}}" @click="toDetail('User/login')">
 							<div class="inner">
@@ -18,7 +18,16 @@
 								</div>
 							</div>
 						</div>
-						<div class="login" if="{{isLogin}}"></div>
+						<div class="login" if="{{isLogin}}" onclick="logout">
+							<div class="inner">
+								<div class="icon">
+									<image height="34" src="images/loginx.png"></image>
+								</div>
+								<div class="text">
+									<text>退出</text>
+								</div>
+							</div>
+						</div>
 					</div>
 					<list><list-item>
 					<div class="slider">
@@ -46,16 +55,17 @@
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
-						<list onscrollbottom="renderMoreListItem">
+						<refresh onrefresh="refreshingTop" offset="10px" refreshing="{{refreshing}}" type="pulldown"></refresh>
+						<list onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
 						<list-item>
 							<div class="list">
-								<div class="item" @click="toDetail('Order',item.orderNo)" for="item in orderPagingH5Model.orderH5ModelList">
+								<div class="item" @click="toDetail('Order',item)" for="item in orderPagingH5Model.recordsModel">
 									<div class="inner">
 										<image height="30" src="{{item.pictureUrl}}"></image>
 										<div class="detail">
 											<text class="title">{{item.paymentItemName}}</text>
 											<text class="num">{{item.orderNo}}</text>
-											<text class="time">{{item.paymentDate}}</text>
+											<text class="time">{{item.payDate}}</text>
 										</div>
 										<text class="money">{{item.payAmount}} 元</text>
 									</div>
@@ -78,7 +88,7 @@
 							<image width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
 						</div>
-						<div class="login" if="{{mobile}}" @click="toDetail('User/login')">
+						<div class="login" if="{{mobile}}">
 							<image width="120" src="images/header_icon.png"></image>
 							<text>{{mobile}}</text>
 						</div>
@@ -97,7 +107,12 @@
 								<text>关于云缴费</text>
 							</div>
 						</div>
-					</div></list-item></list>
+					</div>
+					<div class="logout-body" if="{{mobile}}" @click="logout">
+						<text>退出登录</text>
+					</div>
+					</list-item></list>
+					
 				</div>
 			</tab-content>
 			<tab-bar class="tab-bar">
@@ -153,21 +168,29 @@
 			isLogin: false,
 			sid: '',
 			mobile: '',
+			refreshing:false,
 			tab: 'i0',
 			pageSize:10,
 			currentPage:1,
 			cityName:"北京市",
             cityId:"101701",
-			hasMoreData:true,
+			hasMoreData:false,
 			cebPaymentCategoriesList: [],
 			orderPagingH5Model:{
 				pageInfo: {},
-				orderH5ModelList:[]
+				recordsModel:[]
 			}
 		},
 		private: {
 			detail: null,
 			tq: []
+		},
+		refreshingFn(){
+			console.log(1)
+			this.refreshing = true;
+		},
+		refreshingTop(){
+			console.log(2)
 		},
 		// onShow(){
         //     APP_STATISTICS.page_show( this );//在onShow方法的第一行加入此代码
@@ -193,14 +216,15 @@
 				],
 				success: function(data) {
 					if(data.index == 0){
-						prompt.showToast({
-							message: '拨打'
-						});
+						
+						router.push({
+							uri: 'tel://4009095595'
+						})
 					}
 					if(data.index == 1){
-						prompt.showToast({
-							message: '不打'
-						});
+						// prompt.showToast({
+						// 	message: '不打'
+						// });
 					}
 				},
 				cancel: function() {
@@ -230,6 +254,23 @@
 					this.sid = data;
 					if(this.sid){
 						this.isLogin = true;
+						// 缴费记录
+						request.post('order/payment-records',{
+							pageSize:10,
+							currentPage:1
+						}).then(res => {
+							console.log(res)
+							if(res.status == 200){
+								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+								if(res.data.hkPaymentRecordsModel.recordsModel.length <this.pageSize){
+									this.hasMoreData = false;
+								}
+							}else{
+								this.hasMoreData = false;
+							}
+						}).catch(err => {
+							this.hasMoreData = false;
+						})
 					}
 				},
 				fail: function(data, code) {
@@ -250,10 +291,24 @@
 				success: (data) => {
 					if(data){
 						this.cityName = data;
+						// 缴费类别
+						request.post('jiaofei/pay-type-lst',{cityName:this.cityName}).then(res => {
+							// console.log(res)
+							if(res.status == 200){
+								this.cebPaymentCategoriesList = res.data;
+							}
+						})
 					}else{
 						storage.set({
 							key:"cityName",
 							value:"北京市",
+						})
+						// 缴费类别
+						request.post('jiaofei/pay-type-lst',{cityName:'北京市'}).then(res => {
+							// console.log(res)
+							if(res.status == 200){
+								this.cebPaymentCategoriesList = res.data;
+							}
 						})
 					}
 				},
@@ -286,26 +341,9 @@
 				}
 				})
 			// this.encryptStr("pwd")
-			// 缴费类别
-			request.post('jiaofei/pay-type-lst',{cityName:this.cityName}).then(res => {
-				console.log(res)
-				if(res.status == 200){
-					this.cebPaymentCategoriesList = res.data;
-				}
-			})
+			
 
-			// 缴费记录
-			request.post('order/payment-records',{
-				pageSize:10,
-				currentPage:1
-			}).then(res => {
-				if(res.status == 200){
-					this.orderPagingH5Model = res.data.orderPagingH5Model;
-					if(res.data.orderPagingH5Model.orderH5ModelList.length <this.pageSize){
-						this.hasMoreData = false;
-					}
-				}
-			})
+			
 			
 			getUserInfo((data) => {
 				prompt.showToast({
@@ -315,9 +353,10 @@
 			// this.$page.setTitleBar({ text: '加载中...' });
 			let me = this;
 		},
+		// 缴费记录
 		renderMoreListItem(){
-			if(this.currentPage < this.orderPagingH5Model.pageInfo.totalPage){
-				
+			if(this.currentPage < this.orderPagingH5Model.pageInfo.totalReco / this.pageSize){
+				this.hasMoreData = true;
 				this.currentPage += 1;
 				// 缴费记录
 				request.post('order/payment-records',{
@@ -325,12 +364,17 @@
 					currentPage:this.currentPage,
 				}).then(res => {
 					if(res.status == 200){
-						this.orderPagingH5Model.pageInfo = res.data.orderPagingH5Model.pageInfo
-						this.orderPagingH5Model.orderH5ModelList = this.orderPagingH5Model.orderH5ModelList.concat(res.data.orderPagingH5Model.orderH5ModelList)
-						if(res.data.orderPagingH5Model.orderH5ModelList.length < this.pageSize){
+						this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
+						this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
+						console.log(this.orderPagingH5Model)
+						if(res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize){
 							this.hasMoreData = false;
 						}
+					}else{
+						this.hasMoreData = false;
 					}
+				}).catch(err => {
+					this.hasMoreData = false;
 				})
 
 			}else{
@@ -351,7 +395,7 @@
 					uri:url
 				}
 			}
-			
+			console.log(obj)
 			router.push (obj)
 		},
 		toJFDetail(url,name,type){
@@ -373,6 +417,41 @@
 					uri:'User/login'
 				})
 			}
+		},
+		logout(){
+			const that = this;
+			storage.delete({
+				key: 'sid',
+				success: function(data) {
+					// console.log('handling success')
+					that.pageSize = 10;
+					that.currentPage = 1;
+					that.sid = '';
+					that.mobile = '';
+					that.isLogin = false;
+					that.hasMoreData = false;
+					console.log(that.isLogin)
+					that.orderPagingH5Model = {
+						pageInfo: {},
+						recordsModel:[]
+					}
+					prompt.showToast({
+						message: '退出登录成功'
+					});
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
+			storage.delete({
+				key: 'mobile',
+				success: function(data) {
+					console.log('handling success')
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+				}
+			})
 		},
 		pagefinish(){
 			this.$page.setTitleBar({ text: this.name });

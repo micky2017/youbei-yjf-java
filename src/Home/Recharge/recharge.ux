@@ -43,13 +43,13 @@
                 </div>
                 <div class="payment-item_content">
                     <div if="paymentItemList.length > 1" onclick="selectItem">
-                        <text>{{itemName}}</text>
+                        <text>{{itemName}}▼</text>
                     </div>
                     <div if="paymentItemList.length == 1">
                         <text>{{paymentItemList[0]}}</text>
                     </div>
-                    <div if="paymentItem.paymentConstraint" class="paymentConstraint">
-                        <text>{{paymentItem.paymentConstraint}}</text>
+                    <div if="payTimeTips" class="paymentConstraint">
+                        <text>{{payTimeTips}}</text>
                     </div>
                 </div>
             </div>
@@ -61,24 +61,29 @@
                     <text>{{paymentItem.companyName}}</text>
                 </div>
             </div>
-
+            <div class="payment-item" if="paymentItem.queryPaymentBillParamModelList.length == 0">
+                <div class="payment-item_name">
+                    <text>客户编号:</text>
+                </div>
+                <div class="payment-item_content">
+                    <div>
+                        <input name="billKey" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                    </div>
+                </div>
+            </div>
             <div class="payment-item" for="item in paymentItem.queryPaymentBillParamModelList">
                 <div class="payment-item_name">
                     <text>{{item.name}}:</text>
                 </div>
                 <div class="payment-item_content">
                     <div if="item.filedType == 0">
-                        <input onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
+                        <input name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
                     <div onclick="changeItem1(item)" elif="item.filedType == 1">
-                        <text if="billItem != null">{{billItem}}</text>
-                        <text if="billItem == null">{{item.listBoxOptions.split('|')[0]}}</text>
-
-                        <!-- <select>
-                            <option value="$item" for="item.listBoxOptions.split('|')">{{$item}}</option>
-                        </select> -->
+                        <text if="billItem != null">{{billItem}}▼</text>
+                        <text name="{{item.nameType}}" if="billItem == null">请选择▼</text>
                     </div>
                     <div elif="item.filedType == 2">
                         <input type="checkbox" name="" id="" />
@@ -91,19 +96,18 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
         <!-- 选择器 -->
-        <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+        <div class="picker-body" show="{{picker}}" @click="pickerShow('')">
             <div class="picker-content" show="{{picker}}">
                 <div class="picker-title">
                     <text></text>
                     <text>{{pickerTitle}}</text>
-                    <div class="close-picker" @click="pickerShow()">
+                    <div class="close-picker" @click="pickerShow('')">
                         <text >✕</text>
                     </div>
                 </div>
@@ -143,19 +147,36 @@
             title:"",
             type:"",
             cityName:"",
+            payTimeTips:'',
             paymentItemModelList:[],
             listPageModelList:[],
             paymentItemList:[],
             cityModel:{},
-            paymentItem:{},
+            paymentItem:{
+                queryPaymentBillParamModelList:[]
+            },
             rangeData:[],
+            rangeDataValue:[],
             itemValue:'',
+            filedName:'',
+            reqData:{
+
+            },
         },
         private: {
             
         },
         changeItem1(item){
+            this.filedName = item.nameType
             this.rangeData = item.listBoxOptions.split('|');
+            this.rangeDataValue = [];
+            const cacheRange = [];
+            for(let i = 0;i<this.rangeData.length;i++){
+                const obj = this.rangeData[i].split("=");
+                cacheRange.push(obj[0])
+                this.rangeDataValue.push(obj[1])
+            }
+            this.rangeData = cacheRange;
             this.billItem = this.rangeData[0];
             this.pickerShow(item.name)
         },
@@ -169,13 +190,18 @@
                 for(let i = 0;i< this.paymentItemList.length;i++){
                     if(this.paymentItemList[i] == this.selectMoney){
                         this.paymentItem = this.paymentItemModelList[i]
+                        this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
+
                     }
                 }
             }else{
                 this.billItem = this.selectMoney;
-                console.log(this.billItem)
-            }
-            
+                for(let i = 0;i<this.rangeData.length;i++){
+                    if(this.billItem == this.rangeData[i]){
+                        this.reqData[this.filedName] = this.rangeDataValue[i];
+                    }
+                }
+            }        
             this.picker = false;
         },
         changeMoney(value){
@@ -197,7 +223,8 @@
             
         },
         changeItem(item,response){
-            this.itemValue = response ? `${item}:${response.value}` : this.itemValue;
+            this.reqData[item.nameType] = response ? response.value : this.itemValue;
+            this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
         },
         selectItem(){
             this.rangeData = this.paymentItemList;
@@ -220,7 +247,6 @@
                 cityName:this.cityName,
                 type:this.type,
             }).then(res => {
-                console.log(res)
                 if(res.status == 200){
                     const item = res.data.paymentItemPagingModel;
                     this.paymentItemList = res.data.paymentItemList;
@@ -230,7 +256,7 @@
                     this.listPageModelList = item.listPageModelList;
                     this.cityModel = item.cityModel;
                     this.paymentItem = this.paymentItemModelList[0];
-                    console.log(this.paymentItemList)
+                    this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
                 }else{
                     this.showToast(res.msg,"back")
                 }
@@ -240,17 +266,62 @@
             
         },
         toInspect(){
-            if(this.itemValue){
-                router.push({
-                    uri: "Home/Inspect",
-                    params:{
-                        paymentItem:this.paymentItem,
-                        itemValue:this.itemValue
+            const list = this.paymentItem.queryPaymentBillParamModelList
+            for(let i = 0;i<list.length;i++){
+                if(list[i].isNull == 0){
+                    if(!this.reqData[list[i].nameType]){
+                        this.showToast('您有信息未填写');
+                        return;
                     }
-                })
-            }else{
-                this.showToast('您有信息未填写')
+                }
             }
+            // 查询账单
+            const params = {
+                itemCode:this.paymentItem.paymentItemId,
+                flag:1,
+            }
+            if(this.paymentItem.businessFlow== 2){
+                params.type = 1
+            }else{
+                params.type = 2
+            }
+            Object.assign(params,this.reqData)
+            // 查缴
+            request.post('jiaofei/generate-bill',params).then(res => {
+
+                if(res.status == 200){
+                    if(res.data.msg.indexOf("成功") != -1){
+                        router.push({
+                            uri: "Home/Inspect",
+                            params:{
+                                paymentItem:this.paymentItem,
+                                itemValue:this.itemValue,
+                                reqData:this.reqData,
+                                data:res.data.billQueryResultModel,
+                                qryAcqSsn:res.data.qryAcqSsn,
+                            }
+                        })
+                    }else{
+                        this.showToast(res.data.msg)
+                    }
+                    
+                }else{
+                        this.showToast(res.data.msg)
+                }
+            })
+
+            // if(this.itemValue){
+                // router.push({
+                //     uri: "Home/Inspect",
+                //     params:{
+                //         paymentItem:this.paymentItem,
+                //         itemValue:this.itemValue,
+                //         reqData:this.reqData
+                //     }
+                // })
+            // }else{
+            //     this.showToast('您有信息未填写')
+            // }
             
         }
     })

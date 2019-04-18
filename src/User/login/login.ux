@@ -146,7 +146,7 @@
                         key: 'mobile',
                         value: res.data.mobile,
                     })
-                    router.push({
+                    router.replace({
                         uri:"/"
                     })
                 }else{
@@ -156,6 +156,19 @@
             })
         },
         smsLogin(){
+                    //  storage.set({
+                    //     key: 'sid',
+                    //     value: '0e7ff377758a23148f6e8136eb74768a553c544b73724c5cdf0b503ba8ea38adf3d871c874d887b28f481ec718539bbe5884c7e4020570d36007b30e5c0328ac',
+                    //     // value: res.data.sessionId,
+                    // })
+                    // storage.set({
+                    //     key: 'mobile',
+                    //     value: '15506517118',
+                    //     // value: res.data.mobile,
+                    // })
+                    // router.push({
+                    //     uri:"/"
+                    // })
             if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
@@ -174,18 +187,26 @@
                     storage.set({
                         key: 'sid',
                         value: res.data.sessionId,
+                        success:function(){
+                            router.replace({
+                                uri:"/"
+                            })
+                            // router.back({
+                            //     path: '/Home'
+                            // })
+                        }
                     })
                     storage.set({
                         key: 'mobile',
                         value: res.data.mobile,
                     })
-                    router.push({
-                        uri:"/"
-                    })
+                    
                 }else{
                     this.showToast(res.msg);
                 }
                 
+            }).catch(err => {
+                this.showToast("登录失败");
             })
         },
         verifyPhone(){
@@ -200,7 +221,8 @@
                 } 
         },
         countdown(){
-            if(this.verifyPhone()){
+            const smsType = this.verifyPhone()
+            if(smsType){
                 
                 this.clickable = false;
                 if(this.codeText.indexOf("获取") != -1){

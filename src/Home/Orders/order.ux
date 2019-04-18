@@ -50,10 +50,12 @@
     import webview from '@system.webview'
     export default Custom_page ({
         protected: {
+            reqData:{},
             data:{},
             show_toast:false,
+            qryAcqSsn:'',
             toast_text:'',
-            payAmountValue:'',
+            payAmount:'',
             address:'',
             info_list: [],
             filed:[],
@@ -88,7 +90,7 @@
         },
         onReady() {
             this.data = JSON.parse(this.data);
-            const data = this.data.billQueryResultModel;
+            const data = this.data;
             // this.address = data.item7 || "";
             // printAddress
             this.info_list = [
@@ -106,11 +108,11 @@
                 },
                 {
                     info_name: "充值金额",
-                    info_value: `${this.payAmountValue}元`,
+                    info_value: `${this.payAmount}元`,
                 },
                 {
                     info_name: "支付金额",
-                    info_value: `${this.payAmountValue}元`,
+                    info_value: `${this.payAmount}元`,
                 },
                 {
                     info_name: "发票获取",
@@ -121,20 +123,34 @@
         toFinish(){
             // this.pickerShow()
             // merOrderNo  merOrderDate  payAmount  paymentItemCode  paymentItemId  billKey   billAmount  queryAcqSsn  contractNo  filed
-            const data = this.data.billQueryResultModel;
+            const data = this.data;
+            const date = new Date();
+            const year = date.getFullYear();  // 获取完整的年份(4位,1970)
+            const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0'+(date.getMonth() + 1);  // 获取月份(0-11,0代表1月,用的时候记得加上1)
+            const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+            const merOrderDate = year+month+day;
+
+            let outTradeNo="";  //订单号
+            for(let i=0;i<6;i++) //6位随机数，用以加在时间戳后面。
+            {
+                outTradeNo += Math.floor(Math.random()*10);
+            }
+            outTradeNo = new Date().getTime() + outTradeNo; 
+
+console.log(this.qryAcqSsn)
             const params = {
-                merOrderNo:'123453654323245532',
-                merOrderDate:'20190412',
-                payAmount:this.payAmountValue,
+                merOrderNo:outTradeNo,
+                merOrderDate,
+                payAmount:this.payAmount,
                 paymentItemCode:data.paymentItemCode,
                 paymentItemId:data.paymentItemId,
-                billKey:data.billKey,
+                // billKey:data.billKey,
                 billAmount:data.billQueryResultDataModelList[0].payAmount,
-                queryAcqSsn:this.data.qryAcqSsn,
+                queryAcqSsn:this.qryAcqSsn,
                 contractNo:data.billQueryResultDataModelList[0].contractNo,
-                filed:this.filed,
+                // filed:this.filed,
             }
-
+            Object.assign(params,JSON.parse(this.reqData))
             request.post('pay/creat',params).then(res => {
                 console.log(res)
                 if(res.status == 200){
@@ -144,10 +160,14 @@
                     //         src:res.data.url
                     //     }
                     // })
-                     webview.loadUrl({
-                        url: res.data.url,
-                        allowthirdpartycookies: true
-                    })
+                     if(res.data.url){
+                            webview.loadUrl({
+                                url: res.data.url,
+                                allowthirdpartycookies: true
+                            })
+                        }else{
+                            this.showToast(res.data.respMsg)
+                        }
                 }else{
                     this.showToast(res.msg)
                 }

@@ -9,11 +9,11 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费状态：</text></div>
-                <div class="item-content"><text class="purple">{{detail.status}}</text></div>
+                <div class="item-content"><text class="purple">{{detail.status == 0 ? "处理中" : (detail.status == 1? "缴费成功" :(detail.status == 2 ? "缴费失败" : "退款成功"))}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>交易时间：</text></div>
-                <div class="item-content"><text>{{detail.paymentDate}}</text></div>
+                <div class="item-content"><text>{{detail.payDate}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费项目：</text></div>
@@ -25,15 +25,15 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费号码：</text></div>
-                <div class="item-content"><text>{{detail.orderNo}}</text></div>
+                <div class="item-content"><text>{{detail.billKey}}</text></div>
             </div>
-            <div class="item">
+            <!-- <div class="item">
                 <div class="item-name"><text>用户名：</text></div>
                 <div class="item-content"><text>{{detail.payAmount}}</text></div>
-            </div>
+            </div> -->
             <div class="item">
-                <div class="item-name"><text>收费方式：</text></div>
-                <div class="item-content"><text>{{detail.payAmount}}</text></div>
+                <div class="item-name"><text>缴费类别：</text></div>
+                <div class="item-content"><text>{{detail.paymentType}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>订单号：</text></div>
@@ -43,10 +43,10 @@
                 <div class="item-name"><text>缴费金额：</text></div>
                 <div class="item-content"><text>{{detail.payAmount}}</text></div>
             </div>
-            <div class="item">
+            <!-- <div class="item">
                 <div class="item-name"><text>发票获取：</text></div>
-                <div class="item-content"><text>{{detail.invoice}}</text></div>
-            </div>
+                <div class="item-content"><text>{{detail.getInvoiceDescription}}</text></div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -84,9 +84,9 @@
         },
         onReady() {
             // /payment-records
-            this.detail = this.name;
+            this.detail = JSON.parse(this.title);
             // 缴费记录
-            console.log(this.title)
+            console.log(this.detail)
 			// request.post('order/detail',{orderNo:this.title}).then(res => {
             //     console.log(res)
 			// 	if(res.status == 200){
