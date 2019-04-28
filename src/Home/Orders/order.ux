@@ -2,10 +2,12 @@
 <import name="InfoList" src="../../common/InfoList/index.ux"></import>
 <import name="PayTypeList" src="../PayTypeList/index.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
+<import src="../../common/YjfLoading.ux"></import>
 
 <template>
     <div class="order-body">
         <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <YjfLoading if="showLoading" />
         <div style="height:40px;"></div>
         <InfoList style="margin-top:40px" infoList="{{info_list}}"></InfoList>
         <text class="invoice">
@@ -48,8 +50,10 @@
     import router from '@system.router';
     import request from '../../utils/request'
     import webview from '@system.webview'
+    import fetch from '@system.fetch'
     export default Custom_page ({
         protected: {
+            showLoading:false,
             reqData:{},
             data:{},
             show_toast:false,
@@ -58,6 +62,7 @@
             payAmount:'',
             address:'',
             info_list: [],
+            billObj:{},
             filed:[],
             picker:false,
             payTypeName:'微信支付',
@@ -91,6 +96,7 @@
         onReady() {
             this.data = JSON.parse(this.data);
             const data = this.data;
+            // const billObj = this.billObj
             // this.address = data.item7 || "";
             // printAddress
             this.info_list = [
@@ -121,6 +127,7 @@
             ]
         },
         toFinish(){
+            this.showLoading = true;
             // this.pickerShow()
             // merOrderNo  merOrderDate  payAmount  paymentItemCode  paymentItemId  billKey   billAmount  queryAcqSsn  contractNo  filed
             const data = this.data;
@@ -136,8 +143,7 @@
                 outTradeNo += Math.floor(Math.random()*10);
             }
             outTradeNo = new Date().getTime() + outTradeNo; 
-
-console.log(this.qryAcqSsn)
+            const billObj = JSON.parse(this.billObj)
             const params = {
                 merOrderNo:outTradeNo,
                 merOrderDate,
@@ -145,14 +151,21 @@ console.log(this.qryAcqSsn)
                 paymentItemCode:data.paymentItemCode,
                 paymentItemId:data.paymentItemId,
                 // billKey:data.billKey,
-                billAmount:data.billQueryResultDataModelList[0].payAmount,
+                billAmount:billObj.payAmount,
                 queryAcqSsn:this.qryAcqSsn,
-                contractNo:data.billQueryResultDataModelList[0].contractNo,
+                contractNo:billObj.contractNo,
+                customerName:billObj.customerName
                 // filed:this.filed,
             }
+            console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
+            APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":this.payAmount});
+            fetch.fetch({
+				url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':${this.data.paymentItemName},"pay_amount":${this.payAmount}}&tag=云缴费`,
+			})
             request.post('pay/creat',params).then(res => {
                 console.log(res)
+                this.showLoading = false;
                 if(res.status == 200){
                     // router.push({
                     //     uri:'Home/Checkstand',
@@ -171,6 +184,9 @@ console.log(this.qryAcqSsn)
                 }else{
                     this.showToast(res.msg)
                 }
+            }).catch(err => {
+                this.showLoading = false;
+                this.showToast('网络错误')
             })
         },
         pickerShow(){

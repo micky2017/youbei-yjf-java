@@ -1,7 +1,10 @@
 <template>
     <div class="TitleBar" style="background-color: {{color}}">
-        <div class="left" @click="back">
+        <div class="left" @click="back" if="!external">
             <image height="30" src="/common/images/back.png"></image>
+        </div>
+        <div class="left qita" @click="goHome" if="external">
+            <image height="50" src="/common/images/qita.png"></image>
         </div>
         <div class="center">
             <text>{{title}}</text>
@@ -32,6 +35,14 @@
                 margin-top: 10px;
             }
         }
+        .qita{
+            padding-left: 20px;
+            text-align: left;
+            height: 100px;
+            image{
+                margin-top: 10px;
+            }
+        }
         .center{
             text{
                 width: 100%;
@@ -45,9 +56,14 @@
 <script>
     const router = require('@system.router')
     export default {
-        props: ['title','color'],
+        props: ['title','color','external'],
         back(){
             router.back();
+        },
+        goHome(){
+            router.replace({
+                uri:'Home'
+            });
         }
     }
 </script>

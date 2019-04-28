@@ -58,6 +58,7 @@ const  requestHandle = (params)  => {
   export default {
     post: function(url, params) {
       // params.environment = "test"
+      params.environment = "yanzheng"
       return requestHandle({
         method: 'post',
         // url: `https://test-api.ubaycn.com/${url}`,
@@ -67,6 +68,7 @@ const  requestHandle = (params)  => {
     },
     get: function(url, params) {
       // params.environment = "test"
+      params.environment = "yanzheng"
       return requestHandle({
         method: 'get',
         url: queryString(`http://192.168.1.111:7010/${url}`, params),

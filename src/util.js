@@ -27,9 +27,9 @@ function showMenu () {
         // 取消
         break
       default:
-        prompt.showToast({
-          message: 'error'
-        })
+        // prompt.showToast({
+        //   message: 'error'
+        // })
       }
     }
   })
@@ -56,9 +56,9 @@ function createShortcut () {
             })
           },
           fail: function (errmsg, errcode) {
-            prompt.showToast({
-              message: `${errcode}: ${errmsg}`
-            })
+            // prompt.showToast({
+            //   message: `${errcode}: ${errmsg}`
+            // })
           }
         })
       }

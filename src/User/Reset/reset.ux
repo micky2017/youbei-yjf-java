@@ -1,19 +1,19 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
 <template>
-    <div class="regist">
+    <div class="regist" onclick="inputFocus()">
         <TitleBar title="忘记登录密码" color="#fff"></TitleBar>
         <div class="input top">
             <div class="name"><text>手机号</text></div>
             <div class="captcha">
-                <input value="{{mobile}}" @change="getMobile" type="number" placeholder="请输入手机号">
+                <input id="mobile" value="{{mobile}}" @change="getMobile" type="number" placeholder="请输入手机号">
 
             </div>
         </div>
         <div class="input">
             <div class="name"><text>验证码</text></div>
             <div class="captcha">
-                <input value="{{code}}" @change="getCode" type="password" placeholder="请输入验证码">
+                <input id="code" value="{{code}}" @change="getCode" type="password" placeholder="请输入验证码">
                 <!-- <text>获取验证码</text> -->
                 <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
                 <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
@@ -76,6 +76,10 @@
                 this.show_toast = false;
             },1500)
         },
+        inputFocus(){
+            this.$element('mobile').focus({focus:false})
+            this.$element('code').focus({focus:false})
+        },
         verifyPhone(){
             if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
                     this.showToast("手机号码有误，请重填");
@@ -91,6 +95,7 @@
             clearInterval(this.timer);
         },
         countdown(){
+            this.inputFocus()
             if(this.verifyPhone()){
                 
                 this.clickable = false;
@@ -112,6 +117,7 @@
             }
         },
         nextTo(){
+            this.inputFocus()
             if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 

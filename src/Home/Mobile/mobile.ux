@@ -2,8 +2,8 @@
 <import name="toast" src="../../common/Toast/index.ux"></import>
 
 <template>
-    <div class="recharge">
-        <TitleBar title={{title}} color="#fff"></TitleBar>
+    <div class="recharge" onclick="inputFocus()">
+        <TitleBar external={{external}} title={{title}} color="#fff"></TitleBar>
         <div class="explain" >
 
             <!-- <div class="explain-left">
@@ -18,7 +18,7 @@
         </div>
         <div class="input-body">
             <text>充值号码</text>
-            <input onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
+            <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
         </div>
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
@@ -42,6 +42,7 @@
         protected: {
             picker:false,
             show_toast:false,
+            external:'',
             pickerTitle:'',
             toast_text:'',
             itemName:'',
@@ -86,11 +87,14 @@
                 }
             },1500)
         },
+        inputFocus(){
+                this.$element('mobile').focus({focus:false})
+        },
         onInit() {
             
         },
         toInspect(){
-
+            this.inputFocus()
                     // router.push({
                     //     uri:'Home/Checkstand',
                     //     params:{

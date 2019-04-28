@@ -1,19 +1,19 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
 <template>
-    <div class="regist">
+    <div class="regist" onclick="inputFocus()">
         <TitleBar title="注册" color="#fff"></TitleBar>
         <div class="input top">
             <div class="name"><text>手机号</text></div>
             <div class="content">
-                <input value="{{sms_phone}}" @change="smsPhone" type="number" placeholder="请输入手机注册号码">
+                <input id="mobile" value="{{sms_phone}}" @change="smsPhone" type="number" placeholder="请输入手机注册号码">
 
             </div>
         </div>
         <div class="input">
             <div class="name"><text>验证码</text></div>
             <div class="captcha">
-                <input value="{{sms_code}}" @change="smsCode" type="number" placeholder="请输入验证码">
+                <input id="code" value="{{sms_code}}" @change="smsCode" type="number" placeholder="请输入验证码">
                 <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
                 <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
             </div>
@@ -21,13 +21,13 @@
 		<div class="input top">
             <div class="name"><text>登录密码</text></div>
             <div class="content">
-                <input value="{{password}}" @change="getPassword" type="password" placeholder="支持6-20位字母数字组合">
+                <input id="password1" value="{{password}}" @change="getPassword" type="password" placeholder="支持6-20位字母数字组合">
             </div>
         </div>
 		<div class="input">
             <div class="name"><text>密码确认</text></div>
             <div class="content">
-                <input value="{{confirm_password}}" @change="getConPassword" type="password" placeholder="请再次输入登录密码">
+                <input id="password2" value="{{confirm_password}}" @change="getConPassword" type="password" placeholder="请再次输入登录密码">
             </div>
         </div>
         <div class="btn">
@@ -45,6 +45,7 @@
 	import router from '@system.router'
     import request from '../../utils/request';
     import storage from"@system.storage";
+    import fetch from '@system.fetch'
 
 	export default Custom_page ({
 		protected: {
@@ -62,6 +63,12 @@
             codeText:"获取验证码",
             clickable:true,
             timer:''
+        },
+        inputFocus(){
+            this.$element('mobile').focus({focus:false})
+            this.$element('code').focus({focus:false})
+            this.$element('password1').focus({focus:false})
+            this.$element('password2').focus({focus:false})
         },
         onDestroy(){
             clearInterval(this.timer);
@@ -98,7 +105,11 @@
                 } 
         },
         countdown(){
+            this.inputFocus()
             if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+                this.showToast("手机号码有误")
+            }else{
+                this.verifyPhone()
                 this.clickable = false;
                 if(this.codeText.indexOf("获取") != -1){
                     this.codeText = "60S"
@@ -118,6 +129,7 @@
             
         },
         register(){
+            this.inputFocus()
             if(this.password != this.confirm_password){
                 this.showToast("两次输入密码不一致");
                 return false;
@@ -136,12 +148,16 @@
                 password:this.password,
                 confirmPassword:this.confirm_password,
             }
+            APP_STATISTICS.track_event("regist_click",{'mobile':this.sms_phone});
+            fetch.fetch({
+                url:`${this.$app.$data.logUrl}?event=regist_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
+            })
             request.post('user/reg',params).then(res => {
                 if(res.status == 200){
                     this.showToast("注册成功");
                     storage.set({
                         key: 'sid',
-                        value: res.data._id,
+                        value: res.data.sessionId,
                     })
                     storage.set({
                         key: 'mobile',

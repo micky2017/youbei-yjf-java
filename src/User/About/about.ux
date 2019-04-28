@@ -14,9 +14,9 @@
                 <text>{{item.value}}</text>
             </div>
         </div>
-        <div class="about-footer">
+        <!-- <div class="about-footer">
             <text>中国光大银行 版权所有</text>
-        </div>
+        </div> -->
     </div>
 </template>
 

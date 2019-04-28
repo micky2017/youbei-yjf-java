@@ -1,9 +1,11 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
+<import src="../../common/YjfLoading.ux"></import>
 
 <template>
-    <div class="recharge">
+    <div class="recharge" onclick="inputFocus()">
         <TitleBar title='确认信息' color="#fff"></TitleBar>
+        <YjfLoading if="showLoading" />
         <div class="explain" if="{{paymentItem.description}}">
 
             <!-- <div class="explain-left">
@@ -68,7 +70,7 @@
                 </div>
                 <div class="payment-item_content">
                     <div if="!item.chooseAmount">
-                        <input onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
+                        <input id="mobile" onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
@@ -137,6 +139,7 @@
     
     export default Custom_page ({
         protected: {
+            showLoading:false,
             picker:false,
             show_toast:false,
             pickerTitle:'',
@@ -206,6 +209,9 @@
         },
         changeItem(item,response){
             this.itemValue = response ? response.value : this.itemValue;
+            if(this.itemValue.indexOf(".") == 0){
+                this.itemValue = '0' + this.itemValue
+            }
         },
         selectItem(){
             this.rangeData = this.paymentItemList;
@@ -245,11 +251,18 @@
                 }
             })
         },
+        inputFocus(){
+            if(this.$element('mobile')){
+                this.$element('mobile').focus({focus:false})
+            }
+        },
         onInit() {
             
         },
         toInspect(){
+            this.inputFocus()
             if(this.itemValue){
+                this.showLoading = true;
                 // 订单日期
                 const date = new Date();
                 const year = date.getFullYear();  // 获取完整的年份(4位,1970)
@@ -281,6 +294,7 @@
                 }
                 request.post('pay/creat',params).then(res => {
                     console.log(res)
+                    this.showLoading = false;
                     if(res.status == 200){
                         if(res.data.url){
                             webview.loadUrl({
@@ -300,11 +314,13 @@
                     }else{
                         this.showToast(res.msg)
                     }
+                }).catch(err => {
+                    this.showLoading = false;
+                    this.showToast('网络错误')
                 })
             }else{
                 this.showToast('您有信息未填写')
             }
-            
         }
     })
 </script>

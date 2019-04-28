@@ -1,23 +1,31 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="Info" src="../../common/InfoList/index.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
+<import src="../../common/YjfLoading.ux"></import>
 
 <template>
-    <div class="inspect-body">
+    <div class="inspect-body" onclick="inputFocus()">
         <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <YjfLoading if="showLoading" />
         <div if="!inputValue" class="top-up_amount">
             <text>选择充值金额</text>
-            <div @click="pickerShow()">
+            <div @click="pickerShow('选择金额')">
                 <text>{{money}} ▼</text>
             </div>
         </div>
         <div if="inputValue" class="top-up_amount">
             <text>输入充值金额</text>
             <div>
-                <input value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" id="">
+                <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" id="">
                 <text>元</text>
             </div>
         </div>
+        <!-- <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
+            <div class="info-list_item" @click="pickerShow('选择账单')">
+                <text class="info-name">选择账单</text>
+                <text class="info-value">{{bill ? bill : '请选择'}}▼</text>
+            </div>
+        </div> -->
         <Info infoList="{{info_list}}"></Info>
         <text class="invoice">
             {{data.printAddress}}
@@ -30,12 +38,12 @@
 
         <!-- 选择金额 -->
 
-        <div class="picker-body" show="{{picker}}" @click="pickerShow()">
+        <div class="picker-body" show="{{picker}}" @click="pickerHide()">
             <div class="picker-content" show="{{picker}}">
                 <div class="picker-title">
                     <text></text>
-                    <text>选择金额</text>
-                    <div class="close-picker" @click="pickerShow()">
+                    <text>{{pickerTitle}}</text>
+                    <div class="close-picker" @click="pickerHide()">
                         <text >✕</text>
                     </div>
                 </div>
@@ -63,7 +71,9 @@
 
     export default Custom_page ({
         protected: {
+            showLoading:false,
             show_toast:false,
+            pickerTitle:'选择金额',
             toast_text:'',
             money:"",
             data:{},
@@ -75,33 +85,17 @@
             amountLimit:'',
             itemValue:'',
             qryAcqSsn:'',
-            rangeData:[
-                "30元",
-                "50元",
-                "100元",
-                "200元",
-                "300元"
-            ],
+            rangeData:[],
             picker:false,
-            info_list: [
-                {
-                    info_name:"充值号码",
-                    info_value:"13345678901",
-                },
-                {
-                    info_name:"运营商",
-                    info_value:"中国联通",
-                },
-                {
-                    info_name:"收费单位",
-                    info_value:"积分科技（北京）有限公司",
-                }
-            ]
+            bill:'',
+            info_list: [],
+            billQueryList:[],
+            paymentList:[],
+            billQueryResultDataModelList:[],
+            fieldInfoKey:'',
         },
-        onReady() {
-            this.paymentItem = JSON.parse(this.paymentItem)
-            this.data = JSON.parse(this.data)
-            const billObj = this.data.billQueryResultDataModelList[0];
+        setInfo(billObj){
+            const billDate = billObj.endDate ? `${billObj.beginDate}-${billObj.endDate}` : billObj.beginDate
             const newInfo = [{
                 info_name:this.itemValue.split(":")[0],
                 info_value:this.itemValue.split(":")[1],
@@ -113,9 +107,45 @@
                 info_value:billObj.payAmount/100 + '元',
             },{
                 info_name:"账期",
-                info_value:`${billObj.beginDate}-${billObj.endDate}`,
+                info_value:billDate,
             }];
+            if(this.fieldInfoKey != ''){
+                newInfo.push({
+                    info_name:"账单说明",
+                    info_value:billObj[this.fieldInfoKey],
+                })
+            }
             this.info_list = newInfo;
+        },
+        onReady() {
+            this.paymentItem = JSON.parse(this.paymentItem)
+            this.data = JSON.parse(this.data)
+            if(this.data.paymentBillFieldsInfoModel){
+                // 获取账单说明
+                const fieldInfo = this.data.paymentBillFieldsInfoModel.fieldInfo
+                if(fieldInfo){
+                    const fieldInfoList = fieldInfo.split("|")
+                    for(let i = 0;i<fieldInfoList.length;i++){
+                        const element = fieldInfoList[i]
+                        const key = element.split("=")[0]
+                        const value = element.split("=")[1]
+                        if(value == '1'){
+                            this.fieldInfoKey = key
+                        }
+                    }
+                }
+            }
+            
+            
+            this.billQueryList = this.data.billQueryResultDataModelList.map(item => {
+                return item.beginDate
+            })
+            this.selectMoney = this.billQueryList[0];
+            this.bill = this.billQueryList[0];
+            this.billQueryResultDataModelList = this.data.billQueryResultDataModelList
+            const billObj = this.data.billQueryResultDataModelList[0];
+            this.billObj = billObj;
+            this.setInfo(billObj)
             // this.payAmountValue = billObj.payAmount /100;
             // 缴费
             this.payItem = this.data.createPaymentBillParamsModel;
@@ -124,15 +154,25 @@
             // this.payAmountValue = Number(this.amountLimit[0]);
             if(this.payItem.chooseAmount){
                 this.inputValue = false;
-                this.rangeData = this.payItem.chooseAmount.split("|");
-                this.money = this.rangeData[0];
-                this.selectMoney = this.rangeData[0];
+                this.paymentList = this.payItem.chooseAmount.split("|");
+                this.money = this.paymentList[0];
+                this.selectMoney = this.paymentList[0];
             }else{
                 this.inputValue = true;
             }
         },
+        inputFocus(){
+            if(this.inputValue){
+                this.$element('payAmount').focus({focus:false})
+            }
+        },
         payAmount(response){
             this.payAmountValue = response ? response.value : this.payAmountValue;
+            if(this.payAmountValue.indexOf(".") == 0){
+                if(this.payAmountValue.indexOf(".") == 0){
+                    this.payAmountValue = '0' + this.payAmountValue
+                }
+            }
             if(Number(this.payAmountValue)<Number(this.amountLimit[0])){
                 // this.payAmountValue = Number(this.amountLimit[0]);
                 this.showToast(`最低金额限制为:${this.amountLimit[0]}`)
@@ -157,6 +197,7 @@
             // request.post('jiaofei/generate-bill',params).then(res => {
                 const params={
                     data:this.data,
+                    billObj:this.billObj,
                     payAmount:this.payAmountValue,
                     qryAcqSsn:this.qryAcqSsn
                 }
@@ -172,18 +213,32 @@
                          itemCode:this.paymentItem.paymentItemId,
                          flag:2,
                          type:1,
+                         filed1:params.payAmount
                         //  qryAcqSsn:this.data.qryAcqSsn,
                      }
-                     Object.assign(reqData,this.reqData)
+                     Object.assign(reqData,JSON.parse(this.reqData))
+                     this.showLoading = true;
                     request.post('jiaofei/generate-bill',reqData).then(res => {
+                        this.showLoading = false;
                         if(res.status == 200){
-                            params.data = res.data.billQueryResultModel
-                            params.qryAcqSsn = res.data.qryAcqSsn
-                            router.push({
-                                uri:"Home/Orders",
-                                params,
-                            })
+                            if(res.data.msg.indexOf("成功") != -1){
+                                params.data = res.data.billQueryResultModel
+                                params.billObj = res.data.billQueryResultModel.billQueryResultDataModelList[0]
+                                // this.data.billQueryResultDataModelList[0]
+                                params.qryAcqSsn = res.data.qryAcqSsn
+                                router.push({
+                                    uri:"Home/Orders",
+                                    params,
+                                })
+                            }else{
+                                this.showToast(res.data.msg)
+                            }
+                            
+                        }else{
+                            this.showToast(res.data.msg)
                         }
+                    }).catch(err => {
+                        this.showLoading = false;
                     })
                 }else{
                     router.push({
@@ -194,15 +249,54 @@
                 
             
         },
-        pickerShow(){
-            this.picker = !this.picker;
+        pickerShow(title){
+            if(title){
+                this.pickerTitle = title;
+                if(title.indexOf("账单") != -1){
+                    this.rangeData = this.billQueryList;
+                }else{
+                    this.rangeData = this.paymentList;
+                }
+            }
+            this.picker = true;
+        },
+        pickerHide(){
+            this.picker = false;
         },
         pickerSelect(){
-            this.money = this.selectMoney;
+            if(this.pickerTitle.indexOf("账单") != -1){
+                // this.rangeData = this.billQueryList;
+                // this.billObj = 
+                for(let i = 0;i<this.billQueryList.length;i++){
+                    if(this.billQueryList[i].indexOf(this.selectMoney) != -1){
+                        this.billObj = this.billQueryResultDataModelList[i]
+                        console.log(i)
+                        this.bill = this.billObj.beginDate
+                        this.setInfo(this.billObj)
+                    }
+                }
+            }else{
+                // this.selectMoney = value;
+                this.money = this.selectMoney;
+            }
+            // this.money = this.selectMoney;
             this.picker = false;
         },
         changeMoney(value){
             this.selectMoney = value;
+            // if(this.pickerTitle.indexOf("账单") != -1){
+            //     // this.rangeData = this.billQueryList;
+            //     // this.billObj = 
+            //     for(let i = 0;i<this.billQueryList.length;i++){
+            //         if(this.billQueryList.indexOf(value) != -1){
+            //             this.billObj = this.billQueryResultDataModelList[i]
+            //             this.setInfo(this.billObj)
+            //         }
+            //     }
+            // }else{
+            //     this.selectMoney = value;
+            // }
+            
         },
         // 显示toast
         showToast(text,back){

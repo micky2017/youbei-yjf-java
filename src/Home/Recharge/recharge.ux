@@ -1,9 +1,11 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
+<import src="../../common/YjfLoading.ux"></import>
 
 <template>
-    <div class="recharge">
-        <TitleBar title={{title}} color="#fff"></TitleBar>
+    <div class="recharge" onclick="inputFocus()">
+        <TitleBar external={{external}} title={{title}} color="#fff"></TitleBar>
+        <YjfLoading if="showLoading" />
         <div class="explain" if="{{paymentItem.description}}">
 
             <!-- <div class="explain-left">
@@ -67,7 +69,7 @@
                 </div>
                 <div class="payment-item_content">
                     <div>
-                        <input name="billKey" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                        <input id="billKey" name="billKey" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
                     </div>
                 </div>
             </div>
@@ -77,7 +79,7 @@
                 </div>
                 <div class="payment-item_content">
                     <div if="item.filedType == 0">
-                        <input name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
+                        <input id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
@@ -134,9 +136,12 @@
 <script>
     import router from '@system.router'
     import request from '../../utils/request'
-	import storage from"@system.storage";
+    import storage from"@system.storage";
+    import _ from 'lodash'
     export default Custom_page ({
         protected: {
+            showLoading:false,
+            external:'',
             picker:false,
             show_toast:false,
             pickerTitle:'',
@@ -166,6 +171,15 @@
         private: {
             
         },
+        inputFocus(){
+            const list = this.paymentItem.queryPaymentBillParamModelList
+            for(let i = 0;i<list.length;i++){
+                if(this.$element(list[i].nameType)){
+                    this.$element(list[i].nameType).focus({focus:false})
+                }
+            }
+                
+        },
         changeItem1(item){
             this.filedName = item.nameType
             this.rangeData = item.listBoxOptions.split('|');
@@ -181,6 +195,7 @@
             this.pickerShow(item.name)
         },
         pickerShow(text){
+            this.inputFocus()
             this.pickerTitle = text;
             this.picker = !this.picker;
         },
@@ -208,6 +223,7 @@
             this.selectMoney = value;
         },
         onReady() {
+            // console.log(_.debounce)
             storage.get({
 				key:"cityName",
 				success: (data) => {
@@ -266,6 +282,7 @@
             
         },
         toInspect(){
+            this.inputFocus()
             const list = this.paymentItem.queryPaymentBillParamModelList
             for(let i = 0;i<list.length;i++){
                 if(list[i].isNull == 0){
@@ -275,6 +292,8 @@
                     }
                 }
             }
+            this.showLoading = true;
+
             // 查询账单
             const params = {
                 itemCode:this.paymentItem.paymentItemId,
@@ -285,10 +304,11 @@
             }else{
                 params.type = 2
             }
-            Object.assign(params,this.reqData)
+            Object.assign(params,this.reqData);
+            console.log(this.reqData)
             // 查缴
             request.post('jiaofei/generate-bill',params).then(res => {
-
+                this.showLoading = false;
                 if(res.status == 200){
                     if(res.data.msg.indexOf("成功") != -1){
                         router.push({
@@ -308,6 +328,9 @@
                 }else{
                         this.showToast(res.data.msg)
                 }
+            }).catch(err => {
+                this.showLoading = false;
+                this.showToast("网络错误")
             })
 
             // if(this.itemValue){
