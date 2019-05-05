@@ -1,4 +1,5 @@
 <import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 
 <template>
     <div class="city-list_body">
@@ -11,6 +12,7 @@
         <div class="location" @click="hideInput">
             <text>您当前所在城市： {{city_name}}</text>
         </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
        
         <list show="{{!showSearch}}" id="list-body" class="city-list">
             <list-item type="hot_city" class="hot-city">
@@ -53,6 +55,8 @@
 	import storage from"@system.storage";
     export default Custom_page ({
         protected: {
+             show_toast:false,
+            toast_text:'',
             showSearch:false,
             show_close:false,
             search_value:"",
@@ -75,8 +79,14 @@
                         this.cityModelList = res.data.cityCategoryModelList;
                         this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
                         this.cacheRenList = res.data.cityRenCategoryModelList;
-
                 }
+            }).catch(err => {
+                this.showToast("网络错误",'back');
+                // setTimeout(() => {
+                //     router.push({
+                //         uri:"/"
+                //     })
+                // },1500)
             })
         },
         selectCityGroup(event){
@@ -130,6 +140,17 @@
                 this.show_close = false;
                 this.showSearch = false;
             }
+        },
+        // 显示toast
+        showToast(text,back){
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+                if(back){
+                    router.back()
+                }
+            },1500)
         },
         clearCityValue(){
             this.search_value = "";

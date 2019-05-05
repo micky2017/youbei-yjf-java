@@ -87,6 +87,8 @@
                 }else{
                     request.post('user/sms',{mobile:this.mobile}).then((res) => {
                         this.showToast("验证码发送成功！");
+                    }).catch(err => {
+                        this.showToast("网络错误");
                     })
                     return true;
                 } 
@@ -142,6 +144,8 @@
                         }else{
                             this.showToast(res.msg)
                         }
+                    }).catch(err => {
+                        this.showToast("网络错误");
                     })
             
         }

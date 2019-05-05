@@ -48,7 +48,7 @@
                     <div class="input" onclick="stopEvent()">
                         <div class="name"><text>验证码</text></div>
                         <div class="captcha">
-                            <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="password" placeholder="请输入验证码">
+                            <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="number" placeholder="请输入验证码">
                             <!-- <text>获取验证码</text> -->
                             <text class="countdown-btn" if="{{clickable}}" @click="countdown">{{codeText}}</text>
                             <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
@@ -160,6 +160,8 @@
                     this.showToast(res.msg);
                 }
                 
+            }).catch(err => {
+                this.showToast("网络错误");
             })
         },
         inputFocus(){
@@ -228,7 +230,7 @@
                 }
                 
             }).catch(err => {
-                this.showToast("登录失败");
+                this.showToast("网络错误");
             })
         },
         verifyPhone(){
@@ -238,6 +240,8 @@
                 }else{
                     request.post('user/sms',{mobile:this.sms_phone}).then((res) => {
                         this.showToast("验证码发送成功！");
+                    }).catch(err => {
+                        this.showToast("网络错误");
                     })
                     return true;
                 } 

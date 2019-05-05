@@ -39,6 +39,9 @@
 							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image> -->
 						</swiper>
 					</div>
+					<div class="no-network" if="!netWork" >
+						<text>世界上最远的距离是没有网络</text>
+					</div>
 					<div class="grids">
 						<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type)">
 							<div class="icon">
@@ -178,6 +181,7 @@
 			cityName:"北京市",
             cityId:"101701",
 			hasMoreData:false,
+			netWork:true,
 			cebPaymentCategoriesList: [],
 			orderPagingH5Model:{
 				pageInfo: {},
@@ -260,18 +264,36 @@
 			// 	url: 'https://test-api.ubaycn.com/pay/cb',
 			// 	allowthirdpartycookies: true
 			// })
+			// console.log(111)
+			// // 获取设备标识
+			// device.getDeviceId({
+			// 	success: function(data) {
+			// 		console.log(`handling success: ${data.deviceId}`)
+			// 	},
+			// 	fail: function(data, code) {
+			// 		console.log(`handling fail, code = ${code}`)
+			// 	}
+			// })
+			console.log(11)
 			// 数据获取 sessionId
 			storage.get({
 				key:"sid",
 				success: (data) => {
+					console.log('sid'+data)
 					this.sid = data;
 					if(this.sid){
 						this.isLogin = true;
+						console.log(1)
 						// 缴费记录
+						console.log(request.post('order/payment-records',{
+							pageSize:10,
+							currentPage:1
+						}))
 						request.post('order/payment-records',{
 							pageSize:10,
 							currentPage:1
 						}).then(res => {
+							console.log(1111)
 							console.log(res)
 							if(res.status == 200){
 								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
@@ -282,6 +304,7 @@
 								this.hasMoreData = false;
 							}
 						}).catch(err => {
+							console.log(22)
 							this.hasMoreData = false;
 						})
 					}
@@ -313,6 +336,8 @@
 							if(res.status == 200){
 								this.cebPaymentCategoriesList = res.data;
 							}
+						}).catch(err => {
+							this.netWork = false
 						})
 					}else{
 						// 获取城市定位
@@ -320,6 +345,8 @@
 					}
 				},
 				fail: function(data, code) {
+					// 获取城市定位
+					this.getLocation()
 					console.log(`handling fail, code = ${code}`)
 				}
 			})
@@ -371,6 +398,8 @@
 								if(res.status == 200){
 									that.cebPaymentCategoriesList = res.data;
 								}
+							}).catch(err => {
+								this.netWork = false
 							})
 							storage.set({
 								key:"cityName",
@@ -386,6 +415,8 @@
 								if(res.status == 200){
 									that.cebPaymentCategoriesList = res.data;
 								}
+							}).catch(err => {
+								this.netWork = false
 							})
 							storage.set({
 								key:"cityName",
@@ -403,7 +434,9 @@
 						if(res.status == 200){
 							that.cebPaymentCategoriesList = res.data;
 						}
-					})
+					}).catch(err => {
+								this.netWork = false
+							})
 					storage.set({
 						key:"cityName",
 						value:city,

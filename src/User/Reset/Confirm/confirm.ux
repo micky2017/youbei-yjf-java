@@ -104,6 +104,8 @@
                                 path:"User/login"
                             })
                     }
+                }).catch(err => {
+                    this.showToast("网络错误");
                 })
             
         }

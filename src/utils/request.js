@@ -58,21 +58,21 @@ const  requestHandle = (params)  => {
   export default {
     post: function(url, params) {
       // params.environment = "test"
-      params.environment = "yanzheng"
+      // params.environment = "yanzheng"
       return requestHandle({
         method: 'post',
-        // url: `https://test-api.ubaycn.com/${url}`,
-        url: `http://192.168.1.111:7010/${url}`,
+        url: `https://test-api.ubaycn.com/${url}`,
+        // url: `http://192.168.1.111:7010/${url}`,
         data: params
       })
     },
     get: function(url, params) {
       // params.environment = "test"
-      params.environment = "yanzheng"
+      // params.environment = "yanzheng"
       return requestHandle({
         method: 'get',
-        url: queryString(`http://192.168.1.111:7010/${url}`, params),
-        // url: queryString(`https://test-api.ubaycn.com/${url}`, params),
+        // url: queryString(`http://192.168.1.111:7010/${url}`, params),
+        url: queryString(`https://test-api.ubaycn.com/${url}`, params),
         data:{},
       })
     }

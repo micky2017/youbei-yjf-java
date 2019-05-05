@@ -69,14 +69,14 @@
                     <text>充值金额:</text>
                 </div>
                 <div class="payment-item_content">
-                    <div if="!item.chooseAmount">
+                    <div if="!item.rechargeLimit">
                         <input id="mobile" onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
-                    <div onclick="changeItem1(item)" if="item.chooseAmount">
-                        <text if="billItem != null">{{itemValue}}元</text>
-                        <text if="billItem == null">{{item.chooseAmount.split('|')[0]}}元</text>
+                    <div onclick="changeItem1(item)" if="item.rechargeLimit">
+                        <text if="billItem != null">{{itemValue}}元▼</text>
+                        <text if="billItem == null">{{item.rechargeLimit.split('|')[0]}}元▼</text>
 
                         <!-- <select>
                             <option value="$item" for="item.listBoxOptions.split('|')">{{$item}}</option>
@@ -165,9 +165,9 @@
         },
         changeItem1(item){
             console.log(item);
-            this.rangeData = item.chooseAmount.split('|');
+            this.rangeData = item.rechargeLimit.split('|');
             this.billItem = this.rangeData[0];
-            this.itemValue = this.rangeData[0];
+            // this.itemValue = this.rangeData[0];
             this.pickerShow("充值金额")
         },
         pickerShow(text){
@@ -245,7 +245,7 @@
                     this.cityModel = item.cityModel;
                     this.paymentItem = this.paymentItemModelList[0];
                     this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
-                    this.itemValue = this.paymentItem.createPaymentBillParamsModelList[0].chooseAmount.split('|')[0] || '';
+                    this.itemValue = this.paymentItem.createPaymentBillParamsModelList[0].rechargeLimit.split('|')[0] || '';
                 }else{
                     this.showToast(res.msg,"back")
                 }
