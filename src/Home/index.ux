@@ -70,7 +70,7 @@
 										<div class="detail">
 											<text class="title">{{item.paymentItemName}}</text>
 											<text class="num">{{item.orderNo}}</text>
-											<text class="time">{{item.payDate}}</text>
+											<!-- <text class="time">{{item.paymentDate}}</text> -->
 										</div>
 										<text class="money">{{item.payAmount}} 元</text>
 									</div>
@@ -199,10 +199,11 @@
 		refreshingTop(){
 			console.log(2)
 		},
-		// onShow(){
-        //     APP_STATISTICS.page_show( this );//在onShow方法的第一行加入此代码
-        //     //App业务代码
-        // },
+		onShow(){
+			router.clear()
+            // APP_STATISTICS.page_show( this );//在onShow方法的第一行加入此代码
+            // //App业务代码
+        },
         // onHide() {
         //     APP_STATISTICS.page_hide( this ); //在onHide方法的第一行加入此代码
         //     //...业务代码
@@ -285,6 +286,7 @@
 					this.sid = data;
 					if(this.sid){
 						this.isLogin = true;
+						console.log(11)
 						// 缴费记录
 						request.post('order/payment-records',{
 							pageSize:10,
