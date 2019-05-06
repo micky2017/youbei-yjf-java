@@ -6,9 +6,9 @@
     align-items: center;
     .explain{
         width: 100%;
-        background-color: #fef9db;
+        // background-color: #fef9db;
         padding: 20px 10px 10px 50px;
-        // margin: 0px 0 20px 0;
+        // margin: 20px 0px;
         font-size: 38px;
         .explain-left{
             font-weight: bold;
@@ -17,20 +17,29 @@
         .explain-right{
             flex-direction:column;
             font-weight: bold; 
+            >div{
+                margin: 10px 0px;
+            }
         }
         text{
-            color: #FF8505;
+            // color: #FF8505;
+            color: #999999;
+            font-size: 24px;
         }
     }
     .input-body{
         width: 100%;
         background-color: #fff;
         padding: 30px;
+        margin-top: 30px;
         justify-content: space-between;
         >text{
-            color: #000000;
-            font-size: 38px;
-            font-weight: bold;
+            // color: #000000;
+            font-size: 30px;
+            // font-weight: bold;
+        }
+        >input{
+            font-size: 28px;
         }
     }
     .payment-body{
@@ -79,6 +88,7 @@
         left: 0px;
         top: 0px;
         z-index: 99;
+        width: 100%;
         height: 100%;
         .picker-content{
             height: 1000px;

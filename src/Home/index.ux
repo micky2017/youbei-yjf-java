@@ -248,7 +248,6 @@
 			let arr = ['主页','缴费记录','我的']
 			let me = this;
 			me.tab = 'i' + tab.index;
-			console.log(this.$app)
 			fetch.fetch({
 				url:`${this.$app.$data.logUrl}?event=tab_change_click&data={tabName:${arr[tab.index]}}&tag=云缴费`,
 			})
@@ -260,11 +259,15 @@
 			});
 		},
 		onReady() {
-			// webview.loadUrl({
-			// 	url: 'https://test-api.ubaycn.com/pay/cb',
-			// 	allowthirdpartycookies: true
-			// })
-			// console.log(111)
+			// 缴费类别
+			request.post('jiaofei/pay-type-lst',{cityName:'北京市'}).then(res => {
+				// console.log(res)
+				if(res.status == 200){
+					this.cebPaymentCategoriesList = res.data;
+				}
+			}).catch(err => {
+				this.netWork = false
+			})
 			// // 获取设备标识
 			// device.getDeviceId({
 			// 	success: function(data) {
@@ -274,7 +277,6 @@
 			// 		console.log(`handling fail, code = ${code}`)
 			// 	}
 			// })
-			console.log(11)
 			// 数据获取 sessionId
 			storage.get({
 				key:"sid",
@@ -283,12 +285,7 @@
 					this.sid = data;
 					if(this.sid){
 						this.isLogin = true;
-						console.log(1)
 						// 缴费记录
-						console.log(request.post('order/payment-records',{
-							pageSize:10,
-							currentPage:1
-						}))
 						request.post('order/payment-records',{
 							pageSize:10,
 							currentPage:1
@@ -328,6 +325,9 @@
 			storage.get({
 				key:"cityName",
 				success: (data) => {
+					console.log('cityName ===== '+data)
+					
+					// alert('cityName ===== '+data)
 					if(data && data != "" && data != null){
 						this.cityName = data;
 						// 缴费类别
@@ -340,6 +340,7 @@
 							this.netWork = false
 						})
 					}else{
+						
 						// 获取城市定位
 						this.getLocation()
 					}
@@ -347,7 +348,6 @@
 				fail: function(data, code) {
 					// 获取城市定位
 					this.getLocation()
-					console.log(`handling fail, code = ${code}`)
 				}
 			})
 			// 获取城市Id
@@ -378,14 +378,10 @@
 		},
 		getLocation(){
 			const that = this;
+			
 			// 定位
 			geolocation.getLocation({
 				success: function(data) {
-					console.log(
-						`handling success: longitude = ${data.longitude}, latitude = ${
-							data.latitude
-						}`
-					)
 					fetch.fetch({
 						url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
 						responseType: 'json',
@@ -399,7 +395,7 @@
 									that.cebPaymentCategoriesList = res.data;
 								}
 							}).catch(err => {
-								this.netWork = false
+								that.netWork = false
 							})
 							storage.set({
 								key:"cityName",
@@ -416,7 +412,7 @@
 									that.cebPaymentCategoriesList = res.data;
 								}
 							}).catch(err => {
-								this.netWork = false
+								that.netWork = false
 							})
 							storage.set({
 								key:"cityName",
@@ -435,7 +431,7 @@
 							that.cebPaymentCategoriesList = res.data;
 						}
 					}).catch(err => {
-								this.netWork = false
+								that.netWork = false
 							})
 					storage.set({
 						key:"cityName",

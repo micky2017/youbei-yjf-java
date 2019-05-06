@@ -6,7 +6,7 @@
         <div class="app-header">
             <img class="app-icon" src="../../images/logo.png" alt="" >
             <text class="app-name">云缴费</text>
-            <text class="app-version">v1.0.0</text>
+            <text class="app-version">v{{$app.$def.manifest.versionName}}</text>
         </div>
         <div class="table">
             <div class="table-cell" for="item in item_list" @click="toDetail(item.path)">
@@ -25,15 +25,12 @@
 </style>
 
 <script>
+
     const router = require('@system.router')
     export default Custom_page ({
         private: {
             item_list:[
                 {
-                    name:"微信公众号",
-                    value:"yunjiaofeiguanfang",
-                    path:""
-                },{
                     name:"用户协议",
                     value:"查看 >",
                     path:"User/About/Protocol"
@@ -42,7 +39,15 @@
                     value:"查看 >",
                     path:"User/About/Statement"
                 },
+                // {
+                //     name:"微信公众号",
+                //     value:"yunjiaofeiguanfang",
+                //     path:""
+                // },
             ]
+        },
+        onReady() {
+            console.log(this.$app.$def.manifest.versionName)
         },
         toDetail(url){
             console.log(url)

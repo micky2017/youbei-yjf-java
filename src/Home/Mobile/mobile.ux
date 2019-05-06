@@ -4,6 +4,14 @@
 <template>
     <div class="recharge" onclick="inputFocus()">
         <TitleBar external={{external}} title={{title}} color="#fff"></TitleBar>
+        
+        <div class="input-body">
+            <text>充值号码</text>
+            <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
+        </div>
+        <div class="next-btn" @click="toInspect()">
+            <text>下一步</text>
+        </div>
         <div class="explain" >
 
             <!-- <div class="explain-left">
@@ -15,13 +23,6 @@
                 <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
                 <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
             </div>
-        </div>
-        <div class="input-body">
-            <text>充值号码</text>
-            <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
-        </div>
-        <div class="next-btn" @click="toInspect()">
-            <text>下一步</text>
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
         

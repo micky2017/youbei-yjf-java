@@ -125,7 +125,7 @@
             },1500)
         },
         login(){
-            if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
+            if(!(/^1[3456789]\d{9}$/.test(this.mobile))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
             }
@@ -188,7 +188,7 @@
                     // router.push({
                     //     uri:"/"
                     // })
-            if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+            if(!(/^1[3456789]\d{9}$/.test(this.sms_phone))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
             }
@@ -234,7 +234,7 @@
             })
         },
         verifyPhone(){
-            if(!(/^1[34578]\d{9}$/.test(this.sms_phone))){ 
+            if(!(/^1[3456789]\d{9}$/.test(this.sms_phone))){ 
                     this.showToast("手机号码有误，请重填");
                     return false; 
                 }else{

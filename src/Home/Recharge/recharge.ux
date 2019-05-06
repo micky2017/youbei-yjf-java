@@ -84,8 +84,8 @@
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
                     <div onclick="changeItem1(item)" elif="item.filedType == 1">
-                        <text if="billItem != null">{{billItem}}▼</text>
-                        <text name="{{item.nameType}}" if="billItem == null">请选择▼</text>
+                        <text if="billItem">{{billItem}}▼</text>
+                        <text name="{{item.nameType}}" if="!billItem">请选择▼</text>
                     </div>
                     <div elif="item.filedType == 2">
                         <input type="checkbox" name="" id="" />
@@ -113,14 +113,16 @@
                         <text >✕</text>
                     </div>
                 </div>
-                <div class="picker-option">
-                    <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
-                        <text>{{item}}</text>
-                        <!-- <input type="radio" name="picker"> -->
-                        <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
-                        <text else></text>
-                    </div>
-                </div>
+                <list class="picker-option">
+                    <list-item class="picker-option_body">
+                        <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
+                            <text>{{item}}</text>
+                            <!-- <input type="radio" name="picker"> -->
+                            <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
+                            <text else></text>
+                        </div>
+                    </list-item>
+                </list>
                  <div class="next-btn" @click="pickerSelect()">
                     <text>确定</text>
                 </div>
@@ -182,6 +184,7 @@
         },
         changeItem1(item){
             this.filedName = item.nameType
+            this.selectMoney = this.billItem
             this.rangeData = item.listBoxOptions.split('|');
             this.rangeDataValue = [];
             const cacheRange = [];
@@ -243,6 +246,7 @@
             this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
         },
         selectItem(){
+            this.selectMoney = this.itemName;
             this.rangeData = this.paymentItemList;
             this.pickerShow("缴费项目")
         },
