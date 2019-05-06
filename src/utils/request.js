@@ -57,7 +57,7 @@ const  requestHandle = (params)  => {
 
   export default {
     post: function(url, params) {
-      params.environment = "test"
+      // params.environment = "test"
       // params.environment = "yanzheng"
       return requestHandle({
         method: 'post',
@@ -67,7 +67,7 @@ const  requestHandle = (params)  => {
       })
     },
     get: function(url, params) {
-      params.environment = "test"
+      // params.environment = "test"
       // params.environment = "yanzheng"
       return requestHandle({
         method: 'get',
