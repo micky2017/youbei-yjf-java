@@ -120,7 +120,7 @@
         },
         nextTo(){
             this.inputFocus()
-            if(!(/^1[34578]\d{9}$/.test(this.mobile))){ 
+            if(!(/^1[3456789]\d{9}$/.test(this.mobile))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
             }

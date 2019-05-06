@@ -109,7 +109,7 @@
             // allowthirdpartycookies: true
             // })
             // return ;
-            if(!(/^1[34578]\d{9}$/.test(this.itemValue))){ 
+            if(!(/^1[3456789]\d{9}$/.test(this.itemValue))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
             }
