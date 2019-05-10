@@ -154,12 +154,13 @@
                 billAmount:billObj.payAmount,
                 queryAcqSsn:this.qryAcqSsn,
                 contractNo:billObj.contractNo,
-                customerName:billObj.customerName
+                customerName:billObj.customerName,
+                billQueryResultDataModel:JSON.stringify(billObj),
                 // filed:this.filed,
             }
             console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
-            APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":this.payAmount});
+            APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});
             fetch.fetch({
 				url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':${this.data.paymentItemName},"pay_amount":${this.payAmount}}&tag=云缴费`,
 			})

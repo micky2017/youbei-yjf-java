@@ -19,6 +19,7 @@
                 width: 100%;
                 text-align: right;
                 font-size: 28px;
+                margin-right: 10px;
             }
             >text{
                 font-size: 28px;
@@ -104,12 +105,18 @@
                 width: 100%;
                 flex-direction: column;
                 font-size: 38px;
-                .picker-item{
-                    padding: 20px;
-                    justify-content: space-between;
-                    height: 200px;
-                    >text{
-                        font-size: 38px;
+                overflow: auto;
+                .picker-option_body{
+                    height: auto;
+                    flex-direction: column;
+                    width:100%;
+                    .picker-item{
+                        padding: 20px;
+                        justify-content: space-between;
+                        height: 120px;
+                        >text{
+                            font-size: 38px;
+                        }
                     }
                 }
             }

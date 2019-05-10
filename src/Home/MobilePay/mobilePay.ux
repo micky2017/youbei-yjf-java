@@ -136,6 +136,7 @@
     import request from '../../utils/request'
     import storage from"@system.storage";
     import webview from '@system.webview'
+    import fetch from '@system.fetch'
     
     export default Custom_page ({
         protected: {
@@ -290,8 +291,13 @@
                     queryAcqSsn:'',
                     contractNo:'',
                     filed:this.filed || [],
-                    type:'1'
+                    type:'1',
+                    billQueryResultDataModel:JSON.stringify({})
                 }
+                APP_STATISTICS.track_event("pay_click",{'pay_type':`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)});
+                fetch.fetch({
+                    url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':手机充值${this.mobile},"pay_amount":${this.itemValue}}&tag=云缴费`,
+                })
                 request.post('pay/creat',params).then(res => {
                     console.log(res)
                     this.showLoading = false;

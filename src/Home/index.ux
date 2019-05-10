@@ -70,7 +70,7 @@
 										<div class="detail">
 											<text class="title">{{item.paymentItemName}}</text>
 											<text class="num">{{item.orderNo}}</text>
-											<!-- <text class="time">{{item.paymentDate}}</text> -->
+											<text class="time">{{item.paymentDate}}</text>
 										</div>
 										<text class="money">{{item.payAmount}} 元</text>
 									</div>

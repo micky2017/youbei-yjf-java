@@ -14,18 +14,24 @@
             </div>
         </div>
         <div if="inputValue" class="top-up_amount">
-            <text>输入充值金额</text>
-            <div>
-                <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" id="">
+            <text if="billObj.payAmount == '0'">输入充值金额</text>
+            <text if="billObj.payAmount != '0'">缴费金额</text>
+            <div if="billObj.payAmount == '0'">
+                <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
                 <text>元</text>
             </div>
+            <div if="billObj.payAmount != '0'">
+                <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
+                <text>元</text>
+                <!-- <text>{{payAmountValue}}元</text> -->
+            </div>
         </div>
-        <!-- <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
+        <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
             <div class="info-list_item" @click="pickerShow('选择账单')">
                 <text class="info-name">选择账单</text>
                 <text class="info-value">{{bill ? bill : '请选择'}}▼</text>
             </div>
-        </div> -->
+        </div>
         <Info infoList="{{info_list}}"></Info>
         <text class="invoice">
             {{data.printAddress}}
@@ -47,14 +53,16 @@
                         <text >✕</text>
                     </div>
                 </div>
-                <div class="picker-option">
-                    <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
-                        <text>{{item}}</text>
-                        <!-- <input type="radio" name="picker"> -->
-                        <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
-                        <text else></text>
-                    </div>
-                </div>
+                <list class="picker-option">
+                    <list-item class="picker-option_body">
+                        <div class="picker-item" for="{{item in rangeData}}" @click="changeMoney(item)">
+                            <text>{{item}}</text>
+                            <!-- <input type="radio" name="picker"> -->
+                            <text if="{{item == this.selectMoney}}" style="color:#9871c3">✔️</text>
+                            <text else></text>
+                        </div>
+                    </list-item>
+                </list>
                  <div class="next-btn" @click="pickerSelect()">
                     <text>确定</text>
                 </div>
@@ -88,6 +96,7 @@
             rangeData:[],
             picker:false,
             bill:'',
+            billObj:{},
             info_list: [],
             billQueryList:[],
             paymentList:[],
@@ -95,6 +104,7 @@
             fieldInfoKey:'',
         },
         setInfo(billObj){
+            console.log(this.data)
             const billDate = billObj.endDate ? `${billObj.beginDate}-${billObj.endDate}` : billObj.beginDate
             const newInfo = [{
                 info_name:this.itemValue.split(":")[0],
@@ -102,13 +112,41 @@
             },{
                 info_name:"用户名",
                 info_value:billObj.customerName,
-            },{
-                info_name:"账单金额",
-                info_value:billObj.payAmount/100 + '元',
-            },{
-                info_name:"账期",
-                info_value:billDate,
             }];
+            if(billObj.payAmount != '0' && billObj.payAmount){
+                newInfo.push({
+                    info_name:"账单金额",
+                    info_value:billObj.payAmount/100 + '元',
+                })
+            }
+            if(billObj.balance != '' && billObj.balance){
+                newInfo.push({
+                    info_name:"余额",
+                    info_value:billObj.balance/100 + '元',
+                })
+            }
+            if(this.data.item7){
+                newInfo.push({
+                    info_name:"用电地址",
+                    info_value:this.data.item7,
+                })
+            }
+            if(this.paymentItem.businessFlow== 2){
+                newInfo.push({
+                    info_name:"补加金额",
+                    info_value:this.data.item3,
+                },{
+                    info_name:"扣减金额",
+                    info_value:this.data.item4,
+                })
+            }
+            if(billObj.beginDate.indexOf("/") != -1 || billObj.endDate.indexOf("/") != -1){
+                newInfo.push({
+                    info_name:"账期",
+                    info_value:billDate,
+                })
+            }
+            
             if(this.fieldInfoKey != ''){
                 newInfo.push({
                     info_name:"账单说明",
@@ -145,6 +183,9 @@
             this.billQueryResultDataModelList = this.data.billQueryResultDataModelList
             const billObj = this.data.billQueryResultDataModelList[0];
             this.billObj = billObj;
+            if(billObj.payAmount && billObj.payAmount != '0'){
+                this.payAmountValue = billObj.payAmount /  100
+            }
             this.setInfo(billObj)
             // this.payAmountValue = billObj.payAmount /100;
             // 缴费
@@ -272,6 +313,9 @@
                         this.billObj = this.billQueryResultDataModelList[i]
                         console.log(i)
                         this.bill = this.billObj.beginDate
+                        if(this.billObj.payAmount && this.billObj.payAmount != '0'){
+                            this.payAmountValue = this.billObj.payAmount /  100
+                        }
                         this.setInfo(this.billObj)
                     }
                 }

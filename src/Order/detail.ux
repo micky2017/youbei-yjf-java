@@ -13,7 +13,7 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>交易时间：</text></div>
-                <div class="item-content"><text>{{detail.payDate}}</text></div>
+                <div class="item-content"><text>{{detail.paymentDate}}</text></div>
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费项目：</text></div>
@@ -87,14 +87,17 @@
             this.detail = JSON.parse(this.title);
             // 缴费记录
             console.log(this.detail)
-			// request.post('order/detail',{orderNo:this.title}).then(res => {
-            //     console.log(res)
-			// 	if(res.status == 200){
-            //         this.detail = res.data.detail
-            //         console.log(this.detail)
-			// 	}
-			// })
-            console.log(this.title)
+			request.post('order/detail',{orderNo:this.detail.orderNo,tranDate:this.detail.tranDate}).then(res => {
+                // console.log(res)
+				if(res.status == 200){
+                    res.data.detail.paymentType = this.detail.paymentType
+                    this.detail = res.data.detail
+                    // const detail = Object.assign(this.detail,res.data.detail)
+                    // this.detail = detail
+                    console.log(this.detail)
+				}
+			})
+            // console.log(this.title)
         },
 	})
 </script>

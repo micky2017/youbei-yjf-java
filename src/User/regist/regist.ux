@@ -150,13 +150,14 @@
                 password:this.password,
                 confirmPassword:this.confirm_password,
             }
-            APP_STATISTICS.track_event("regist_click",{'mobile':this.sms_phone});
-            fetch.fetch({
-                url:`${this.$app.$data.logUrl}?event=regist_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
-            })
+            
             request.post('user/reg',params).then(res => {
                 if(res.status == 200){
                     this.showToast("注册成功");
+                    APP_STATISTICS.track_event("regist_click",{'mobile':this.sms_phone});
+                    fetch.fetch({
+                        url:`${this.$app.$data.logUrl}?event=regist_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
+                    })
                     storage.set({
                         key: 'sid',
                         value: res.data.sessionId,
