@@ -1,6 +1,12 @@
 
 <template>
 	<div class="yjf-home">
+		<!-- <div if="showGuide" class="guide-page">
+		    <div class="guide-page_btn" >
+				<text onclick="skip()">跳过</text>
+			</div>
+			<image class="guide-page_image" src="./images/lanuch.png"></image>
+		</div> -->
 		<tabs @change="reTab">
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
@@ -172,6 +178,7 @@
 	export default Custom_page ({
 		protected: {
 			isLogin: false,
+			showGuide:true,
 			sid: '',
 			mobile: '',
 			refreshing:false,
@@ -191,6 +198,10 @@
 		private: {
 			detail: null,
 			tq: []
+		},
+		skip(){
+			console.log(111)
+			this.showGuide = false;
 		},
 		refreshingFn(){
 			console.log(1)
