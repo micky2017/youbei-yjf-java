@@ -69,6 +69,17 @@
         },
 
         onReady(){
+            storage.get({
+				key:"cityName",
+				success: (data) => {
+					console.log('cityName ===== '+data)
+					
+					// alert('cityName ===== '+data)
+					if(data && data != "" && data != null){
+                        this.city_name = data;
+                    }
+                }
+            })
             request.get("jiaofei/get-city-list",{}).then(res => {
                 if(res.status == 200){ 
                     // cityRenCategoryModelList  最近常用城市

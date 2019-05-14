@@ -62,8 +62,8 @@ const  requestHandle = (params)  => {
       // params.environment = "yanzheng"
       return requestHandle({
         method: 'post',
-        url: `https://api.ubaycn.com/${url}`,
-        // url: `http://192.168.199.119:7010/${url}`,
+        // url: `https://api.ubaycn.com/${url}`,
+        url: `http://192.168.1.111:7010/${url}`,
         data: params
       })
     },
@@ -73,8 +73,8 @@ const  requestHandle = (params)  => {
       // params.environment = "yanzheng"
       return requestHandle({
         method: 'get',
-        // url: queryString(`http://192.168.199.119:7010/${url}`, params),
-        url: queryString(`https://api.ubaycn.com/${url}`, params),
+        url: queryString(`http://192.168.1.111:7010/${url}`, params),
+        // url: queryString(`https://api.ubaycn.com/${url}`, params),
         data:{},
       })
     }

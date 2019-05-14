@@ -37,12 +37,11 @@
 						</div>
 					</div>
 					<list><list-item>
+					<!-- <div></div> -->
 					<div class="slider">
 						<swiper>
 							<img width="100%" src="../images/banner.jpg" alt="">
 							<!-- <image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image> -->
-							<!-- <image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image>
-							<image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image> -->
 						</swiper>
 					</div>
 					<div class="no-network" if="!netWork" >
@@ -66,8 +65,8 @@
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
-						<refresh onrefresh="refreshingTop" offset="10px" refreshing="{{refreshing}}" type="pulldown"></refresh>
-						<list onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
+						<!-- <refresh onrefresh="refreshingTop" offset="10px" refreshing="{{refreshing}}" type="pulldown"></refresh> -->
+						<list style="height:100%" onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
 						<list-item>
 							<div class="list">
 								<div class="item" @click="toDetail('Order',item)" for="item in orderPagingH5Model.recordsModel">
@@ -290,21 +289,23 @@
 			// 	}
 			// })
 			// 数据获取 sessionId
+			
 			storage.get({
 				key:"sid",
 				success: (data) => {
 					console.log('sid'+data)
 					this.sid = data;
+					
 					if(this.sid){
 						this.isLogin = true;
-						console.log(11)
+						
 						// 缴费记录
 						request.post('order/payment-records',{
 							pageSize:10,
 							currentPage:1
 						}).then(res => {
-							console.log(1111)
 							console.log(res)
+							
 							if(res.status == 200){
 								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
 								if(res.data.hkPaymentRecordsModel.recordsModel.length <this.pageSize){
