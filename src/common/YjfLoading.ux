@@ -1,7 +1,7 @@
 <template>
     <div class="loading-body">
         <div class="loading">
-            <img width="30%" src="../icon.png" alt="" srcset="">
+            <img width="30%" src="../icon1.png" alt="" srcset="">
             <img width="200" height="40" src="./images/loading.gif" alt="" srcset="">
             <!-- <text>正在加载</text> -->
         </div>

@@ -1,14 +1,15 @@
 {
   "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.2.3",
-  "versionCode": "7",
+  "versionName": "1.2.6",
+  "versionCode": "10",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
     { "name": "system.fetch" },
     { "name": "system.storage" },
     {"name": "system.device"},
+    { "name": "system.clipboard" },
     {"name": "system.network"},
     {"name": "system.webview"},
     {"name": "service.account"},
@@ -36,7 +37,10 @@
       "Order": {
         "component": "detail"
       },
-      "User/login": {
+      "User/SmsLogin": {
+        "component": "smsLogin"
+      },
+      "User/PwLogin": {
         "component": "login"
       },
       "User/regist": {

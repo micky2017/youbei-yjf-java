@@ -137,6 +137,7 @@
     import storage from"@system.storage";
     import webview from '@system.webview'
     import fetch from '@system.fetch'
+    import statis from '../../utils/statistics'
     
     export default Custom_page ({
         protected: {
@@ -169,9 +170,11 @@
             this.rangeData = item.rechargeLimit.split('|');
             this.billItem = this.rangeData[0];
             // this.itemValue = this.rangeData[0];
+            this.selectMoney = this.itemValue
             this.pickerShow("充值金额")
         },
         pickerShow(text){
+            
             this.pickerTitle = text;
             this.picker = !this.picker;
         },
@@ -216,6 +219,9 @@
         },
         selectItem(){
             this.rangeData = this.paymentItemList;
+            //  if(!this.selectMoney){
+            this.selectMoney = this.itemName
+            // }
             this.pickerShow("运营商")
         },
         // 显示toast
@@ -294,15 +300,14 @@
                     type:'1',
                     billQueryResultDataModel:JSON.stringify({})
                 }
-                APP_STATISTICS.track_event("pay_click",{'pay_type':`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)});
-                fetch.fetch({
-                    url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':手机充值${this.mobile},"pay_amount":${this.itemValue}}&tag=云缴费`,
-                })
+                statis.statis('pay_click',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
+                // params.testpackage = 'test'
                 request.post('pay/creat',params).then(res => {
                     console.log(res)
                     this.showLoading = false;
                     if(res.status == 200){
                         if(res.data.url){
+                            statis.statis('pay_click_success',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
                             webview.loadUrl({
                                 url: res.data.url,
                                 trustedurl:['https://test-api.ubaycn.com/pay/cb'],

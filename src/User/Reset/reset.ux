@@ -45,6 +45,7 @@
 <script>
 	import router from '@system.router'
     import request from '../../utils/request';
+    import statis from '../../utils/statistics.js';
 
 	export default Custom_page ({
 		protected: {
@@ -80,22 +81,27 @@
             this.$element('mobile').focus({focus:false})
             this.$element('code').focus({focus:false})
         },
+        // 匹配手机号并发送验证码
         verifyPhone(){
+            statis.statis('reset_code',{mobile:this.mobile},this)
             if(!(/^1[3456789]\d{9}$/.test(this.mobile))){ 
                     this.showToast("手机号码有误，请重填");
                     return false; 
                 }else{
                     request.post('user/sms',{mobile:this.mobile}).then((res) => {
                         this.showToast("验证码发送成功！");
+                        statis.statis('reset_code_success',{mobile:this.mobile},this)
                     }).catch(err => {
                         this.showToast("网络错误");
                     })
                     return true;
                 } 
         },
+        // 清空定时器
         onDestroy(){
             clearInterval(this.timer);
         },
+        // 倒计时
         countdown(){
             this.inputFocus()
             if(this.verifyPhone()){
@@ -118,6 +124,7 @@
             
             }
         },
+        // 验证验证码
         nextTo(){
             this.inputFocus()
             if(!(/^1[3456789]\d{9}$/.test(this.mobile))){ 

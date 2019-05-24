@@ -45,9 +45,9 @@ function createShortcut () {
   shortcut.hasInstalled({
     success: function (ret) {
       if (ret) {
-        prompt.showToast({
-          message: '已创建桌面图标'
-        })
+        // prompt.showToast({
+        //   message: '已创建桌面图标'
+        // })
       } else {
         shortcut.install({
           success: function () {

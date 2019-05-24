@@ -11,7 +11,7 @@
             <!-- <div class="explain-left">
                 <text>！</text>
             </div> -->
-            <div class="explain-right" >
+            <div class="explain-right">
                 <text>{{paymentItem.description}}</text>
                 <!-- <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
                 <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="payment-item_content">
                     <div>
-                        <input id="billKey" name="billKey" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                        <input  id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
                     </div>
                 </div>
             </div>
@@ -79,7 +79,8 @@
                 </div>
                 <div class="payment-item_content">
                     <div if="item.filedType == 0">
-                        <input id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
+                        <input if="item.priorLevel == 1" value="{{billKey}}" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
+                        <input if="item.priorLevel != 1" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
                         <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
                         <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
@@ -99,6 +100,17 @@
                 </div>
             </div>
         </div>
+        <!-- 是否显示历史户号 -->
+        <div class="history-billkey" if="billkeys.length > 0">
+            <div>
+            	<text>历史户号记录</text>
+                <div>
+                    <div @click="changeBillkey(item)" class="{{historyBillkey == item ? 'se-his' : 'nse-his'}}" for="{{item in billkeys}}">
+                        <text class="{{historyBillkey == item ? 'se-his_text' : 'nse-his_text'}}">{{item}}</text>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
@@ -110,7 +122,7 @@
                     <text></text>
                     <text>{{pickerTitle}}</text>
                     <div class="close-picker" @click="pickerShow('')">
-                        <text >✕</text>
+                        <text>✕</text>
                     </div>
                 </div>
                 <list class="picker-option">
@@ -123,7 +135,7 @@
                         </div>
                     </list-item>
                 </list>
-                 <div class="next-btn" @click="pickerSelect()">
+                <div class="next-btn" @click="pickerSelect()">
                     <text>确定</text>
                 </div>
             </div>
@@ -132,224 +144,339 @@
 </template>
 
 <style lang="less">
-    @import './recharge.less';
+@import "./recharge.less";
 </style>
 
 <script>
-    import router from '@system.router'
-    import request from '../../utils/request'
-    import storage from"@system.storage";
-    import _ from 'lodash'
-    export default Custom_page ({
-        protected: {
-            showLoading:false,
-            external:'',
-            picker:false,
-            show_toast:false,
-            pickerTitle:'',
-            toast_text:'',
-            itemName:'',
-            selectMoney:'',
-            billItem:null,
-            title:"",
-            type:"",
-            cityName:"",
-            payTimeTips:'',
-            paymentItemModelList:[],
-            listPageModelList:[],
-            paymentItemList:[],
-            cityModel:{},
-            paymentItem:{
-                queryPaymentBillParamModelList:[]
-            },
-            rangeData:[],
-            rangeDataValue:[],
-            itemValue:'',
-            filedName:'',
-            reqData:{
+import router from '@system.router'
+import request from '../../utils/request'
+import statis from '../../utils/statistics'
+import storage from "@system.storage";
+export default Custom_page({
+    protected: {
+        showLoading: false,
+        external: '',
+        picker: false,
+        show_toast: false,
+        pickerTitle: '',
+        toast_text: '',
+        itemName: '',
+        selectMoney: '',
+        billItem: null,
+        title: "",
+        type: "",
+        cityName: "",
+        payTimeTips: '',
+        paymentItemModelList: [],
+        listPageModelList: [],
+        paymentItemList: [],
+        cityModel: {},
+        paymentItem: {
+            queryPaymentBillParamModelList: []
+        },
+        rangeData: [],
+        rangeDataValue: [],
+        itemValue: '',
+        filedName: '',
+        billkeys:[],
+        historyBillkey:'',
+        billKey:'',
+        reqData: {
 
-            },
         },
-        private: {
-            
-        },
-        inputFocus(){
-            const list = this.paymentItem.queryPaymentBillParamModelList
-            for(let i = 0;i<list.length;i++){
-                if(this.$element(list[i].nameType)){
-                    this.$element(list[i].nameType).focus({focus:false})
-                }
-            }
-                
-        },
-        changeItem1(item){
-            this.filedName = item.nameType
-            this.selectMoney = this.billItem
-            this.rangeData = item.listBoxOptions.split('|');
-            this.rangeDataValue = [];
-            const cacheRange = [];
-            for(let i = 0;i<this.rangeData.length;i++){
-                const obj = this.rangeData[i].split("=");
-                cacheRange.push(obj[0])
-                this.rangeDataValue.push(obj[1])
-            }
-            this.rangeData = cacheRange;
-            this.billItem = this.rangeData[0];
-            this.pickerShow(item.name)
-        },
-        pickerShow(text){
-            this.inputFocus()
-            this.pickerTitle = text;
-            this.picker = !this.picker;
-        },
-        pickerSelect(){
-            if(this.pickerTitle == "缴费项目"){
-                this.itemName = this.selectMoney;
-                for(let i = 0;i< this.paymentItemList.length;i++){
-                    if(this.paymentItemList[i] == this.selectMoney){
-                        this.paymentItem = this.paymentItemModelList[i]
-                        this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
+    },
+    private: {
 
-                    }
-                }
-            }else{
-                this.billItem = this.selectMoney;
-                for(let i = 0;i<this.rangeData.length;i++){
-                    if(this.billItem == this.rangeData[i]){
-                        this.reqData[this.filedName] = this.rangeDataValue[i];
-                    }
-                }
-            }        
-            this.picker = false;
-        },
-        changeMoney(value){
-            this.selectMoney = value;
-        },
-        onReady() {
-            // console.log(_.debounce)
-            storage.get({
-				key:"cityName",
-				success: (data) => {
-					if(data){
-                        this.cityName = data;
-                        this.getTypeDetail()
-					}
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-            
-        },
-        changeItem(item,response){
-            this.reqData[item.nameType] = response ? response.value : this.itemValue;
-            this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
-        },
-        selectItem(){
-            this.selectMoney = this.itemName;
-            this.rangeData = this.paymentItemList;
-            this.pickerShow("缴费项目")
-        },
-        // 显示toast
-        showToast(text,back){
-            this.toast_text = text;
-            this.show_toast = true;
-            setTimeout(() => {
-                this.show_toast = false;
-                if(back){
-                    router.back()
-                }
-            },1500)
-        },
-        getTypeDetail(){
-            // 缴费项目信息
-            request.post('jiaofei/pay-type-detail',{
-                cityName:this.cityName,
-                type:this.type,
-            }).then(res => {
-                if(res.status == 200){
-                    const item = res.data.paymentItemPagingModel;
-                    this.paymentItemList = res.data.paymentItemList;
-                    this.rangeData = this.paymentItemList;
-                    this.itemName = this.paymentItemList[0];
-                    this.paymentItemModelList = item.paymentItemModelList;
-                    this.listPageModelList = item.listPageModelList;
-                    this.cityModel = item.cityModel;
-                    this.paymentItem = this.paymentItemModelList[0];
+    },
+    inputFocus() {
+        const list = this.paymentItem.queryPaymentBillParamModelList
+        for (let i = 0; i < list.length; i++) {
+            if (this.$element(list[i].nameType)) {
+                this.$element(list[i].nameType).focus({ focus: false })
+            }
+        }
+
+    },
+    // picker框数据处理
+    changeItem1(item) {
+        this.filedName = item.nameType
+        this.selectMoney = this.billItem
+        this.rangeData = item.listBoxOptions.split('|');
+        this.rangeDataValue = [];
+        const cacheRange = [];
+        for (let i = 0; i < this.rangeData.length; i++) {
+            const obj = this.rangeData[i].split("=");
+            cacheRange.push(obj[0])
+            this.rangeDataValue.push(obj[1])
+        }
+        this.rangeData = cacheRange;
+        this.billItem = this.rangeData[0];
+        this.pickerShow(item.name)
+    },
+    // 显示picker选择框
+    pickerShow(text) {
+        this.inputFocus()
+        this.pickerTitle = text;
+        this.picker = !this.picker;
+    },
+    // 选择框确定选择
+    pickerSelect() {
+        if (this.pickerTitle == "缴费项目") {
+            this.itemName = this.selectMoney;
+            for (let i = 0; i < this.paymentItemList.length; i++) {
+                if (this.paymentItemList[i] == this.selectMoney) {
+                    this.paymentItem = this.paymentItemModelList[i]
                     this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
-                }else{
-                    this.showToast(res.msg,"back")
-                }
-            })
-        },
-        onInit() {
-            
-        },
-        toInspect(){
-            this.inputFocus()
-            const list = this.paymentItem.queryPaymentBillParamModelList
-            for(let i = 0;i<list.length;i++){
-                if(list[i].isNull == 0){
-                    if(!this.reqData[list[i].nameType]){
-                        this.showToast('您有信息未填写');
-                        return;
-                    }
+                    this.getHistoryBillkey();
                 }
             }
-            this.showLoading = true;
+        } else {
+            this.billItem = this.selectMoney;
+            for (let i = 0; i < this.rangeData.length; i++) {
+                if (this.billItem == this.rangeData[i]) {
+                    this.reqData[this.filedName] = this.rangeDataValue[i];
+                }
+            }
+        }
+        this.picker = false;
+    },
+    // 选择框切换
+    changeMoney(value) {
+        this.selectMoney = value;
+    },
+    onReady() {
+        // console.log(_.debounce)
+        storage.get({
+            key: "cityName",
+            success: (data) => {
+                if (data) {
+                    this.cityName = data;
+                    this.getTypeDetail()
+                }
+            },
+            fail: function (data, code) {
+                console.log(`handling fail, code = ${code}`)
+            }
+        })
 
-            // 查询账单
-            const params = {
-                itemCode:this.paymentItem.paymentItemId,
-                flag:1,
-            }
-            if(this.paymentItem.businessFlow== 2){
-                params.type = 1
+    },
+    // 输入框监听
+    changeItem(item, response) {
+        this.reqData[item.nameType] = response ? response.value : this.itemValue;
+        if(item.name == '客户编号'){
+            this.billKey = response ? response.value : this.itemValue;
+            const str = this.deleteSpace(this.billKey)
+            if(this.billkeys.indexOf(str) != -1){
+                this.changeBillkey(str)
             }else{
-                params.type = 2
-            }
-            Object.assign(params,this.reqData);
-            console.log(this.reqData)
-            // 查缴
-            request.post('jiaofei/generate-bill',params).then(res => {
-                this.showLoading = false;
-                if(res.status == 200){
-                    if(res.data.msg.indexOf("成功") != -1){
-                        router.push({
-                            uri: "Home/Inspect",
-                            params:{
-                                paymentItem:this.paymentItem,
-                                itemValue:this.itemValue,
-                                reqData:this.reqData,
-                                data:res.data.billQueryResultModel,
-                                qryAcqSsn:res.data.qryAcqSsn,
-                            }
-                        })
-                    }else{
-                        this.showToast(res.data.msg)
-                    }
-                    
-                }else{
-                        this.showToast(res.data.msg)
+                if(this.historyBillkey != str){
+                    this.historyBillkey = ""
                 }
-            }).catch(err => {
-                this.showLoading = false;
-                this.showToast("网络错误")
-            })
-
-            // if(this.itemValue){
-                // router.push({
-                //     uri: "Home/Inspect",
-                //     params:{
-                //         paymentItem:this.paymentItem,
-                //         itemValue:this.itemValue,
-                //         reqData:this.reqData
-                //     }
-                // })
-            // }else{
-            //     this.showToast('您有信息未填写')
-            // }
+            }
             
         }
-    })
+        
+        this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
+    },
+    // 去空格操作
+    deleteSpace(str){
+        str = str.replace(/^\s*|\s*$/g,"");
+        return str;
+    },
+    // 缴费项目弹出选择框
+    selectItem() {
+        this.selectMoney = this.itemName;
+        this.rangeData = this.paymentItemList;
+        this.pickerShow("缴费项目")
+    },
+    // 显示toast
+    showToast(text, back) {
+        this.toast_text = text;
+        this.show_toast = true;
+        setTimeout(() => {
+            this.show_toast = false;
+            if (back) {
+                router.back()
+            }
+        }, 1500)
+    },
+    // 获取项目信息
+    getTypeDetail() {
+        // 缴费项目信息
+        request.post('jiaofei/pay-type-detail', {
+            cityName: this.cityName,
+            type: this.type,
+        }).then(res => {
+            if (res.status == 200) {
+                const item = res.data.paymentItemPagingModel;
+                this.paymentItemList = res.data.paymentItemList;
+                this.rangeData = this.paymentItemList;
+                this.itemName = this.paymentItemList[0];
+                this.paymentItemModelList = item.paymentItemModelList;
+                this.listPageModelList = item.listPageModelList;
+                this.cityModel = item.cityModel;
+                this.paymentItem = this.paymentItemModelList[0];
+                this.getHistoryBillkey();
+                this.payTimeTips = this.paymentItem.createPaymentBillParamsModelList[0].payTimeTips;
+            } else {
+                this.showToast(res.msg, "back")
+            }
+        })
+    },
+    onInit() {
+        
+    },
+    // 获取历史记录
+    getHistoryBillkey(){
+        storage.get({
+            key: 'billkey',
+            success: (data) => {
+                if(data){
+                    if(data.indexOf(this.paymentItem.paymentItemName) != -1){
+                        data = JSON.parse(data);
+                        for(let i = 0;i<data.length;i++){
+                            if(data[i].name == this.paymentItem.paymentItemName){
+                                this.billkeys = data[i].billkey
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        })
+    },
+    changeBillkey(billkey){
+        this.historyBillkey =  billkey;
+        this.billKey = billkey;
+    },
+    // 缓存账户号
+    setBillkey() {
+        storage.get({
+            key: 'billkey',
+            success: (data) => {
+                if (data) {
+                    if (data.indexOf(this.paymentItem.paymentItemName) != -1) {
+                        data = JSON.parse(data)
+                        for (let i = 0; i < data.length; i++) {
+                            if (data[i].name == this.paymentItem.paymentItemName) {
+                                const billKey = this.deleteSpace(this.billKey)
+                                if(!(data[i].billkey.indexOf(billKey) != -1)){
+                                    // data[i].billkey.push(this.itemValue.split(':')[1])
+                                    if(data[i].billkey.length >= 3){
+                                        data[i].billkey.shift()
+                                        data[i].billkey.push(billKey)
+                                    }else{
+                                        data[i].billkey.push(billKey)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        data = JSON.parse(data)
+                        data.push({
+                            name: this.paymentItem.paymentItemName,
+                            billkey: [this.itemValue.split(':')[1]]
+                        })
+                    }
+                    storage.set({
+                        key: 'billkey',
+                        value: data
+                    })
+                } else {
+                    const params = [{
+                        name: this.paymentItem.paymentItemName,
+                        billkey: [this.itemValue.split(':')[1]]
+                    }]
+                    storage.set({
+                        key: 'billkey',
+                        value: params
+                    })
+                }
+            }
+        })
+    },
+    // 查询缴费账单
+    toInspect() {
+        this.inputFocus()
+        statis.statis('search_bill_click', {}, this)
+        const list = this.paymentItem.queryPaymentBillParamModelList
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].isNull == 0) {
+                if (!this.reqData[list[i].nameType]) {
+                    this.showToast('您有信息未填写');
+                    return;
+                }
+            }
+        }
+        this.showLoading = true;
+        // 查询账单
+        const params = {
+            itemCode: this.paymentItem.paymentItemId,
+            flag: 1,
+        }
+        if (this.paymentItem.businessFlow == 2) {
+            params.type = 1
+        } else {
+            params.type = 2
+        }
+        // 去除前后空格
+        for (const key in this.reqData) {
+            if (this.reqData.hasOwnProperty(key)) {
+                const element = this.reqData[key];
+                this.reqData[key] = this.deleteSpace(element)
+            }
+        }
+        Object.assign(params, this.reqData);
+        // 查缴
+        request.post('jiaofei/generate-bill', params).then(res => {
+            this.showLoading = false;
+            if (res.status == 200) {
+                if (res.data.msg.indexOf("成功") != -1) {
+
+                    // 账单打点
+                    // const 
+
+                    const statisParams = {
+                        paymentName: this.paymentItem.paymentItemName,
+                    }
+                    Object.assign(statisParams,this.reqData)
+                    statis.statis('search_bill', statisParams, this)
+                    this.setBillkey();
+                    router.push({
+                        uri: "Home/Inspect",
+                        params: {
+                            paymentItem: this.paymentItem,
+                            itemValue: this.deleteSpace(this.itemValue),
+                            reqData: this.reqData,
+                            data: res.data.billQueryResultModel,
+                            qryAcqSsn: res.data.qryAcqSsn,
+                        }
+                    })
+                } else {
+                    this.showToast(res.data.msg)
+                }
+
+            } else {
+                this.showToast(res.data.msg)
+            }
+        }).catch(err => {
+            this.showLoading = false;
+            this.showToast("网络错误")
+        })
+
+        // if(this.itemValue){
+        // router.push({
+        //     uri: "Home/Inspect",
+        //     params:{
+        //         paymentItem:this.paymentItem,
+        //         itemValue:this.itemValue,
+        //         reqData:this.reqData
+        //     }
+        // })
+        // }else{
+        //     this.showToast('您有信息未填写')
+        // }
+
+    }
+})
 </script>

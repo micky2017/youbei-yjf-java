@@ -21,7 +21,6 @@
   "dependencies": {
     "babel-loader": "^8.0.5",
     "eslint": "^5.15.3",
-    "lodash": "^4.17.11",
     "webpack": "^4.29.6"
   }
 }

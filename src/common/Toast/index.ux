@@ -13,5 +13,15 @@
 <script>
     export default {
         props: ['text'],
+        onInit() {
+            if(this.text.indexOf('|') != -1){
+                const strArr = this.text.split('|');
+                this.text = strArr[1]
+            }
+        },
+        onShow() {
+            console.log(111)
+            console.log(this.props.text)
+        },
     }
 </script>

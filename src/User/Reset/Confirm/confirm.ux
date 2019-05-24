@@ -25,7 +25,7 @@
         </div>
 		
         <div class="btn" >
-            <input type="button" value="修改登录密码" @click="goHome()" />
+            <input type="button" value="修改登录密码" @click="resetPwd()" />
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
@@ -39,6 +39,7 @@
 
 	import router from '@system.router'
     import request from '../../../utils/request';
+    import statis from '../../../utils/statistics.js';
     import storage from"@system.storage";
     import fetch from '@system.fetch'
 
@@ -73,7 +74,8 @@
                 this.show_toast = false;
             },1500)
         },
-        goHome(){
+        // 重置密码
+        resetPwd(){
             this.inputFcous()
             if(this.password == ""){
                 this.showToast("密码不能为空")
@@ -87,13 +89,15 @@
                 mobile:this.mobile,
                 password:this.password
             }
-            APP_STATISTICS.track_event("reset_password_click",{'mobile':this.mobile});
-            fetch.fetch({
-                url:`${this.$app.$data.logUrl}?event=reset_password_click&data={'mobile':${this.mobile}}&tag=云缴费`,
-            })
+            statis.statis('reset_password_click',{'mobile':this.mobile},this)
+            // APP_STATISTICS.track_event("reset_password_click",{'mobile':this.mobile});
+            // fetch.fetch({
+            //     url:`${this.$app.$data.logUrl}?event=reset_password_click&data={'mobile':${this.mobile}}&tag=云缴费`,
+            // })
             request.post('user/repassword',params).then((res) => {
                     if(res.status == 200){
                         this.showToast("密码修改成功");
+                        statis.statis('reset_password_click_success',{'mobile':this.mobile},this)
                         storage.delete({
                             key: 'sid'
                         })

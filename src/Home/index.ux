@@ -1,101 +1,144 @@
 
 <template>
 	<div class="yjf-home">
-		<!-- <div if="showGuide" class="guide-page">
-		    <div class="guide-page_btn" >
-				<text onclick="skip()">跳过</text>
+		<div if="showGuide" class="guide-page">
+			<!-- <div if="showGuide" class="guide-page_btn" >
+				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
+			</div> -->
+			<div class="go-app" if="showGuide && swIndex == 2">
+				<text onclick="skip()">立即体验</text>
 			</div>
-			<image class="guide-page_image" src="./images/lanuch.png"></image>
-		</div> -->
-		<tabs @change="reTab">
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide">
+				<image class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
+					<!-- <image class="guide-page_image" width="100%" src="./images/guide_page_2.png" alt="">
+				<image class="guide-page_image" width="100%" src="./images/guide_page_3.png" alt=""> -->
+			</swiper>
+		</div>
+		<tabs index="{{tabIndex}}" @change="reTab">
+		<!-- 主页 -->
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
 					<div class="title-bar">
-						<div class="city" @click="toDetail('Home/CityList')"><text>{{cityName}}&nbsp;▼</text></div>
-						<div class="logo">
-							<image width="220" src="images/logo.png"></image>
+						<div class="city" @click="toDetail('Home/CityList')">
+							<text>{{cityName}}</text>
+							<text>▼</text>
 						</div>
-						<div class="login" if="{{!isLogin}}" @click="toDetail('User/login')">
+						<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
 							<div class="inner">
-								<div class="icon">
-									<image height="50" src="images/loginx.png"></image>
-								</div>
 								<div class="text right-btn">
 									<text>登录</text>
 								</div>
 							</div>
 						</div>
-						<div class="login" if="{{isLogin}}" onclick="logout">
-							<div class="inner">
-								<div class="icon">
-									<image height="50" src="images/loginx.png"></image>
-								</div>
-								<div class="text">
-									<text>退出</text>
-								</div>
-							</div>
-						</div>
 					</div>
-					<list><list-item>
-					<!-- <div></div> -->
-					<div class="slider">
-						<swiper>
-							<img width="100%" src="../images/banner.jpg" alt="">
-							<!-- <image width="100%" src="https://cdn.lcyff.com/upload/images/2018-11-19/2ef7be4143d1256313ae7bd2fb4c3679.jpg?x-oss-process=image/resize,m_fill,h_450,w_750"></image> -->
+					<!-- 常用缴费 -->
+					<div class="common-body">
+						<swiper class="common-swiper" indicator-selected-color="#9A70C2" >
+							<image src="{{item}}" resize-mode="contain" for="item in bannerList" alt=""></image>
 						</swiper>
-					</div>
-					<div class="no-network" if="!netWork" >
-						<text>世界上最远的距离是没有网络</text>
-					</div>
-					<div class="grids">
-						<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type)">
-							<div class="icon">
-								<image src="{{$item.icon}}"></image>
-							</div>
-							<div class="text">
-								<text>{{$item.typeName}}</text>
+						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
+						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
+						<div class="common-content">
+							<text class="common-content_title">常用缴费</text>
+							<div class="common-content_body">
+								<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
+									<div class="icon">
+										<image resize-mode="contain" src="{{$item.icon}}"></image>
+									</div>
+									<div class="text">
+										<text>{{$item.typeName}}</text>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					</list-item></list>
+					<text class="fast-title">便捷缴费</text>
+					<!-- 缴费类别 -->
+					<list>
+						<list-item>
+							
+							<div class="no-network" if="!netWork">
+								<text>世界上最远的距离是没有网络</text>
+							</div>
+							<div class="grids">
+								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type)">
+									<div class="icon">
+										<image resize-mode="contain" src="{{$item.icon}}"></image>
+									</div>
+									<div class="text">
+										<text>{{$item.typeName}}</text>
+									</div>
+								</div>
+							</div>
+						</list-item>
+					</list>
 				</div>
-				
+				<!-- 缴费记录 -->
 				<div class="tab-content-section">
 					<div class="order">
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
-						<!-- <refresh onrefresh="refreshingTop" offset="10px" refreshing="{{refreshing}}" type="pulldown"></refresh> -->
-						<list style="height:100%" onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
-						<list-item>
-							<div class="list">
-								<div class="item" @click="toDetail('Order',item)" for="item in orderPagingH5Model.recordsModel">
-									<div class="inner">
-										<image height="30" src="{{item.pictureUrl}}"></image>
-										<div class="detail">
-											<text class="title">{{item.paymentItemName}}</text>
-											<text class="num">{{item.orderNo}}</text>
-											<text class="time">{{item.paymentDate}}</text>
-										</div>
-										<text class="money">{{item.payAmount}} 元</text>
+						<!-- 无缴费记录时 -->
+						<div class="no-records_body" if="orderPagingH5Model.recordsModel.length == 0">
+							<div if="{{!isLogin}}" @click="toDetail('User/SmsLogin')" class="no-records_title">
+								<div><text style="color:#9A70C2;font-weight:bold;">登录</text><text>后可查看您的缴费记录呦</text></div>
+							</div>
+							<div if="{{isLogin}}" class="no-records_title">
+								<text>暂无记录</text>
+							</div>
+							<div class="pay-type_body">
+								<div class="select-pay_type">
+									<text class="select-city" @click="orderToDetail()">{{cityName}}&nbsp;&nbsp;▼</text>
+									<text class="pay-type_title">快速缴费</text>
+								</div>
+
+							</div>
+							<div class="grids">
+								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'fast')">
+									<div class="icon">
+										<image resize-mode="contain" src="{{$item.icon}}"></image>
+									</div>
+									<div class="text">
+										<text>{{$item.typeName}}</text>
 									</div>
 								</div>
-								
 							</div>
-						</list-item>
-							<list-item type="loadStatus" class="load-status">
-								<progress type="circular" show="{{hasMoreData}}"></progress>
-								<text show="{{hasMoreData}}">加载更多</text>
-								<text show="{{!hasMoreData}}">没有更多了~</text>
-							</list-item>
-						</list>
+						</div>
+						<!-- 缴费记录列表 -->
+						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color	= "#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
+							<list if="orderPagingH5Model.recordsModel.length > 0" style="height:100%" onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
+								<list-item>
+									<div class="list">
+										<div class="item" @click="toDetail('Order',item)" for="item in orderPagingH5Model.recordsModel">
+											<div class="inner">
+												<image object-fit="contain" resize-mode="contain" src="{{item.pictureUrl}}"></image>
+												<div class="detail">
+													<text class="title">{{item.paymentItemName}}</text>
+													<text class="num">{{item.orderNo}}</text>
+													<text class="time">{{item.paymentDate}}</text>
+												</div>
+												<text class="money">{{item.payAmount}} 元</text>
+											</div>
+										</div>
+
+									</div>
+								</list-item>
+								<list-item type="loadStatus" class="load-status">
+									<progress type="circular" show="{{hasMoreData}}"></progress>
+									<text show="{{hasMoreData}}">加载更多</text>
+									<text show="{{!hasMoreData}}">没有更多了~</text>
+								</list-item>
+							</list>
+						</refresh>
 					</div>
 				</div>
+				<!-- 我的 -->
 				<div class="tab-content-section user">
 					<div class="user-header">
 						<div class="title"><text>我的</text></div>
-						<div class="login" if="{{!isLogin}}" @click="toDetail('User/login')">
-							<image width="120" src="images/header_icon.png"></image>
+						<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
+							<image object-fit="contain" resize-mode="contain"  width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
 						</div>
 						<div class="login" if="{{isLogin}}">
@@ -103,33 +146,46 @@
 							<text>{{mobile}}</text>
 						</div>
 					</div>
-					<list><list-item>
-					<div class="list">
-						<div class="item" @click="call">
-							<div class="inner">
-								<image height="30" src="./images/kefu.png"></image>
-								<text>客服电话</text>
+					<list>
+						<list-item>
+							<div class="list">
+								<div class="item" @click="copyWx">
+									<div class="inner">
+										<image height="30" src="./images/feedback.png"></image>
+										<text>反馈建议</text>
+										<div class="inner-body">
+											<text class="inner-body_title">微信公众号 ubaycn</text>
+											<text class="inner-body_pleacehoder">真诚期待您的建议</text>
+										</div>
+									</div>
+								</div>
+								<div class="item" @click="call">
+									<div class="inner inner-arrow">
+										<image height="30" src="./images/kefu.png"></image>
+										<text>客服电话</text>
+									</div>
+								</div>
+								<div class="item" @click="toDetail('User/About')">
+									<div class="inner inner-arrow">
+										<image height="30" src="./images/about.png"></image>
+										<text>关于云缴费</text>
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="item" @click="toDetail('User/About')">
-							<div class="inner">
-								<image height="30" src="./images/about.png"></image>
-								<text>关于云缴费</text>
+							<div class="logout-body" if="{{isLogin}}" @click="logout">
+								<text>退出登录</text>
 							</div>
-						</div>
-					</div>
-					<div class="logout-body" if="{{isLogin}}" @click="logout">
-						<text>退出登录</text>
-					</div>
-					</list-item></list>
-					
+						</list-item>
+					</list>
+
 				</div>
 			</tab-content>
+			<!-- footbar -->
 			<tab-bar class="tab-bar">
 				<div class="icon">
 					<div class="image">
-						<image if="{{tab=='i0'}}" src="./images/home_active.png"></image>	
-						<image else src="./images/home.png"></image>	
+						<image if="{{tab=='i0'}}" src="./images/home_active.png"></image>
+						<image else src="./images/home.png"></image>
 					</div>
 					<div class="text">
 						<text class="{{tab=='i0'?'active':''}}">首页</text>
@@ -138,7 +194,7 @@
 				<div class="icon">
 					<div class="image">
 						<image if="{{tab=='i1'}}" src="./images/order_active.png"></image>
-						<image else src="./images/order.png"></image>	
+						<image else src="./images/order.png"></image>
 					</div>
 					<div class="text">
 						<text class="{{tab=='i1'?'active':''}}">缴费记录</text>
@@ -146,7 +202,7 @@
 				</div>
 				<div class="icon">
 					<div class="image">
-						<image if="{{tab=='i2'}}" src="./images/me_active.png"></image>	
+						<image if="{{tab=='i2'}}" src="./images/me_active.png"></image>
 						<image else src="./images/me.png"></image>
 					</div>
 					<div class="text">
@@ -159,407 +215,514 @@
 </template>
 
 <style lang="less">
-	@import './index.less';
+@import "./index.less";
 </style>
 
 <script>
-	import router from '@system.router';
-    import request from '../utils/request'
-	import getUserInfo from '../common/getuserid.js';
-	import geolocation from '@system.geolocation';
-	import storage from"@system.storage";
-    import webview from '@system.webview'
+import router from '@system.router';
+import request from '../utils/request'
+import statis from '../utils/statistics'
+import getUserInfo from '../common/getuserid.js';
+import geolocation from '@system.geolocation';
+import util from '../util.js';
+import storage from "@system.storage";
+import webview from '@system.webview'
+import clipboard from '@system.clipboard'
+const fetch = require('@system.fetch');
+const prompt = require('@system.prompt');
+// const device = require('@system.device');
 
-	const fetch = require('@system.fetch');
-	const prompt = require('@system.prompt');
-	const device = require('@system.device');
-
-	export default Custom_page ({
-		protected: {
-			isLogin: false,
-			showGuide:true,
-			sid: '',
-			mobile: '',
-			refreshing:false,
-			tab: 'i0',
-			pageSize:10,
-			currentPage:1,
-			cityName:"北京市",
-            cityId:"101701",
-			hasMoreData:false,
-			netWork:true,
-			cebPaymentCategoriesList: [],
-			orderPagingH5Model:{
-				pageInfo: {},
-				recordsModel:[]
+export default Custom_page({
+	protected: {
+		isLogin: false,
+		showGuide: false,
+		sid: '',
+		tabIndex: 0,
+		guidePageList: [],
+		guideSecond: 3,
+		mobile: '',
+		refreshing: false,
+		tab: 'i0',
+		pageSize: 10,
+		currentPage: 1,
+		cityName: "北京市",
+		cityId: "101701",
+		hasMoreData: false,
+		netWork: true,
+		timer: '',
+		swIndex: 0,
+		bannerList:['./images/home-banner.jpg'],
+		cebPaymentCategoriesList: [],
+		orderPagingH5Model: {
+			pageInfo: {},
+			recordsModel: []
+		}
+	},
+	private: {
+		detail: null,
+		tq: []
+	},
+	onInit() {
+		// banner
+		this.getBanner();
+		// 引导页
+		storage.get({
+			key:'showGuide',
+			success:(data) => {
+				if(data){
+					this.skip()
+				}else{
+					this.getGuidePage()
+					this.showGuide = true;
+					util.createShortcut();
+					storage.set({
+						key:'showGuide',
+						value:'true'
+					})
+				}
 			}
-		},
-		private: {
-			detail: null,
-			tq: []
-		},
-		skip(){
-			console.log(111)
-			this.showGuide = false;
-		},
-		refreshingFn(){
-			console.log(1)
-			this.refreshing = true;
-		},
-		refreshingTop(){
-			console.log(2)
-		},
-		onShow(){
-			router.clear()
-            // APP_STATISTICS.page_show( this );//在onShow方法的第一行加入此代码
-            // //App业务代码
-        },
-        // onHide() {
-        //     APP_STATISTICS.page_hide( this ); //在onHide方法的第一行加入此代码
-        //     //...业务代码
-        // } ,
-		call(){
-			prompt.showDialog({
-				title: '拨打云缴费客服电话',
-				message: '4009095595',
-				buttons: [
-					{
-						text: '拨打',
-						color: '#996fc5'
-					},
-					{
-						text: '取消',
-						color: '#996fc5'
-					}
-				],
-				success: function(data) {
-					if(data.index == 0){
-						
-						router.push({
-							uri: 'tel://4009095595'
-						})
-					}
-					if(data.index == 1){
-						// prompt.showToast({
-						// 	message: '不打'
-						// });
-					}
-				},
-				cancel: function() {
-					prompt.showToast({
-						message: '失败'
-					});
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`);
+		})
+
+	},
+	onDestroy() {
+		if (this.timer) {
+			clearInterval(this.timer)
+		}
+	},
+	// banner
+	getBanner(){
+		request.post('jiaofei/get-banner-list').then(res => {
+			if (res.status == 200) {
+				if (res.data.bannerList.length > 0) {
+					this.bannerList = res.data.bannerList;
 				}
-			});
-		},
-		reTab(tab){
-			let arr = ['主页','缴费记录','我的']
-			let me = this;
-			me.tab = 'i' + tab.index;
-			fetch.fetch({
-				url:`${this.$app.$data.logUrl}?event=tab_change_click&data={tabName:${arr[tab.index]}}&tag=云缴费`,
+			} 
+		})
+	},
+	// 引导页切换
+	lanuchChange(swiper) {
+		this.swIndex = swiper.index;
+	},
+	skip() {
+		this.showGuide = false;
+		storage.set({
+			key: 'showGuide',
+			value: 'true'
+		})
+	},
+	// 触发下拉刷新
+	refreshingFn() {
+		this.refreshing = true;
+	},
+	// 下拉刷新事件
+	refreshingTop(e) {
+		this.refreshing = e.refreshing
+		this.currentPage = 1;
+		// 缴费记录
+		request.post('order/payment-records', {
+			pageSize: 10,
+			currentPage: 1
+		}).then(res => {
+			setTimeout(() => {
+				this.refreshing = false
 			})
-			APP_STATISTICS.track_event("tab_change_click",{'tabName':arr[tab.index]});
-		},
-		tip(){
-			prompt.showToast({
-				message: 'message'
-			});
-		},
-		onReady() {
-			// 缴费类别
-			request.post('jiaofei/pay-type-lst',{cityName:'北京市'}).then(res => {
-				// console.log(res)
-				if(res.status == 200){
-					this.cebPaymentCategoriesList = res.data;
+			if (res.status == 200) {
+				this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+				if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+					this.hasMoreData = false;
 				}
-			}).catch(err => {
-				this.netWork = false
+			} else {
+				this.hasMoreData = false;
+			}
+		}).catch(err => {
+			setTimeout(() => {
+				this.refreshing = false
 			})
-			// // 获取设备标识
-			// device.getDeviceId({
-			// 	success: function(data) {
-			// 		console.log(`handling success: ${data.deviceId}`)
-			// 	},
-			// 	fail: function(data, code) {
-			// 		console.log(`handling fail, code = ${code}`)
-			// 	}
-			// })
-			// 数据获取 sessionId
-			
-			storage.get({
-				key:"sid",
-				success: (data) => {
-					console.log('sid'+data)
-					this.sid = data;
-					
-					if(this.sid){
-						this.isLogin = true;
-						
-						// 缴费记录
-						request.post('order/payment-records',{
-							pageSize:10,
-							currentPage:1
-						}).then(res => {
-							console.log(res)
-							
-							if(res.status == 200){
-								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-								if(res.data.hkPaymentRecordsModel.recordsModel.length <this.pageSize){
-									this.hasMoreData = false;
-								}
-							}else{
+			this.hasMoreData = false;
+		})
+	},
+	onShow() {
+		router.clear()
+	},
+	//打电话
+	call() {
+		prompt.showDialog({
+			title: '拨打云缴费客服电话',
+			message: '4009095595',
+			buttons: [
+				{
+					text: '拨打',
+					color: '#996fc5'
+				},
+				{
+					text: '取消',
+					color: '#996fc5'
+				}
+			],
+			success: function (data) {
+				if (data.index == 0) {
+
+					router.push({
+						uri: 'tel://4009095595'
+					})
+				}
+				if (data.index == 1) {
+					// prompt.showToast({
+					// 	message: '不打'
+					// });
+				}
+			},
+			cancel: function () {
+				prompt.showToast({
+					message: '失败'
+				});
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`);
+			}
+		});
+	},
+	// footbar切换
+	reTab(tab) {
+		let arr = ['主页', '缴费记录', '我的']
+		let me = this;
+		me.tab = 'i' + tab.index;
+		this.tabIndex = tab.index;
+		// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
+		statis.statis('tab_change_click',{tabName: arr[tab.index]},this)
+	},
+	tip() {
+		prompt.showToast({
+			message: 'message'
+		});
+	},
+	// 获取引导页
+	getGuidePage() {
+		request.post('jiaofei/get-guide-page').then(res => {
+			if (res.status == 200) {
+				if (res.data.guidePageList.length > 0) {
+					this.guidePageList = res.data.guidePageList;
+				} else {
+					this.skip();
+				}
+			} else {
+				this.skip()
+			}
+		})
+	},
+	onReady() {
+		// 缴费类别
+		request.post('jiaofei/pay-type-lst', { cityName: '北京市' }).then(res => {
+			// console.log(res)
+			if (res.status == 200) {
+				this.cebPaymentCategoriesList = res.data;
+			}
+		}).catch(err => {
+			this.netWork = false
+		})
+		// 数据获取 sessionId
+
+		storage.get({
+			key: "sid",
+			success: (data) => {
+				console.log('sid' + data)
+				this.sid = data;
+
+				if (this.sid) {
+					this.isLogin = true;
+
+					// 缴费记录
+					request.post('order/payment-records', {
+						pageSize: 10,
+						currentPage: 1
+					}).then(res => {
+						console.log(res)
+
+						if (res.status == 200) {
+							this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+							if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 								this.hasMoreData = false;
 							}
-						}).catch(err => {
-							console.log(22)
+						} else {
 							this.hasMoreData = false;
-						})
-					}
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
+						}
+					}).catch(err => {
+						console.log(22)
+						this.hasMoreData = false;
+					})
 				}
-			})
-			// 获取手机号
-			storage.get({
-				key:"mobile",
-				success: (data) => {
-					const mobile = data.substring(0,3)+'****'+data.substring(7,11)
-					this.mobile = mobile;
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-			// 获取城市名字
-			storage.get({
-				key:"cityName",
-				success: (data) => {
-					console.log('cityName ===== '+data)
-					
-					// alert('cityName ===== '+data)
-					if(data && data != "" && data != null){
-						this.cityName = data;
-						// 缴费类别
-						request.post('jiaofei/pay-type-lst',{cityName:this.cityName}).then(res => {
-							// console.log(res)
-							if(res.status == 200){
-								this.cebPaymentCategoriesList = res.data;
-							}
-						}).catch(err => {
-							this.netWork = false
-						})
-					}else{
-						
-						// 获取城市定位
-						this.getLocation()
-					}
-				},
-				fail: function(data, code) {
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		// 获取手机号
+		storage.get({
+			key: "mobile",
+			success: (data) => {
+				const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
+				this.mobile = mobile;
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		// 获取城市名字
+		storage.get({
+			key: "cityName",
+			success: (data) => {
+				if (data && data != "" && data != null) {
+					this.cityName = data;
+					// 缴费类别
+					request.post('jiaofei/pay-type-lst', { cityName: this.cityName }).then(res => {
+						// console.log(res)
+						if (res.status == 200) {
+							this.cebPaymentCategoriesList = res.data;
+						}
+					}).catch(err => {
+						this.netWork = false
+					})
+				} else {
+
 					// 获取城市定位
 					this.getLocation()
 				}
-			})
-			// 获取城市Id
-			storage.get({
-				key:"cityId",
-				success: (data) => {
-					if(data){
-						this.cityId = data;
-					}
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
+			},
+			fail: function (data, code) {
+				// 获取城市定位
+				this.getLocation()
+			}
+		})
+		// 获取城市Id
+		storage.get({
+			key: "cityId",
+			success: (data) => {
+				if (data) {
+					this.cityId = data;
 				}
-			})
-			
-			// this.encryptStr("pwd")
-			
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
 
-			
-			
-			getUserInfo((data) => {
-				// prompt.showToast({
-				// 	message: data.sid
-				// });				
-			});
-			// this.$page.setTitleBar({ text: '加载中...' });
-			let me = this;
-		},
-		getLocation(){
-			const that = this;
-			
-			// 定位
-			geolocation.getLocation({
-				success: function(data) {
-					fetch.fetch({
-						url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
-						responseType: 'json',
-						success:  (res) => {
-							const city = res.data.result.addressComponent.city || '北京市'
-							that.cityName = city;
-							// 缴费类别
-							request.post('jiaofei/pay-type-lst',{cityName:city}).then(res => {
-								// console.log(res)
-								if(res.status == 200){
-									that.cebPaymentCategoriesList = res.data;
-								}
-							}).catch(err => {
-								that.netWork = false
-							})
-							storage.set({
-								key:"cityName",
-								value:city,
-							})
-						},
-						fail: function (err, code) {
-							const city = '北京市'
-							that.cityName = city;
-							// 缴费类别
-							request.post('jiaofei/pay-type-lst',{cityName:city}).then(res => {
-								// console.log(res)
-								if(res.status == 200){
-									that.cebPaymentCategoriesList = res.data;
-								}
-							}).catch(err => {
-								that.netWork = false
-							})
-							storage.set({
-								key:"cityName",
-								value:city,
-							})
-						}
-					})
+		getUserInfo((data) => {
+			// prompt.showToast({
+			// 	message: data.sid
+			// });				
+		});
+		let me = this;
+	},
+	// 获取定位
+	getLocation() {
+		const that = this;
+
+		// 定位
+		geolocation.getLocation({
+			success: function (data) {
+				fetch.fetch({
+					url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
+					responseType: 'json',
+					success: (res) => {
+						const city = res.data.result.addressComponent.city || '北京市'
+						that.cityName = city;
+						// 缴费类别
+						request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+							// console.log(res)
+							if (res.status == 200) {
+								that.cebPaymentCategoriesList = res.data;
+							}
+						}).catch(err => {
+							that.netWork = false
+						})
+						storage.set({
+							key: "cityName",
+							value: city,
+						})
 					},
-				fail: function(data, code) {
-					const city = '北京市'
-					that.cityName = city;
-					// 缴费类别
-					request.post('jiaofei/pay-type-lst',{cityName:city}).then(res => {
-						// console.log(res)
-						if(res.status == 200){
-							that.cebPaymentCategoriesList = res.data;
-						}
-					}).catch(err => {
-								that.netWork = false
-							})
-					storage.set({
-						key:"cityName",
-						value:city,
-					})
-				}
-			})
-		},
-		// 缴费记录
-		renderMoreListItem(){
-			if(this.currentPage < this.orderPagingH5Model.pageInfo.totalReco / this.pageSize){
-				this.hasMoreData = true;
-				this.currentPage += 1;
-				// 缴费记录
-				request.post('order/payment-records',{
-					pageSize:this.pageSize,
-					currentPage:this.currentPage,
-				}).then(res => {
-					if(res.status == 200){
-						this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
-						this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
-						console.log(this.orderPagingH5Model)
-						if(res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize){
-							this.hasMoreData = false;
-						}
-					}else{
-						this.hasMoreData = false;
+					fail: function (err, code) {
+						const city = '北京市'
+						that.cityName = city;
+						// 缴费类别
+						request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+							// console.log(res)
+							if (res.status == 200) {
+								that.cebPaymentCategoriesList = res.data;
+							}
+						}).catch(err => {
+							that.netWork = false
+						})
+						storage.set({
+							key: "cityName",
+							value: city,
+						})
+					}
+				})
+			},
+			fail: function (data, code) {
+				const city = '北京市'
+				that.cityName = city;
+				// 缴费类别
+				request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+					// console.log(res)
+					if (res.status == 200) {
+						that.cebPaymentCategoriesList = res.data;
 					}
 				}).catch(err => {
+					that.netWork = false
+				})
+				storage.set({
+					key: "cityName",
+					value: city,
+				})
+			}
+		})
+	},
+	// 复制微信号
+	copyWx() {
+		statis.statis('copy_wx',{},this)		
+		clipboard.set({
+			text: 'ubaycn',
+			success: () => {
+				prompt.showToast({
+					message: '复制成功'
+				})
+			},
+			fail: () => {
+				prompt.showToast({
+					message: '复制失败'
+				})
+			}
+		})
+	},
+	// 上拉加载缴费记录
+	renderMoreListItem() {
+		if (this.currentPage < this.orderPagingH5Model.pageInfo.totalReco / this.pageSize) {
+			this.hasMoreData = true;
+			this.currentPage += 1;
+			// 缴费记录
+			request.post('order/payment-records', {
+				pageSize: this.pageSize,
+				currentPage: this.currentPage,
+			}).then(res => {
+				if (res.status == 200) {
+					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
+					this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
+					console.log(this.orderPagingH5Model)
+					if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+						this.hasMoreData = false;
+					}
+				} else {
 					this.hasMoreData = false;
-				})
-
-			}else{
+				}
+			}).catch(err => {
 				this.hasMoreData = false;
-			}
-		},
-		toDetail (url,name) {
-			let obj
-			if(name){
-				obj = {
-					uri:url,
-					params:{
-						title:name
-					}
-				}
-			}else{
-				obj = {
-					uri:url
-				}
-			}
-			console.log(obj)
-			router.push (obj)
-		},
-		toJFDetail(url,name,type){
-			APP_STATISTICS.track_event("class_type_click",{'typeName':name});
-			fetch.fetch({
-				url:`${this.$app.$data.logUrl}?event=class_type_click&data={typeName:${name}}&tag=云缴费`,
 			})
-			const obj = {
-				uri:url,
-				params:{
-					title:name,
-					type,
-				}
-			}
-			if(name.indexOf("手机") != -1){
-				obj.uri = "Home/Mobile"
-			}
-			console.log(obj)
-			if(this.isLogin){
-				router.push (obj)
-			}else{
-				router.push({
-					uri:'User/login'
-				})
-			}
-		},
-		logout(){
-			const that = this;
-			storage.delete({
-				key: 'sid',
-				success: function(data) {
-					// console.log('handling success')
-					that.pageSize = 10;
-					that.currentPage = 1;
-					that.sid = '';
-					that.mobile = '';
-					that.isLogin = false;
-					that.hasMoreData = false;
-					console.log(that.isLogin)
-					that.orderPagingH5Model = {
-						pageInfo: {},
-						recordsModel:[]
-					}
-					prompt.showToast({
-						message: '退出登录成功'
-					});
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-			storage.delete({
-				key: 'mobile',
-				success: function(data) {
-					console.log('handling success')
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-		},
-		pagefinish(){
-			this.$page.setTitleBar({ text: this.name });
+
+		} else {
+			this.hasMoreData = false;
 		}
-	})
+	},
+	// 缴费记录页面跳转城市选择
+	orderToDetail() {
+		router.push({
+			uri: 'Home/CityList',
+			params: {
+				tabIndex: 1,
+			}
+		})
+	},
+	// 页面跳转
+	toDetail(url, name) {
+		let obj
+		if (name) {
+			obj = {
+				uri: url,
+				params: {
+					title: name
+				}
+			}
+		} else {
+			obj = {
+				uri: url
+			}
+		}
+		router.push(obj)
+	},
+	// 缴费类别点击事件
+	toJFDetail(url, name, type,jfType) {
+		if(jfType == 'common'){
+			// 常用缴费
+			statis.statis('class_type_common_click',{ typeName: name },this)
+		}else if(jfType == 'fast'){
+			// 快速缴费
+			statis.statis('class_type_fast_click',{ typeName: name },this)
+		}else{
+			// 首页缴费
+			statis.statis('class_type_click',{ typeName: name },this)
+		}
+		
+		const obj = {
+			uri: url,
+			params: {
+				title: name,
+				type,
+			}
+		}
+		if (name.indexOf("手机") != -1) {
+			obj.uri = "Home/Mobile"
+		}
+		if (this.isLogin) {
+			router.push(obj)
+		} else {
+			router.push({
+				uri: 'User/SmsLogin'
+			})
+			// router.push({
+			// 	uri: 'User/login'
+			// })
+		}
+	},
+	// 退出登录
+	logout() {
+		statis.statis('logout_click',{mobile:this.mobile},this)
+		const that = this;
+		storage.delete({
+			key: 'sid',
+			success: function (data) {
+				// console.log('handling success')
+				that.pageSize = 10;
+				that.currentPage = 1;
+				that.sid = '';
+				that.mobile = '';
+				that.isLogin = false;
+				that.hasMoreData = false;
+				console.log(that.isLogin)
+				that.orderPagingH5Model = {
+					pageInfo: {},
+					recordsModel: []
+				}
+				prompt.showToast({
+					message: '退出登录成功'
+				});
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		storage.delete({
+			key: 'mobile',
+			success: function (data) {
+				console.log('handling success')
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+	},
+
+	pagefinish() {
+		this.$page.setTitleBar({ text: this.name });
+	}
+})
 </script>

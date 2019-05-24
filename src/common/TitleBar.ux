@@ -1,5 +1,5 @@
 <template>
-    <div class="TitleBar" style="background-color: {{color}}">
+    <div class="TitleBar" >
         <div class="left" @click="back" if="!external">
             <image height="30" src="/common/images/back.png"></image>
         </div>
@@ -18,11 +18,12 @@
         position: fixed;
         left: 0px;
         top:0px;
+        background-color: #9A70C2;
         flex-direction: row;
         width: 100%;padding: 30px 0;height: 100px;
-        background-color: #fff;
-        border-bottom-width: 2px;
-        border-bottom-color: #f0f0f0;
+        /* background-color: #fff; */
+        /* border-bottom-width: 2px;
+        border-bottom-color: #f0f0f0; */
         .left,.center,.right{
             width: 33.333333%;
             flex-direction: column;
@@ -47,7 +48,9 @@
             text{
                 width: 100%;
                 text-align: center;
-                color: #333;font-size: 32px;font-weight: bold;
+                color: #ffffff;
+                font-size: 36px;
+                font-weight: 500;
             }
         }
     }

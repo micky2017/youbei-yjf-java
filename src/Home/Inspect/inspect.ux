@@ -37,7 +37,7 @@
             {{data.printAddress}}
         </text>
         <div class="next-btn" @click="toOrders()">
-            <text>支付</text>
+            <text>下一步</text>
         </div>
 
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
@@ -76,6 +76,7 @@
 <script>
     import router from '@system.router';
     import request from '../../utils/request'
+    import statis from '../../utils/statistics.js'
 
     export default Custom_page ({
         protected: {
@@ -103,6 +104,7 @@
             billQueryResultDataModelList:[],
             fieldInfoKey:'',
         },
+        // 处理账单信息并展示
         setInfo(billObj){
             console.log(this.data)
             const billDate = billObj.endDate ? `${billObj.beginDate}-${billObj.endDate}` : billObj.beginDate
@@ -125,13 +127,13 @@
                     info_value:billObj.balance/100 + '元',
                 })
             }
-            if(this.data.item7){
-                newInfo.push({
-                    info_name:"用电地址",
-                    info_value:this.data.item7,
-                })
-            }
             if(this.paymentItem.businessFlow== 2){
+                if(this.data.item7){
+                    newInfo.push({
+                        info_name:"用电地址",
+                        info_value:this.data.item7,
+                    })
+                }
                 newInfo.push({
                     info_name:"补加金额",
                     info_value:this.data.item3,
@@ -140,12 +142,23 @@
                     info_value:this.data.item4,
                 })
             }
-            if(billObj.beginDate.indexOf("/") != -1 || billObj.endDate.indexOf("/") != -1){
+            if(isNaN(billObj.beginDate)&&!isNaN(Date.parse(billObj.beginDate))){
+            　　newInfo.push({
+                    info_name:"账期",
+                    info_value:billDate,
+                })
+            }else if(isNaN(billObj.endDate)&&!isNaN(Date.parse(billObj.endDate))){
                 newInfo.push({
                     info_name:"账期",
                     info_value:billDate,
                 })
             }
+            // if(billObj.beginDate.indexOf("/") != -1 || billObj.endDate.indexOf("/") != -1){
+            //     newInfo.push({
+            //         info_name:"账期",
+            //         info_value:billDate,
+            //     })
+            // }
             
             if(this.fieldInfoKey != ''){
                 newInfo.push({
@@ -207,6 +220,7 @@
                 this.$element('payAmount').focus({focus:false})
             }
         },
+        // 处理输入框金额限制
         payAmount(response){
             this.payAmountValue = response ? response.value : this.payAmountValue;
             if(this.payAmountValue.indexOf(".") == 0){
@@ -222,6 +236,7 @@
                 this.showToast(`最高金额限制为:${this.amountLimit[1]}`)
             }
         },
+        // 生成待支付订单
         toOrders(){
             if(this.inputValue){
                 if(!this.payAmountValue){
@@ -267,6 +282,11 @@
                                 params.billObj = res.data.billQueryResultModel.billQueryResultDataModelList[0]
                                 // this.data.billQueryResultDataModelList[0]
                                 params.qryAcqSsn = res.data.qryAcqSsn
+                                statis.statis('pending_order_click',{
+                                    itemCode:this.paymentItem.paymentItemId,
+                                    payAmount:params.payAmount
+                                },this)
+                                console.log(params)
                                 router.push({
                                     uri:"Home/Orders",
                                     params,
@@ -282,6 +302,10 @@
                         this.showLoading = false;
                     })
                 }else{
+                    statis.statis('pending_order_click',{
+                        itemCode:this.paymentItem.paymentItemId,
+                        payAmount:params.payAmount
+                    },this)
                     router.push({
                         uri:"Home/Orders",
                         params,
@@ -290,6 +314,7 @@
                 
             
         },
+        // 显示选择框
         pickerShow(title){
             if(title){
                 this.pickerTitle = title;
@@ -301,9 +326,11 @@
             }
             this.picker = true;
         },
+        // 隐藏选择框
         pickerHide(){
             this.picker = false;
         },
+        // 选择框确定选项
         pickerSelect(){
             if(this.pickerTitle.indexOf("账单") != -1){
                 // this.rangeData = this.billQueryList;
@@ -326,6 +353,7 @@
             // this.money = this.selectMoney;
             this.picker = false;
         },
+        // 选择框更换选项
         changeMoney(value){
             this.selectMoney = value;
             // if(this.pickerTitle.indexOf("账单") != -1){

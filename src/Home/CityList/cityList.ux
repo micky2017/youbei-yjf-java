@@ -60,6 +60,7 @@
             showSearch:false,
             show_close:false,
             search_value:"",
+            tabIndex:0,
             city_name:"北京市",
             cityId:"101701",
             cityHotCategoryModelList:[],
@@ -100,6 +101,7 @@
                 // },1500)
             })
         },
+        // 选择分组
         selectCityGroup(event){
             let y =event.changedTouches[0].pageY;
             let index = parseInt((y - 400) / 40);
@@ -112,6 +114,7 @@
         hideInput(){
             this.$element('search-city').focus({focus:false})
         },
+        // 选择城市
         selectCity(cityName,cityId){
             this.city_name = cityName;
             this.cityId = cityId;
@@ -123,13 +126,18 @@
                 key: 'cityId',
                 value: cityId,
             })
+            console.log(this.tabIndex)
             router.push({
-                uri:"/"
+                uri:"Home",
+                params:{
+                    tabIndex:this.tabIndex,
+                }
             })
             this.showSearch = false;
             this.search_value = "";
             this.hideInput()
         },
+        // 搜索城市
         searchCity(response){
             this.search_value = response ? response.value : this.search_value;
             let cityRenCategoryModelList = [];
@@ -163,6 +171,7 @@
                 }
             },1500)
         },
+        // 清除输入框
         clearCityValue(){
             this.search_value = "";
             this.hideInput()

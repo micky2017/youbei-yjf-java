@@ -51,6 +51,8 @@
     import request from '../../utils/request'
     import webview from '@system.webview'
     import fetch from '@system.fetch'
+    import statis from '../../utils/statistics'
+
     export default Custom_page ({
         protected: {
             showLoading:false,
@@ -94,6 +96,7 @@
             },1500)
         },
         onReady() {
+            console.log(this.data)
             this.data = JSON.parse(this.data);
             const data = this.data;
             // const billObj = this.billObj
@@ -126,6 +129,7 @@
                 }
             ]
         },
+        // 拉起收银台
         toFinish(){
             this.showLoading = true;
             // this.pickerShow()
@@ -160,10 +164,13 @@
             }
             console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
-            APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});
-            fetch.fetch({
-				url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':${this.data.paymentItemName},"pay_amount":${this.payAmount}}&tag=云缴费`,
-			})
+            // params.testpackage = 'test'
+            statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
+
+            // APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});
+            // fetch.fetch({
+			// 	url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':${this.data.paymentItemName},"pay_amount":${this.payAmount}}&tag=云缴费`,
+			// })
             request.post('pay/creat',params).then(res => {
                 console.log(res)
                 this.showLoading = false;
@@ -174,6 +181,7 @@
                     //         src:res.data.url
                     //     }
                     // })
+                statis.statis('pay_click_success',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
                      if(res.data.url){
                             webview.loadUrl({
                                 url: res.data.url,

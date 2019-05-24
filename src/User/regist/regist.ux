@@ -44,6 +44,7 @@
 <script>
 	import router from '@system.router'
     import request from '../../utils/request';
+    import statis from '../../utils/statistics.js';
     import storage from"@system.storage";
     import fetch from '@system.fetch'
 
@@ -64,6 +65,7 @@
             clickable:true,
             timer:''
         },
+        // 收起软键盘
         inputFocus(){
             this.$element('mobile').focus({focus:false})
             this.$element('code').focus({focus:false})
@@ -73,6 +75,7 @@
         onDestroy(){
             clearInterval(this.timer);
         },
+        // 监听输入框
         smsPhone(response){
             this.sms_phone = response ? response.value : this.sms_phone;
         },
@@ -93,19 +96,23 @@
                 this.show_toast = false;
             },1500)
         },
+        // 匹配手机号并发送验证码
         verifyPhone(){
+            statis.statis('regist_code',{mobile:this.sms_phone},this)
             if(!(/^1[3456789]\d{9}$/.test(this.sms_phone))){ 
                     this.showToast("手机号码有误，请重填");
                     return false; 
                 }else{
                     request.post('user/sms',{mobile:this.sms_phone}).then((res) => {
                         this.showToast("验证码发送成功！");
+                        statis.statis('regist_code_success',{mobile:this.sms_phone},this)
                     }).catch(err => {
                         this.showToast("网络错误");
                     })
                     return true;
                 } 
         },
+        // 倒计时
         countdown(){
             this.inputFocus()
             if(!(/^1[3456789]\d{9}$/.test(this.sms_phone))){ 
@@ -130,8 +137,10 @@
             }
             
         },
+        // 注册
         register(){
             this.inputFocus()
+            statis.statis('regist_click',{mobile:this.sms_phone},this)
             if(this.password != this.confirm_password){
                 this.showToast("两次输入密码不一致");
                 return false;
@@ -154,10 +163,11 @@
             request.post('user/reg',params).then(res => {
                 if(res.status == 200){
                     this.showToast("注册成功");
-                    APP_STATISTICS.track_event("regist_click",{'mobile':this.sms_phone});
-                    fetch.fetch({
-                        url:`${this.$app.$data.logUrl}?event=regist_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
-                    })
+                    statis.statis('regist_click_success',{mobile:this.sms_phone},this)
+                    // APP_STATISTICS.track_event("regist_click",{'mobile':this.sms_phone});
+                    // fetch.fetch({
+                    //     url:`${this.$app.$data.logUrl}?event=regist_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
+                    // })
                     storage.set({
                         key: 'sid',
                         value: res.data.sessionId,
