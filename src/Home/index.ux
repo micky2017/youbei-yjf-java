@@ -30,7 +30,12 @@
 								</div>
 							</div>
 						</div>
+						<div class="weather" if="{{isLogin}}">
+							<text>{{weather}}</text>
+						</div>
 					</div>
+					<list>
+					<list-item>
 					<!-- 常用缴费 -->
 					<div class="common-body">
 						<swiper class="common-swiper" indicator-selected-color="#9A70C2" >
@@ -53,8 +58,8 @@
 						</div>
 					</div>
 					<text class="fast-title">便捷缴费</text>
+					</list-item>
 					<!-- 缴费类别 -->
-					<list>
 						<list-item>
 							
 							<div class="no-network" if="!netWork">
@@ -71,7 +76,18 @@
 								</div>
 							</div>
 						</list-item>
+						
 					</list>
+					<div class="add-icon" if="showShortcut && tabIndex == 0">
+						<div>
+							<image height="100px" src="./images/add_icon_text.png"></image>
+						</div>
+						<div>
+							<image @click="createShortcut()" height="50px" src="./images/add_icon_btn.png"></image>
+						</div>
+						
+						<image height="50px" src="./images/add_icon_source.png"></image>
+					</div>
 				</div>
 				<!-- 缴费记录 -->
 				<div class="tab-content-section">
@@ -172,6 +188,13 @@
 									</div>
 								</div>
 							</div>
+							<div class="list" if="showShortcut">
+								<div class="item" style="margin-top:22px;" @click="createShortcut()">
+									<div class="inner">
+										<text>创建桌面快捷方式</text>
+									</div>
+								</div>
+							</div>
 							<div class="logout-body" if="{{isLogin}}" @click="logout">
 								<text>退出登录</text>
 							</div>
@@ -230,14 +253,20 @@ import webview from '@system.webview'
 import clipboard from '@system.clipboard'
 const fetch = require('@system.fetch');
 const prompt = require('@system.prompt');
+const shortcut = require('@system.shortcut')
 // const device = require('@system.device');
 
 export default Custom_page({
+	public: {
+		external:''
+	},
 	protected: {
 		isLogin: false,
 		showGuide: false,
+		showShortcut:false,
 		sid: '',
 		tabIndex: 0,
+		weather:'',
 		guidePageList: [],
 		guideSecond: 3,
 		mobile: '',
@@ -265,6 +294,10 @@ export default Custom_page({
 	onInit() {
 		// banner
 		this.getBanner();
+		// weather
+		this.getWeather();
+		// 是否提示用户添加到桌面
+		this.showProptShortcut();
 		// 引导页
 		storage.get({
 			key:'showGuide',
@@ -284,10 +317,63 @@ export default Custom_page({
 		})
 
 	},
+	showProptShortcut(){
+		const that = this;
+		shortcut.hasInstalled({
+			success:  (ret) => {
+				if (ret) {
+					that.showShortcut = false;
+				} else {
+					that.showShortcut = true;
+				}
+			}
+		})
+	},
 	onDestroy() {
 		if (this.timer) {
 			clearInterval(this.timer)
 		}
+	},
+	// 天气
+	getWeather(){
+		console.log(1)
+		request.get(`user/get-weather?city=${this.cityName}`).then(res => {
+			console.log(res.data)
+			if(res.data.forecast){
+					const weather = res.data.forecast[0].type;
+					const wendu = res.data.wendu;
+					this.weather = `${wendu}℃ ${weather}`
+				}
+		}).catch(err => {
+			console.log(err)
+		})
+	},
+	// 创建桌面快捷方式
+	createShortcut(){
+		shortcut.hasInstalled({
+			success:  (ret) => {
+			if (ret) {
+				prompt.showToast({
+					message: '已创建桌面图标'
+				})
+				this.showShortcut = false;					
+			} else {
+				shortcut.install({
+					success:  () => {
+						prompt.showToast({
+							message: '成功创建桌面图标'
+						})
+						this.showShortcut = false;					
+					},
+					fail: function (errmsg, errcode) {
+						// prompt.showToast({
+						//   message: `${errcode}: ${errmsg}`
+						// })
+					}
+				})
+			}
+			}
+		})
 	},
 	// banner
 	getBanner(){
@@ -389,7 +475,7 @@ export default Custom_page({
 		me.tab = 'i' + tab.index;
 		this.tabIndex = tab.index;
 		// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
-		statis.statis('tab_change_click',{tabName: arr[tab.index]},this)
+		statis.statis('tab_change_click',{tabName: arr[tab.index],external:this.external},this)
 	},
 	tip() {
 		prompt.showToast({
@@ -580,7 +666,7 @@ export default Custom_page({
 	},
 	// 复制微信号
 	copyWx() {
-		statis.statis('copy_wx',{},this)		
+		statis.statis('copy_wx',{external:this.external},this)		
 		clipboard.set({
 			text: 'ubaycn',
 			success: () => {
@@ -653,13 +739,13 @@ export default Custom_page({
 	toJFDetail(url, name, type,jfType) {
 		if(jfType == 'common'){
 			// 常用缴费
-			statis.statis('class_type_common_click',{ typeName: name },this)
+			statis.statis('class_type_common_click',{ typeName: name ,external:this.external},this)
 		}else if(jfType == 'fast'){
 			// 快速缴费
-			statis.statis('class_type_fast_click',{ typeName: name },this)
+			statis.statis('class_type_fast_click',{ typeName: name,external:this.external },this)
 		}else{
 			// 首页缴费
-			statis.statis('class_type_click',{ typeName: name },this)
+			statis.statis('class_type_click',{ typeName: name,external:this.external },this)
 		}
 		
 		const obj = {

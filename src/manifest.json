@@ -1,8 +1,8 @@
 {
-  "package": "com.ubaycn.yjf",
+  "package": "com.ubaycn.yjftest",
   "name": "云缴费",
-  "versionName": "1.2.6",
-  "versionCode": "10",
+  "versionName": "1.2.7",
+  "versionCode": "11",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
@@ -92,11 +92,13 @@
   },
   "display": {
     "titleBar": false,
+    "titleBarText": "云缴费",
     "titleBarBackgroundColor": "#996fc5",
     "titleBarTextColor": "#ffffff",
     "menu": true,
     "pages": {
       "Home": {
+        "titleBar":false,
         "titleBarText": "云缴费",
         "menu": false
       }

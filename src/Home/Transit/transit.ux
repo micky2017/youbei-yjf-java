@@ -85,7 +85,7 @@
                         
                     }else{
                         router.replace({
-                            uri:'User/login',
+                            uri:'User/SmsLogin',
                             params:{
                                 external:'external',
                             }
@@ -94,9 +94,9 @@
                 },
                 error:(err) => {
                     router.replace({
-                        uri:'User/login',
+                        uri:'User/SmsLogin',
                         params:{
-
+                            external:'external',
                         }
                     })
                 }

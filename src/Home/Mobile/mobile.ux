@@ -41,18 +41,24 @@
     import statis from '../../utils/statistics'
 
     export default Custom_page ({
+        public: {
+            external:'',
+            cityName:"",
+            title:"",
+            type:"",
+        },
         protected: {
             picker:false,
             show_toast:false,
-            external:'',
+            // external:'',
             pickerTitle:'',
             toast_text:'',
             itemName:'',
             selectMoney:'',
             billItem:null,
-            title:"",
-            type:"",
-            cityName:"",
+            // title:"",
+            // type:"",
+            // cityName:"",
             paymentItemModelList:[],
             listPageModelList:[],
             paymentItemList:[],
@@ -62,6 +68,7 @@
             itemValue:'',
         },
         onReady() {
+            this.ifLogin()
             storage.get({
 				key:"cityName",
 				success: (data) => {
@@ -74,6 +81,31 @@
 				}
 			})
             
+        },
+        ifLogin(){
+            storage.get({
+                key:"sid",
+                success: (data) => {
+                    if(data){
+                        
+                    }else{
+                        router.replace({
+                            uri:'User/SmsLogin',
+                            params:{
+                                external:'external',
+                            }
+                        })
+                    }
+                },
+                fail: (res) => {
+                    router.replace({
+                        uri:'User/SmsLogin',
+                        params:{
+                                external:'external',
+                            }
+                    })
+                }
+            })
         },
         changeItem(response){
             this.itemValue = response ? response.value : this.itemValue;
@@ -97,14 +129,14 @@
         },
         toInspect(){
             this.inputFocus()
-            statis.statis('mobile_click',{},this);
+            statis.statis('mobile_click',{external:this.external},this);
             if(!(/^1[3456789]\d{9}$/.test(this.itemValue))){ 
                 this.showToast("手机号码有误，请重填");
                 return false; 
             }
 
             if(this.itemValue){
-                statis.statis('mobile_click_success',{mobile:this.itemValue},this);
+                statis.statis('mobile_click_success',{mobile:this.itemValue,external:this.external},this);
                 router.push({
                     uri: "Home/MobilePay",
                     params:{

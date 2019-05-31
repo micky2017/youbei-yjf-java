@@ -33,13 +33,18 @@
             </list-item>
         </list>
         <div  show="{{!showSearch}}"  class="navigation-right" @touchmove="selectCityGroup()">
-            <div for="item in cityModelList">
+            <div @click="changeCityGroup(item.cityFlag)" for="item in cityModelList">
                 <text>{{item.cityFlag}}</text>
             </div>
         </div>
         <div class="city-search_body" show="{{showSearch}}">
             <div class="city-item" @click="selectCity(city.cityName,city.cityId)" for="city in cityRenCategoryModelList">
                 <text>{{city.cityName}}</text>
+            </div>
+        </div>
+        <div class="propt-body" if="showPropt">
+            <div class="propt-content">
+                <text>{{cityFlag}}</text>
             </div>
         </div>
     </div>
@@ -61,6 +66,8 @@
             show_close:false,
             search_value:"",
             tabIndex:0,
+            cityFlag:'A',
+            showPropt:false,
             city_name:"北京市",
             cityId:"101701",
             cityHotCategoryModelList:[],
@@ -101,15 +108,34 @@
                 // },1500)
             })
         },
+        showProptFn(cityFlag,time){
+            this.cityFlag = cityFlag;
+            this.showPropt = true;
+            setTimeout(() => {
+                this.showPropt = false;
+            },time || 500)
+        },
+        changeCityGroup(cityFlag){
+            let index = 0;
+            for(let i = 0;i<this.cityModelList.length;i++){
+                const item = this.cityModelList[i];
+                if(item.cityFlag == cityFlag){
+                    index = i+1;
+                }
+            }
+            this.showProptFn(cityFlag)
+            const list = this.$element('list-body');
+            list.scrollTo({index:index});
+        },
         // 选择分组
         selectCityGroup(event){
             let y =event.changedTouches[0].pageY;
             let index = parseInt((y - 400) / 40);
             index = index > 0 ? (index > this.cityModelList.length ? this.cityModelList.length : index+1) : 1;
             // const initial = this.city_list[index-1].initial;
+            this.showProptFn(this.cityModelList[index-1].cityFlag)
             const list = this.$element('list-body');
             list.scrollTo({index:index});
-            
         },
         hideInput(){
             this.$element('search-city').focus({focus:false})

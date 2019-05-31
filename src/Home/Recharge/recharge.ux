@@ -153,9 +153,15 @@ import request from '../../utils/request'
 import statis from '../../utils/statistics'
 import storage from "@system.storage";
 export default Custom_page({
+    public: {
+            external:'',
+            cityName:"",
+            title:"",
+            type:"",
+        },
     protected: {
         showLoading: false,
-        external: '',
+        // external: '',
         picker: false,
         show_toast: false,
         pickerTitle: '',
@@ -163,9 +169,9 @@ export default Custom_page({
         itemName: '',
         selectMoney: '',
         billItem: null,
-        title: "",
-        type: "",
-        cityName: "",
+        // title: "",
+        // type: "",
+        // cityName: "",
         payTimeTips: '',
         paymentItemModelList: [],
         listPageModelList: [],
@@ -244,21 +250,53 @@ export default Custom_page({
     changeMoney(value) {
         this.selectMoney = value;
     },
-    onReady() {
-        // console.log(_.debounce)
+    ifLogin(){
         storage.get({
-            key: "cityName",
+            key:"sid",
             success: (data) => {
-                if (data) {
-                    this.cityName = data;
-                    this.getTypeDetail()
+                if(data){
+                    this.getDetail()
+                }else{
+                    router.replace({
+                        uri:'User/SmsLogin',
+                        params:{
+                            external:'external',
+                        }
+                    })
                 }
             },
-            fail: function (data, code) {
-                console.log(`handling fail, code = ${code}`)
+            fail: (res) => {
+                router.replace({
+                    uri:'User/SmsLogin',
+                    params:{
+                        external:'external',
+                    }
+                })
             }
         })
-
+    },
+    getDetail(){
+        if(this.cityName){
+            this.getTypeDetail()
+        }else{
+            storage.get({
+                key: "cityName",
+                success: (data) => {
+                    if (data) {
+                        this.cityName = data;
+                        this.getTypeDetail()
+                    }
+                },
+                fail: function (data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
+        }
+    },
+    onReady() {
+        this.ifLogin()
+        // console.log(_.debounce)
+        
     },
     // 输入框监听
     changeItem(item, response) {
@@ -398,7 +436,7 @@ export default Custom_page({
     // 查询缴费账单
     toInspect() {
         this.inputFocus()
-        statis.statis('search_bill_click', {}, this)
+        statis.statis('search_bill_click', {external:this.external}, this)
         const list = this.paymentItem.queryPaymentBillParamModelList
         for (let i = 0; i < list.length; i++) {
             if (list[i].isNull == 0) {
@@ -438,6 +476,7 @@ export default Custom_page({
 
                     const statisParams = {
                         paymentName: this.paymentItem.paymentItemName,
+                        external:this.external
                     }
                     Object.assign(statisParams,this.reqData)
                     statis.statis('search_bill', statisParams, this)
