@@ -1,0 +1,250 @@
+<template>
+  <!-- template里只能有一个根节点 -->
+  <div class="oppo-card">
+    <div class="content" if="!loading && netWork">
+      <div class="icon-content">
+        <div class="icon-row">
+            <block for="cebPaymentCategoriesList">
+            <div class="item">
+                <stack>
+                <image src="{{$item.icon}}"></image>
+                <div @click="handleClick($item, $idx)" class="img-active"></div>
+                </stack>
+            </div>
+            </block>
+        </div>
+        <div class="text-row" >
+            <div class="item" for="cebPaymentCategoriesList" @click="handleClick($item, $idx)">
+            <text>{{$item.name}}</text>
+            </div>
+        </div>
+      </div>
+      <div class="jf-record">
+        <text>暂无缴费账单信息</text>
+      </div>
+    </div>
+    <div class="loading-content"  @click="retry()" if="loading && netWork">
+        <text class="loading-text">拼命加载中...</text>
+        <text class="refresh-btn">刷新</text>
+      </div>
+      <div class="no-network_content" @click="retry()" if="!netWork">
+        <text class="loading-text">网络异常，请稍后重试</text>
+        <text class="refresh-btn">刷新</text>
+      </div>
+  </div>
+</template>
+
+<style>
+  .oppo-card {
+      width: 100%;
+      height: 250px;
+      justify-content: center;
+      align-items: center;
+  }
+  .loading-content{
+    width: 718px;
+    height: 208px;
+    padding: 56px 59px 30px 59px;
+    background-color: #fff;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .loading-text{
+    color: #898989;
+    font-family: 'FZYOUH_508R--GB1-4';
+    font-size: 28px;
+  }
+
+  .refresh-btn{
+    font-size: 28px;
+    color: #00A963 ;
+    font-family: 'FZYOUH_508R--GB1-4';
+  }
+  .no-network_content{
+    width: 100%;
+    height: 208px;
+    padding: 56px 59px 30px 59px;
+    background-color: #fff;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .retry-text{
+    color: #456fff;
+  }
+  .content {
+    width: 718px;
+    height: 256px;
+    padding: 16px 59px 30px 59px;
+    align-items: center;
+    background-color: #fff;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+    .icon-content{
+      flex-direction: column;
+      width: 600px;
+    }
+  .jf-record{
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      text-align: center;
+  }
+  .jf-record text{
+      width: 100%;
+      text-align: center;
+  }
+  .item {
+    justify-content: center;
+    flex: 1;
+  }
+
+  .item stack {
+    width: 90px;
+    height: 90px;
+  }
+
+  .img-active {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    border-radius: 18px;
+  }
+  .img-active:active {
+    opacity: 1;
+    background-color: theme.activeColor;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .icon-row{
+    justify-content: space-between;
+  }
+  .text-row {
+    margin-top: 12px;
+  }
+
+   .text-rowtext {
+    color: #000000;
+    font-size: 24px;
+  }
+</style>
+
+<script>
+  import router from '@system.router';
+  import fetch from '@system.fetch';
+  import geolocation from '@system.geolocation';
+  import request from '../../utils/request'
+
+  export default {
+    private: {
+      netWork:true,//网络
+      loading:true,//加载
+      city:'北京市',
+      // 水电燃气充值
+      cebPaymentCategoriesList: [],
+      hapUrl:'hap://app/com.ubaycn.yjf/'
+    },
+    onInit(){
+      this.getLocation()
+    },
+    // 经纬度转城市
+    geocoder(data){
+      fetch.fetch({
+        url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
+        method: 'GET',
+        responseType: 'json',
+        success: (res) => {
+          const city = res.data.result.addressComponent.city || '北京市'
+          this.city = city;
+          this.getPaytypeList(city)
+        },
+        fail: () => {
+          this.getPaytypeList('北京市')
+        }
+      })
+    },
+    // 获取地理位置
+    getLocation(){
+      this.loading = true;
+      geolocation.getLocation({
+        success:  (data) => {
+          this.geocoder(data)
+        },
+        fail: () => {
+          this.getPaytypeList('北京市')
+        }
+      })
+    },
+    retry(){
+      this.loading = true;
+      this.netWork = true;
+      this.getPaytypeList(this.city)
+    },
+    // 获取缴费类别
+    getPaytypeList(city){
+      this.loading = true;
+      this.netWork = true;
+      request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+        if (res.status == 200) {
+          const paymentTypeList = []
+          // 数据处理
+          for (let i = 0; i < res.data.length; i++) {
+            const element = res.data[i];
+            res.data[i].name = element.typeName
+            res.data[i].uri = `${this.hapUrl}Home/Recharge`
+            res.data[i].params = {
+              cityName:city,
+              type: res.data[i].type,
+              external:'oppo-card',
+              title: res.data[i].name,
+            }
+            if (element.typeName.indexOf('水费') != -1) {
+              res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_water.png'
+              res.data[i].name = '交水费'
+              paymentTypeList.push(res.data[i])
+            }else if(element.typeName.indexOf('电费') != -1){
+              res.data[i].name = '交电费'
+              res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_power.png'
+              paymentTypeList.push(res.data[i])
+            }else if(element.typeName.indexOf('燃气') != -1){
+              res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_gas.png'
+              paymentTypeList.push(res.data[i])
+            }
+            // else if(element.typeName.indexOf('手机') != -1){
+            //   res.data[i].icon = 'https://cdn.ubaycn.com/assets/images/youbei-yjf/vivo/mobile.png'
+            //   res.data[i].uri = `${this.hapUrl}Home/Mobile`
+            //   paymentTypeList.push(res.data[i])
+            // }
+          }
+          paymentTypeList.push({
+                name: '更多',
+                icon: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_more.png',
+                uri: `${this.hapUrl}Home`,
+                params:{
+                  cityName:city,
+                  external:'oppo-card',
+                  title: '主页',
+                }
+          })
+          this.cebPaymentCategoriesList = paymentTypeList;
+          this.loading = false;
+        }else{
+          this.netWork = false //网络错误
+        }
+      }).catch(err => {
+        this.netWork = false //网络错误
+      })
+    },
+    handleClick(item, index) {
+      console.log(item['params'])
+      let obj = {
+        uri: item['uri']
+      }
+      if (item['params']) {
+        obj['params'] = item['params']
+      }
+      router.push(obj);
+    }
+  }
+</script>

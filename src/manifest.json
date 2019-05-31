@@ -1,8 +1,8 @@
 {
-  "package": "com.ubaycn.yjftest",
+  "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.2.7",
-  "versionCode": "11",
+  "versionName": "1.2.8",
+  "versionCode": "12",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
@@ -87,6 +87,19 @@
       },
       "Home/CityList": {
         "component": "cityList"
+      }
+    },
+    "widgets": {
+      "Card/OPPOCard": {
+        "name": "云缴费",
+        "decription": "云缴费-生活缴费",
+        "component": "index",
+        "path": "/Card/OPPOCard",
+        "features": [
+          {"name": "system.geolocation"},
+          {"name": "system.fetch"},
+          {"name": "system.router"}
+        ]
       }
     }
   },

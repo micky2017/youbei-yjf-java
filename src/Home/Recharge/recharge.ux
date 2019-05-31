@@ -260,7 +260,7 @@ export default Custom_page({
                     router.replace({
                         uri:'User/SmsLogin',
                         params:{
-                            external:'external',
+                            external:this.external,
                         }
                     })
                 }
@@ -269,13 +269,14 @@ export default Custom_page({
                 router.replace({
                     uri:'User/SmsLogin',
                     params:{
-                        external:'external',
+                        external:this.external,
                     }
                 })
             }
         })
     },
     getDetail(){
+        
         if(this.cityName){
             this.getTypeDetail()
         }else{
@@ -294,6 +295,23 @@ export default Custom_page({
         }
     },
     onReady() {
+        storage.get({
+			key:'external',
+			success: (data) => {
+				if(data && data != ''){
+					storage.set({
+						key:'external',
+						value:this.external
+					})
+				}
+			},
+			fail: (err) => {
+				storage.set({
+					key:'external',
+					value:this.external
+				})
+			}
+		})
         this.ifLogin()
         // console.log(_.debounce)
         

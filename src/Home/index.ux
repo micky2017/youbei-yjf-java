@@ -497,6 +497,24 @@ export default Custom_page({
 		})
 	},
 	onReady() {
+		storage.get({
+			key:'external',
+			success: (data) => {
+				if(data && data != ''){
+					storage.set({
+						key:'external',
+						value:this.external
+					})
+				}
+			},
+			fail: (err) => {
+				storage.set({
+					key:'external',
+					value:this.external
+				})
+			}
+		})
+		
 		// 缴费类别
 		request.post('jiaofei/pay-type-lst', { cityName: '北京市' }).then(res => {
 			// console.log(res)
@@ -753,6 +771,7 @@ export default Custom_page({
 			params: {
 				title: name,
 				type,
+				external:this.external,
 			}
 		}
 		if (name.indexOf("手机") != -1) {
@@ -761,8 +780,9 @@ export default Custom_page({
 		if (this.isLogin) {
 			router.push(obj)
 		} else {
+			// obj.uri = "Home/Mobile"
 			router.push({
-				uri: 'User/SmsLogin'
+				uri:'User/SmsLogin'
 			})
 			// router.push({
 			// 	uri: 'User/login'

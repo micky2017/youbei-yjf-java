@@ -70,6 +70,23 @@
         onReady() {
             this.ifLogin()
             storage.get({
+                key:'external',
+                success: (data) => {
+                    if(data && data != ''){
+                        storage.set({
+                            key:'external',
+                            value:this.external
+                        })
+                    }
+                },
+                fail: (err) => {
+                    storage.set({
+                        key:'external',
+                        value:this.external
+                    })
+                }
+            })
+            storage.get({
 				key:"cityName",
 				success: (data) => {
 					if(data){
