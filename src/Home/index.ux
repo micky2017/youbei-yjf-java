@@ -57,8 +57,10 @@
 						<swiper if="!showHomeBanner" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
 							<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
 						</swiper>
-						<div class="weather" >
+						<div if="{{isLogin}}" class="weather" >
 							<text if="{{isLogin}}">{{weather}}</text>
+						</div>
+						<div if="{{!isLogin}}" class="weather no-login" >
 						</div>
 						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
