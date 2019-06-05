@@ -286,7 +286,7 @@
             }
             console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
-            // params.testpackage = 'test'
+            params.testpackage = 'test'
             statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
 
             // APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});

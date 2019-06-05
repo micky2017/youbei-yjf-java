@@ -355,16 +355,16 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
-		storage.set({
-			key:'activeSwitch',
-			value:this.activeSwitch
-		})
-		// device.getInfo({
-		// 	success: (ret) => {
-		// 		this.brand = ret.brand;
-		// 		this.getActiveSwitch(this.brand)
-		// 	}
+		// storage.set({
+		// 	key:'activeSwitch',
+		// 	value:this.activeSwitch
 		// })
+		device.getInfo({
+			success: (ret) => {
+				this.brand = ret.brand;
+				this.getActiveSwitch(this.brand)
+			}
+		})
 		// banner
 		// this.getBanner();
 		this.getNotification();
