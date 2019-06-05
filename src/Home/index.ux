@@ -8,10 +8,10 @@
 			<div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
 				<text onclick="skip()">立即体验</text>
 			</div>
-			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="true" if="showGuide && guideList.length>0">
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.pic}}" alt="">
 			</swiper>
-			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="true" if="showGuide && guideList.length <=0">
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length <=0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
 			</swiper>
 
@@ -48,14 +48,14 @@
 					<list-item>
 					<!-- 常用缴费 -->
 					<div class="common-body">
-						<swiper autoplay="true" class="common-swiper">
+						<swiper if="showHomeBanner" autoplay="true" class="common-swiper">
 							<image @click="goUrl($item)" if="homeBannerList.length > 0" src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
 						</swiper>
 						<swiper if="!showHomeBanner" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
 							<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
 						</swiper>
-						<div class="weather" if="{{isLogin}}">
-							<text>{{weather}}</text>
+						<div class="weather" >
+							<text if="{{isLogin}}">{{weather}}</text>
 						</div>
 						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
@@ -355,14 +355,16 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
-		device.getInfo({
-			success: (ret) => {
-				this.brand = ret.brand;
-				this.getActiveSwitch(this.brand)
-				// 设备品牌
-				// console.log(ret.brand)
-			}
+		storage.set({
+			key:'activeSwitch',
+			value:this.activeSwitch
 		})
+		// device.getInfo({
+		// 	success: (ret) => {
+		// 		this.brand = ret.brand;
+		// 		this.getActiveSwitch(this.brand)
+		// 	}
+		// })
 		// banner
 		// this.getBanner();
 		this.getNotification();
@@ -974,7 +976,6 @@ export default Custom_page({
 		if (this.isLogin) {
 			// 跳转缴费页
 			this.getJfTypeDetail(obj)
-			// router.push(obj)
 		} else {
 			router.push({
 				uri:'User/SmsLogin'

@@ -17,8 +17,8 @@
                     <div class="payment-item_name">
                         <text>缴费城市:</text>
                     </div>
-                    <div class="payment-item_content">
-                        <text>{{cityName}}</text>
+                    <div @click="goCityList" class="payment-item_content">
+                        <text>{{cityName}}▼</text>
                     </div>
                 </div>
                 <div class="payment-item">
@@ -287,6 +287,15 @@ export default Custom_page({
                 }
             })
         }
+    },
+    goCityList(){
+        console.log(this.type)
+        router.push({
+            uri:'Home/CityList',
+            params:{
+                type:this.type,
+            }
+        })
     },
     onReady() {
         storage.get({

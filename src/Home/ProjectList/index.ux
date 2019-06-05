@@ -1,7 +1,7 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="jf-list_body" @click="inputFocus">
-        <TitleBar title="{{title}}机构选择" external="{{external}}" @click="inputFocus"></TitleBar>
+        <TitleBar title="{{title}}机构选择" type="{{type}}" righttext="{{cityName}}" external="{{external}}" @click="inputFocus"></TitleBar>
         <div class="jf-list_content">
             <div class="jf-search_body">
                 <image width="31px" height="29px" resize-mode="contain" src="../images/search.png" alt=""></image>

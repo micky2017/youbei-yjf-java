@@ -9,7 +9,13 @@
         <div class="center">
             <text>{{title}}</text>
         </div>
-        <div class="right"></div>
+        <div class="right" if="!righttext"></div>
+        <div class="right" if="righttext">
+            <div @click="goCityList">
+                <text class="cityname">{{righttext}}</text>
+                <text >▼</text>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -28,6 +34,31 @@
         .left,.right{
             width: 25%;
             flex-direction: column;
+        }
+        .right{
+            padding-right:20px;
+            flex-direction: row;
+            justify-content: flex-end;
+            >div{
+                width: 120px;
+                padding: 2px;
+                /* background-color: rgba(48,48,48,0.4); */
+                border-radius: 6px;
+                flex-direction: row;
+                justify-content: space-around;
+                >text{
+                    color: #ffffff;
+                    font-size: 25px;
+                    height: 36px;
+                    
+                }
+                .cityname{
+                    font-weight: bold;
+                    width: 90px;
+                    lines: 1;
+                    text-overflow: ellipsis;
+                }
+            }
         }
         .center{
             width: 50%;
@@ -68,7 +99,7 @@
 <script>
     const router = require('@system.router')
     export default {
-        props: ['title','color','external'],
+        props: ['title','color','external','righttext','type'],
         back(){
             router.back();
         },
@@ -76,6 +107,15 @@
             router.replace({
                 uri:'Home'
             });
+        },
+        goCityList(){
+            router.push({
+                uri:'Home/CityList',
+                params:{
+                    type:this.type,
+                    external:this.external
+                }
+            })
         }
     }
 </script>

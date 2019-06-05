@@ -63,15 +63,18 @@
 	import storage from"@system.storage";
     export default Custom_page ({
         protected: {
-             show_toast:false,
+            show_toast:false,
+            type:'',
             toast_text:'',
             showSearch:false,
             show_close:false,
             search_value:"",
             tabIndex:0,
+            external:'',
             cityFlag:'A',
             showPropt:false,
             city_name:"北京市",
+            cityName:'',
             cityId:"101701",
             cityHotCategoryModelList:[],
             section: [],
@@ -146,6 +149,7 @@
         // 选择城市
         selectCity(cityName,cityId){
             this.city_name = cityName;
+            this.cityName = cityName;
             this.cityId = cityId;
             storage.set({
                 key: 'cityName',
@@ -155,13 +159,18 @@
                 key: 'cityId',
                 value: cityId,
             })
-            console.log(this.tabIndex)
-            router.push({
-                uri:"Home",
-                params:{
-                    tabIndex:this.tabIndex,
-                }
-            })
+            console.log(this.type)
+            if(this.type){
+                this.getPayType(cityName)
+            }else{
+                router.push({
+                    uri:"Home",
+                    params:{
+                        tabIndex:this.tabIndex,
+                    }
+                })
+            }
+            
             this.showSearch = false;
             this.search_value = "";
             this.hideInput()
@@ -187,6 +196,104 @@
                 this.cityRenCategoryModelList = this.cacheRenList;
                 this.show_close = false;
                 this.showSearch = false;
+            }
+        },
+        getPayType(cityName){
+            request.post('jiaofei/pay-type-lst', { cityName: cityName }).then(res => {
+                if (res.status == 200) {
+                    const data = res.data;
+                    let havePayType = true
+                    for(let i = 0;i<data.length;i++){
+
+                        if(data[i].type == this.type){
+                            havePayType = false;
+                            const element = data[i];
+                            const obj = {
+                                uri: 'Home/Recharge',
+                                params: {
+                                    title: element.typeName,
+                                    type:element.type,
+                                    external:'',
+                                    icon:element.icon,
+                                }
+                            }
+                            console.log(data[i])
+                            storage.get({
+                                key: "sid",
+                                success: (data) => {
+                                    if(data){
+                                        this.getJfTypeDetail(obj)
+                                    }else{
+                                        router.push({
+                                            uri:'User/SmsLogin'
+                                        })
+                                    }
+                                },
+                                fail:() => {
+                                    router.push({
+                                        uri:'User/SmsLogin'
+                                    })
+                                }
+                            })
+                        }
+                    }
+                    if(havePayType){
+                        this.showToast('该城市暂无此缴费类别')
+                    }
+                }
+            }).catch(err => {
+                this.netWork = false
+            })
+        },
+        // 查询缴费项目
+        getJfTypeDetail(obj){
+            console.log(obj)
+            if(obj.params.title.indexOf("手机") != -1) {
+                obj.uri = "Home/Mobile"
+                router.push(obj)
+            }else{	
+                // 缴费项目信息
+                request.post('jiaofei/pay-type-detail', {
+                    cityName: this.cityName,
+                    type: obj.params.type,
+                }).then(res => {
+                    if (res.status == 200) {
+                        const item = res.data.paymentItemPagingModel;
+                        this.paymentItemList = res.data.paymentItemList;
+                        if(this.paymentItemList.length > 1){
+                            // 列表选择
+                            router.push({
+                                uri:'Home/ProjectList',
+                                params:{
+                                    title: obj.params.title,
+                                    type:obj.params.type,
+                                    icon:obj.params.icon,
+                                    cityName:this.cityName,
+                                    external:this.external || 'card',
+                                    paymentItemList:this.paymentItemList,//选择列表
+                                    paymentItemModelList:item.paymentItemModelList,//项目信息
+                                }
+                            })
+                        }else{
+                            console.log(obj.params.name)
+                            // 账单详情
+                            router.push({
+                                uri:'Home/Recharge',
+                                params:{
+                                    payName:'1',
+                                    title: obj.params.title,
+                                    type:obj.params.type,
+                                    icon:obj.params.icon,
+                                    external:this.external || 'card',
+                                    cityName:this.cityName,
+                                    paymentItemModelList:item.paymentItemModelList,//项目信息
+                                }
+                            })
+                        }
+                    } else {
+                        this.showToast(res.msg, "back")
+                    }
+                })
             }
         },
         // 显示toast
