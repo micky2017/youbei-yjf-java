@@ -1,29 +1,53 @@
 <import src="../../common/TitleBar.ux"></import>
 <import name="toast" src="../../common/Toast/index.ux"></import>
+<import src="../../common/YjfLoading.ux"></import>
 
 <template>
     <div class="recharge" onclick="inputFocus()">
-        <TitleBar external={{external}} title={{title}} color="#fff"></TitleBar>
+        <TitleBar external={{external}} onclick="inputFocus()" title={{title}} color="#fff"></TitleBar>
+        <YjfLoading if="showLoading" />
         
-        <div class="input-body">
+         <div class="payment-content_bg"></div>
+        <div class="payment-content">
+            <text class="operator">{{operator}}</text>
+            <div class="mobile-input">
+                <div class="mobile-input_body">
+                    <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入手机号码" />
+                    <div class="contact" @click="pickContact">
+                        <image width='45' height="45" resize-mode="contain" src="../images/telephone_directory.png"></image>
+                    </div>
+                </div>
+                <text if="showMobileError">{{errInfo}}</text>
+            </div>
+            <div class="pay-amount_body">
+                <div class="payment-item" for="paymentList">
+                    <div if="!showMobileError && itemValue != '' && selectItem == $item" class="payment-item_content select-item" @click="selectItemValue($item)">
+                        <text>{{$item}}元</text>
+                    </div>
+                    <div if="!showMobileError && itemValue != '' && selectItem != $item" class="payment-item_content" @click="selectItemValue($item)">
+                        <text>{{$item}}元</text>
+                    </div>
+                    <div if="showMobileError || itemValue == ''" class="payment-item_content no-choose" >
+                        <text>{{$item}}元</text>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- <div class="input-body">
             <text>充值号码</text>
             <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
-        </div>
+        </div> -->
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
-        <div class="explain" >
-
-            <!-- <div class="explain-left">
-                <text>！</text>
-            </div> -->
+        <!-- <div class="explain" >
             <div class="explain-right" >
-                <!-- <text>{{paymentItem.description}}</text> -->
                 <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
                 <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
                 <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
             </div>
-        </div>
+        </div> -->
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
         
     </div>
@@ -38,6 +62,7 @@
     import request from '../../utils/request'
     import storage from"@system.storage";
     import webview from '@system.webview'
+    import contact from '@system.contact'
     import statis from '../../utils/statistics'
 
     export default Custom_page ({
@@ -48,11 +73,15 @@
             type:"",
         },
         protected: {
+            showLoading:false,
             picker:false,
             show_toast:false,
+            showMobileError:false,
             // external:'',
+            errInfo:'您输入的号码有误，请重新输入',
             pickerTitle:'',
             toast_text:'',
+            operator:'',
             itemName:'',
             selectMoney:'',
             billItem:null,
@@ -66,6 +95,10 @@
             paymentItem:{},
             rangeData:[],
             itemValue:'',
+            selectItem:'',
+            paymentItemModel:'',
+            paymentItemName:'',
+            paymentList:['30','50','100','200','300'],
         },
         onReady() {
             this.ifLogin()
@@ -124,8 +157,27 @@
                 }
             })
         },
+        selectItemValue(itemValue){
+            this.selectItem = itemValue;
+            
+        },
         changeItem(response){
             this.itemValue = response ? response.value : this.itemValue;
+            // 检查手机号 并查询信息
+            this.getPaymentDetail()
+        },
+        pickContact(){
+            contact.pick({
+                success: (data) => {
+                    this.itemValue = data.number;
+                    this.showToast(`您选取了${data.displayName }的联系方式`)
+                    this.inputFocus();
+                    console.log('contact: name=' + data.displayName + ', number=' + data.number)
+                },
+                fail: function(data, code) {
+                    this.showToast('选取联系人失败')
+                }
+            })
         },
         // 显示toast
         showToast(text,back){
@@ -139,10 +191,54 @@
             },1500)
         },
         inputFocus(){
-                this.$element('mobile').focus({focus:false})
+            this.$element('mobile').focus({focus:false})
+            // 检查手机号 并查询信息
+            this.getPaymentDetail()
+
         },
         onInit() {
-            
+            storage.get({
+                key:'mobile',
+                success:(data) => {
+                    console.log(data)
+                    if(data){
+                        this.itemValue = data;
+                    }
+                },
+                fail:(err) => [
+                    console.log(err)
+                ]
+            })
+        },
+        getPaymentDetail(){
+            if(!(/^1[3456789]\d{9}$/.test(this.itemValue))){ 
+                this.showMobileError = true;
+                this.errInfo = '您输入的号码有误，请重新输入'
+                return false; 
+            }else{
+                this.showMobileError = false;
+                // 缴费项目信息
+            request.post('jiaofei/mobile-pay',{
+                mobile:this.itemValue,
+            }).then(res => {
+                console.log(res)
+                if(res.status == 200){
+                    this.$element('mobile').focus({focus:false})
+                    const item = res.data.mobileRechargeModel;
+                    this.paymentItemName = res.data.paymentItemList[0];
+                    this.paymentItemModel = item.paymentItemModelList[0];
+                    this.operator = this.paymentItemModel.paymentItemName;
+                    this.paymentList = this.paymentItemModel.createPaymentBillParamsModelList[0].rechargeLimit.split('|');
+                    if(!this.selectItem){
+                        this.selectItem = this.paymentList[0];
+                    }
+                }else{
+                    this.showToast(res.msg);
+                    this.showMobileError = true;
+                    this.errInfo = '暂不支持';
+                }
+            })
+            }
         },
         toInspect(){
             this.inputFocus()
@@ -154,16 +250,78 @@
 
             if(this.itemValue){
                 statis.statis('mobile_click_success',{mobile:this.itemValue,external:this.external},this);
-                router.push({
-                    uri: "Home/MobilePay",
-                    params:{
-                        mobile:this.itemValue
-                    }
-                })
+                this.mobilePay();
+                // router.push({
+                //     uri:'Home/MobilePay',
+                //     params:{
+                //         mobile:this.itemValue
+                //     }
+                // })
             }else{
                 this.showToast('您有信息未填写')
             }
             
+        },
+        mobilePay(){
+            this.inputFocus()
+            if(this.itemValue){
+                this.showLoading = true;
+                // 订单日期
+                const date = new Date();
+                const year = date.getFullYear();  // 获取完整的年份(4位,1970)
+                const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0'+(date.getMonth() + 1);  // 获取月份(0-11,0代表1月,用的时候记得加上1)
+                const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                const merOrderDate = year+month+day;
+                // 基础数据
+                const data = this.paymentItemModel;
+
+                let outTradeNo="";  //订单号
+                for(let i=0;i<6;i++) //6位随机数，用以加在时间戳后面。
+                {
+                    outTradeNo += Math.floor(Math.random()*10);
+                }
+                outTradeNo = new Date().getTime() + outTradeNo; 
+                
+                const params = {
+                    merOrderNo:outTradeNo,
+                    merOrderDate,
+                    payAmount:this.selectItem,
+                    paymentItemCode:data.paymentItemCode,
+                    paymentItemId:data.paymentItemId,
+                    billKey:this.itemValue,
+                    billAmount:'',
+                    queryAcqSsn:'',
+                    contractNo:'',
+                    filed: [],
+                    type:'1',
+                    billQueryResultDataModel:JSON.stringify({})
+                }
+                statis.statis('pay_click',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
+                params.testpackage = 'test'
+                request.post('pay/creat',params).then(res => {
+                    console.log(res)
+                    this.showLoading = false;
+                    if(res.status == 200){
+                        if(res.data.url){
+                            statis.statis('pay_click_success',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
+                            webview.loadUrl({
+                                url: res.data.url,
+                                trustedurl:['https://test-api.ubaycn.com/pay/cb'],
+                                allowthirdpartycookies: true
+                            })
+                        }else{
+                            this.showToast(res.data.respMsg)
+                        }
+                    }else{
+                        this.showToast(res.msg)
+                    }
+                }).catch(err => {
+                    this.showLoading = false;
+                    this.showToast('网络错误')
+                })
+            }else{
+                this.showToast('您有信息未填写')
+            }
         }
     })
 </script>

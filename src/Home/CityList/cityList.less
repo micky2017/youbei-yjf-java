@@ -13,6 +13,7 @@
         font-size: 38px;
         padding: 20px;
         justify-content: space-between;
+        align-items: center;
         >input{
             // height: 42px;
             margin-left: 20px;
@@ -21,10 +22,20 @@
     }
     .location{
         width: 100%;
+        padding-left:27px;
         height: 150px;
         background-color: #fff;
-        justify-content: center;
+        justify-content: flex-start;
+        align-items:center;
         margin-bottom:2px;
+        >image{
+            margin-right: 10px;
+        }
+        >text{
+            font-weight: 400;
+            font-size: 24px;
+            color: #333333;
+        }
     }
     
     .city-list{
@@ -36,11 +47,12 @@
             background-color: #ffffff;
             flex-direction: column;
             padding: 20px;
+            columns: 3;
             .hot-city_items{
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: space-around;
-                padding: 20px 0px 10px 25px;
+                padding: 20px 25px 10px 15px;
                 .city-item{
                     width: 200px;
                     height: 100px;

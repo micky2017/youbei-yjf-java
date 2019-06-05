@@ -5,9 +5,41 @@
 
 <template>
     <div class="inspect-body" onclick="inputFocus()">
-        <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <TitleBar title="生活缴费" color="#fff"></TitleBar>
         <YjfLoading if="showLoading" />
-        <div if="!inputValue" class="top-up_amount">
+        <div class="pay-fees">
+            <div class="payment-icon">
+                <image width="46" height="46"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <text>{{title}}</text>
+            </div>
+            <div class="payment-type">
+                <text if="!inputValue">请选择充值金:</text>
+                <text if="inputValue && billObj.payAmount == '0'">请输入充值金额:</text>
+                <text if="inputValue && billObj.payAmount != '0'">缴费金额</text>
+            </div>
+            <div class="payment-input_type">
+                <div if="!inputValue" @click="pickerShow('选择金额')">
+                    <text>{{money}} ▼</text>
+                </div>
+                <div if="billObj.payAmount == '0'">
+                    <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
+                    <text>元</text>
+                </div>
+                <div if="billObj.payAmount != '0'">
+                    <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
+                    <text>元</text>
+                    <!-- <text>{{payAmountValue}}元</text> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-user_info">
+            <div class="{{item.info_name == info_list[info_list.length -1].info_name ? 'payment-info_item no-boder' : 'payment-info_item'}}" for="item in info_list">
+                <text class="info-name">{{item.info_name}}</text>
+                <text class="info-value">{{item.info_value}}</text>
+            </div>
+        </div>
+        <!-- <div if="!inputValue" class="top-up_amount">
             <text>选择充值金额</text>
             <div @click="pickerShow('选择金额')">
                 <text>{{money}} ▼</text>
@@ -23,19 +55,19 @@
             <div if="billObj.payAmount != '0'">
                 <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
                 <text>元</text>
-                <!-- <text>{{payAmountValue}}元</text> -->
             </div>
-        </div>
-        <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
+        </div> -->
+        <!-- 多账单 -->
+        <!-- <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
             <div class="info-list_item" @click="pickerShow('选择账单')">
                 <text class="info-name">选择账单</text>
                 <text class="info-value">{{bill ? bill : '请选择'}}▼</text>
             </div>
-        </div>
-        <Info infoList="{{info_list}}"></Info>
-        <text class="invoice">
+        </div> -->
+        <!-- <Info infoList="{{info_list}}"></Info> -->
+        <!-- <text class="invoice">
             {{data.printAddress}}
-        </text>
+        </text> -->
         <div class="next-btn" @click="toOrders()">
             <text>下一步</text>
         </div>
@@ -103,6 +135,105 @@
             paymentList:[],
             billQueryResultDataModelList:[],
             fieldInfoKey:'',
+            modelIndex:0,
+            iconUrl:'',
+            title:'',
+        },
+        getIcon(){
+            const iconList = [
+                {
+                    icon: '/Home/images/icon/water.png',
+                    typeName: '水费',
+                    id: '',
+                    path: 'Home/Recharge'
+                },
+                {
+                    icon: '/Home/images/icon/power.png',
+                    typeName: '电费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/ranqi.png',
+                    typeName: '燃气费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/mobile.png',
+                    typeName: '手机充值',
+                    id: '',
+                    path: 'Home/Recharge'
+                },
+                {
+                    icon: '/Home/images/icon/tv.png',
+                    typeName: '有线电视',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiayouka.png',
+                    typeName: '加油卡',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/wuye.png',
+                    typeName: '物业费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/dang.png',
+                    typeName: '党费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiaoyu.png',
+                    typeName: '教育考试',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/daishou.png',
+                    typeName: '非税代收',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/qunuan.png',
+                    typeName: '供暖费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/liuliang.png',
+                    typeName: '流量',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/qita.png',
+                    typeName: '其他',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/etc.png',
+                    typeName: 'ETC',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/yanglao.png',
+                    typeName: '养老',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiaotong.png',
+                    typeName: '交通',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/tongxu.png',
+                    typeName: '通讯费',
+                    id: ''
+                }
+            ];
+            for(let i = 0;i<iconList.length;i++){
+                if(this.title.indexOf(iconList[i].typeName) != -1){
+                    this.iconUrl = `${iconList[i].icon}`
+                }
+            }
         },
         // 处理账单信息并展示
         setInfo(billObj){
@@ -171,6 +302,7 @@
         onReady() {
             this.paymentItem = JSON.parse(this.paymentItem)
             this.data = JSON.parse(this.data)
+            this.getIcon();
             if(this.data.paymentBillFieldsInfoModel){
                 // 获取账单说明
                 const fieldInfo = this.data.paymentBillFieldsInfoModel.fieldInfo
@@ -194,7 +326,7 @@
             this.selectMoney = this.billQueryList[0];
             this.bill = this.billQueryList[0];
             this.billQueryResultDataModelList = this.data.billQueryResultDataModelList
-            const billObj = this.data.billQueryResultDataModelList[0];
+            const billObj = this.data.billQueryResultDataModelList[this.modelIndex];
             this.billObj = billObj;
             if(billObj.payAmount && billObj.payAmount != '0'){
                 this.payAmountValue = billObj.payAmount /  100
@@ -255,7 +387,8 @@
                     data:this.data,
                     billObj:this.billObj,
                     payAmount:this.payAmountValue,
-                    qryAcqSsn:this.qryAcqSsn
+                    qryAcqSsn:this.qryAcqSsn,
+                    title:this.title
                 }
                 if(this.inputValue){
                     params.payAmount = this.payAmountValue;

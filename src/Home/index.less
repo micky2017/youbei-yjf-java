@@ -1,6 +1,7 @@
 .yjf-home{
     height: 100%;
     background-color: #f4f4f4;
+    // 引导页
     .guide-page{
         position: fixed;
         left: 0px;
@@ -57,9 +58,10 @@
             // justify-content: center;
             align-items: center;
             .common-swiper{
-                height: 350px;
+                width: 100%;
+                height: 319px;
                 >image{
-                    height: 350px;
+                    height: 319px;
                 }
             }
            >image{
@@ -74,10 +76,21 @@
                padding-right: 20px;
                margin-top: -310px;
            }
+           .weather{
+                align-self: flex-end;
+                height: 50px;
+                align-items: center;
+                margin-top: -250px;
+                >text{
+                    color: #fff;
+                    font-size: 30px;
+                    font-weight: bold;
+                }
+            }
            .common-content{
                width: 652px;
                height: 280px;
-               margin-top: -125px;
+               margin-top: 75px;
                background-color: #fff;
                border-radius: 10px;
             //    margin-bottom: 60px;
@@ -86,8 +99,10 @@
                flex-direction: column;
                justify-content: flex-start;
                .common-content_title{
-                   color: #9A70C2;
-                   font-size: 32px;
+                   color: #333333;
+                   font-size: 30px;
+                //    color: #9A70C2;
+                //    font-size: 32px;
                    font-weight: bold;
                }
                .common-content_body{
@@ -120,12 +135,20 @@
            }
         }
         .fast-title{
-            color: #9A70C2;
-            font-size: 32px;
-            font-weight: bold;
+            // color: #9A70C2;
+            // font-size: 32px;
+            
             margin-left: 60px;
             margin-top: 40px;
             margin-bottom:45px;
+            .fast-title_text{
+                color: #333333;
+                font-size: 30px;
+                font-weight: bold;
+            }
+            >image{
+                margin-left: 10px;
+            }
         }
         .add-icon{
             position:fixed;
@@ -155,78 +178,142 @@
             }
         }
         .title-bar{
-            // position: absolute;
-            // left: 0px;
-            // top: 0px;
+            position: fixed;
+            left: 0px;
+            top: 0px;
             width: 100%;
             padding: 20px 20px;
-            height: 110px;
-            flex-direction: row;
-            background-color: #9A70C2;
-
-            // background-color: #996fc5;
+            height: 140px;
+            flex-direction: column;
+            // background-color: #9A70C2;
             justify-content: space-between;
             align-items: center;
-            .city{
-                // width: 200px;
-                height: 60px;
-                padding: 0px 20px;
-                background-color: #fff;
-                border-radius: 26px;
-                flex-direction: row;
-                justify-content: space-around;
-                >text{
-                    color: #9A70C2;
-                    font-size: 30px;
-                    font-weight: bold;
-                }
-            }
-            .logo{
-                margin-left:-70px;
-                height: 200px;
-                justify-content: center;
+            .header-content{
+                width: 100%;
                 align-items: center;
-            }
-            .login{
-                // width: 33%;
-                // flex-direction: row;
-                // padding-right: 0px;
-                // margin-top: 20px;
-                // justify-content: flex-end;
-                .inner{
-                    // width: 54px;
-                    width: 114px;
-                    height: 60px;
-                    border-radius: 26px;
-                    background-color: #fff;
-                    // flex-direction: column;
-                    justify-content: center;
+                justify-content: space-between;
+                .city{
+                    // width: 200px;
+                    // height: 60px;
+                    // padding: 0px 20px;
+                    // background-color: #fff;
+                    // border-radius: 26px;
+                    width:120px;
+                    padding:8px;
+                    background-color:rgba(48,48,48,0.4);
+                    border-radius: 6px;
+                    flex-direction: row;
+                    justify-content: space-around;
+                    .city-name{
+                        width:90px;
+                        lines:1;
+                        text-overflow:ellipsis;
+                    }
+                    >text{
+                        color: #ffffff;
+                        font-size: 25px;
+                        height: 40px;
+                        // color: #9A70C2;
+                        // font-size: 30px;
+                        font-weight: bold;
+                    }
+                }
+                .notification-body{
+                    width: 382px;
+                    height: 38px;
                     align-items: center;
-                    .text{
-                        flex-direction: row;
-                        justify-content: center;
-                        text{
-                            margin-left: 5px;
-                            font-size: 30px;
-                            font-weight: bold;
-                            color: #9A70C2;
+                    justify-content: space-around;
+                    background-color: rgba(0,0,0,0.3);
+                    border-radius:19px;
+                    padding-left: 10px;
+                    >swiper{
+                        height: 38px;
+                        flex: 1;
+                        margin-left: 10px;
+                        >text{
+                            font-size:25px;
+                            font-family:'SourceHanSansCN-Regular';
+                            font-weight:400;
+                            color: #ffffff;
                         }
-                    }               
+                    }
+                    
+                }
+                .login{
+                    // width: 33%;
+                    // flex-direction: row;
+                    // padding-right: 0px;
+                    // margin-top: 20px;
+                    // justify-content: flex-end;
+                    .inner{
+                        // width: 114px;
+                        // height: 60px;
+                        // border-radius: 26px;
+                        // background-color: #fff;
+                        width: 80px;
+                        padding: 8px;
+                        background-color:rgba(48,48,48,0.4);
+                        border-radius: 6px;
+                        justify-content: center;
+                        align-items: center;
+                        .text{
+                            flex-direction: row;
+                            justify-content: center;
+                            text{
+                                margin-left: 5px;
+                                font-weight: bold;
+                                color: #ffffff;
+                                font-size: 25px;
+                                // font-size: 30px;
+                                // color: #9A70C2;
+                            }
+                        }               
+                    }
                 }
             }
-            .weather{
-                >text{
-                    color: #fff;
-                    font-size: 30px;
-                    font-weight: bold;
-                }
-            }
+            
+            
             text{
                 color: #fff;
                 font-size: 32px;
             }
         }
-        
+        .activity-entry-banner{
+            margin-top: 34px;
+            .common-swiper{
+                width: 100%;
+                height: 300px;
+                >image{
+                    width: 100%;
+                    // height: 350px;
+                }
+            }
+        }
+        .activity-model-body{
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            >div{
+                width:100%;
+                justify-content:flex-end;
+                padding-right: 85px;
+            }
+            
+            .activity-model_img{
+                width: 693px;
+                height: 717px;
+                margin-top: -160px;
+            }
+            .activity-model_btn{
+                // margin-top: 70px;
+            }
+        }
         .slider{
             width: 100%;display: block;
             margin-bottom: 50px;
@@ -267,8 +354,25 @@
     
     .order{
         flex-direction: column;
+        .records-banner{
+            width: 100%;
+            .common-swiper{
+                width: 100%;
+                height: 280px;
+                >image{
+                    height: 280px;
+                }
+            }
+            // >image{
+            //     width: 100%;
+            // }
+        }
         .no-records_body{
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
             .no-records_title{
                 width: 100%;
                 height: 140px;
@@ -425,7 +529,16 @@
                 }
             }
         }
-        
+        .records-banner{
+            width: 100%;
+            .common-swiper{
+                width: 100%;
+                height: 280px;
+                >image{
+                    height: 280px;
+                }
+            }
+        }
         .list{
             flex-direction: column;
             .item{

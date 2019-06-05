@@ -3,6 +3,58 @@
     flex-direction: column;
     background-color: #ffffff;
     padding-top: 100px;
+    align-items: center;
+    >image{
+        width: 100%;
+        height: 288px;
+    }
+    .common-swiper{
+        width:100%;
+        height:280px;
+        >image{
+            width: 100%;
+            height: 280px;
+        }
+    }
+    .login-body{
+        width: 710px;
+        // height: 689px;
+        border-radius: 20px;
+        background-image: url('../../images/activityImg/login_bg.png');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin-top: -100px;
+        .tabs{
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 122px 75px 77px 75px; 
+            .tab-bar{
+                width: 360px;
+                justify-content: space-between;
+                .tab-bar_item{
+                    width: 165px;
+                    height: 60px;
+                    border-bottom: 4px solid #9A70C2;
+                    justify-content: center;
+                    >text{
+                        font-size:34px;
+                        font-family:"SourceHanSansCN-Regular";
+                        font-weight:bold;
+                        color: #9A70C2;
+                    }
+                }
+                .no-selece_item{
+                    border-bottom: 4px solid #C5C5C5;
+                    >text{
+                        font-size:28px;
+                        color: #C5C5C5;
+                    }
+                }
+            }
+        }
+    }
     .tab-select{
         width:100%;
         height: 100px;
@@ -25,15 +77,17 @@
     }
     .tab-content-section{
         flex-direction: column;
-        background-color: #fff;
+        // background-color: #fff;
         // height: 100%;
-        padding: 50px 35px;
+        padding: 75px 0px 0px 7px;
         .input{
-            height: 90px;
+            // height: 60px;
             width: 100%;
-            background-color: #fff;
-            border-bottom-width: 2px;
-            border-bottom-color: #F5EAFF;
+            // background-color: #fff;
+            border-bottom-width: 1px;
+            // border-bottom-color: #F5EAFF;
+            border-bottom-color: #f4eff8;
+            padding-bottom: 10px;
             .name{
                 width: 30%;
                 padding-left: 40px;
@@ -43,29 +97,46 @@
                 }
             }
             .content{
-                width: 70%;
+                // width: 70%;
+                flex: 1;
                 align-items: center;
-                input{
-                    height: 100%;
-                    width: 100%;
-                    font-size: 28px;
-                }
-                .countdown-body{
-                    width:220px;
+                .input-body{
                     height:60px;
-                    // padding: 12px 25px;
-                    background-color:#9A70C2;
-                    border-radius:10px;
-                    justify-content: center;
-                    align-items: center;
-                    .countdown-btn{
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    flex:1;
+                    input{
+                        height: 60px;
+                        width: 100%;
                         font-size: 26px;
-                        color: #ffffff;
-    
                     }
-                    .seconds{
-                        font-size: 26px;
-                        color: #ffffff;
+                }
+                input{
+                    height: 60px;
+                    width: 100%;
+                    font-size: 26px;
+                }
+                .coutdown-content{
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    height:100%;
+                    .countdown-body{
+                        width:144px;
+                        height:42px;
+                        // padding: 12px 25px;
+                        background-color:#9A70C2;
+                        border-radius:30px;
+                        justify-content: center;
+                        align-items: center;
+                        .countdown-btn{
+                            font-size: 22px;
+                            color: #ffffff;
+        
+                        }
+                        .seconds{
+                            font-size: 26px;
+                            color: #ffffff;
+                        }
                     }
                 }
                 .seconds-body{
@@ -73,14 +144,14 @@
                 }
             }
             .captcha{
-                width: 70%;
+                width: 100%;
                 padding-right: 40px;
                 input{
-                    width: 60%;
-                    font-size: 28px;
+                    // flex: 1;
+                    width: 100%;
+                    height: 60px;
+                    font-size: 26px;
                 }
-                
-                
                 text{
                     width: 40%;
                     text-align: center;
@@ -108,6 +179,7 @@
             margin-top: 40px;
             >text{
                 font-size: 22px;
+                color: #c5c5c5;
                 .agreement-text{
                     font-size:22px;
                     font-weight:500;
@@ -122,12 +194,12 @@
             align-self: center;
             margin-top: 66px;
             input{
-                height: 90%;
+                height: 90px;
                 width: 100%;
                 background-color: #996fc5;
                 color: #fff;
                 font-size: 34px;
-                border-radius: 10px;
+                border-radius: 45px;
             }
         }
         .toReg{

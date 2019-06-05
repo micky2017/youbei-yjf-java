@@ -1,0 +1,252 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="my-prize_body">
+        <TitleBar title="我的奖品"></TitleBar>
+        <!-- 奖品列表 -->
+        <list if="!noPrizeList">
+            <list-item class="prize-item" for="prizeList" type="{{$item}}">
+                <div if="{{!($item.isExpire)}}" class="prize-item_body">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <image width="30" height="30" src='../images/activityImg/prize_item_icon.png'></image>
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time">
+                            <text>有效期至: {{$item.expire_time}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>领取时间: {{$item.acquire_time}}</text>
+                            <div class="prize-content_btn" @click="lookRule($item)">
+                                <text>使用规则</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div  class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <!-- <image src="../images/activityImg/money_icon.png"></image> -->
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn" @click="exchange($item)">
+                            <text>立即兑换</text>
+                        </div>
+                    </div>
+                </div>
+                <div if="{{$item.isExpire}}" class="prize-item_body prize-item_past">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <image width="30" height="30" src='../images/activityImg/prize_item_icon_default.png'></image>
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time">
+                            <text>有效期至: {{$item.expire_time}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>领取时间: {{$item.acquire_time}}</text>
+                            <div class="prize-content_btn">
+                                <text>使用规则</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <!-- <image src="../images/activityImg/money_icon.png"></image> -->
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn">
+                            <text>立即兑换</text>
+                        </div>
+                    </div>
+                </div>
+            </list-item>
+        </list>
+        <!-- 暂无记录 -->
+        <div class="no-prize" if="noPrizeList">
+            <image width="268px" height="163px" src="../images/activityImg/money_icon.png"></image>
+            <text class="no-prize_text">暂无奖券</text>
+            <text class="no-prize_propt">悄悄告诉你，缴费成功</text>
+            <text class="no-prize_propt">可以获得一次抽奖机会哦～</text>
+            <div class="no-prize_btn" @click="goHome">
+                <text>我要云缴费</text>
+            </div>
+        </div>
+        <!-- 使用规则 -->
+        <div if="showPrizeRules" @click="closePrizeRules" class="prize-detail_body prize-rules_body">
+            <div class="prize-detail_content">
+                <div class="prize-detail_title">
+                    <div></div>
+                    <text>使用规则</text>
+                    <div>
+                        <image @click="closePrizeRules" width="44" height="44" resize-mode="contain" src="../images/activityImg/close_bg_btn.png"></image>
+                    </div>
+                </div>
+                <div class="prize-detail_info">
+                    <div class="use-pattern_body">
+                        <text class="use-pattern_title">活动时间：即日起至；</text>
+                        <text class="use-pattern_content">1、手机右下角我的-我的钱包-礼品卡-绑定新卡-输入卡密绑定。</text>
+                        <text class="use-pattern_content">2、把京东自营商品加入购物车-点击去结算-结算页面找到【礼品卡(京东卡/E卡)】几张可用-点进去把E卡右侧圆圈打钩(√)(此时提示开启支付密码，按照系统提示即可)-确定-提交订单-输入设置的支付密码-提交订单。祝您生活愉快！</text>
+                        <text class="use-pattern_content">3.卡片有效期为36个月。</text>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 奖券 -->
+        <div if="showPrizeDetail" @click="closePrizeDetail" class="prize-detail_body">
+            <div class="prize-detail_content">
+                <div class="prize-detail_title">
+                    <div></div>
+                    <text>兑换成功</text>
+                    <div>
+                        <image @click="closePrizeDetail" width="44" height="44" resize-mode="contain" src="../images/activityImg/close_bg_btn.png"></image>
+                    </div>
+                </div>
+                <div class="prize-detail_info">
+                    <div class="prize-detail_ticket">
+                        <div class="prize-ticket_title">
+                            <text>京东红包券码：</text>
+                        </div>
+                        <div class="prize-ticket_content">
+                            <text>{{code}}</text>
+                            <div @click="copyValue(code)">
+                                <text>复制</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prize-detail_ticket end_ticket">
+                        <div class="prize-ticket_title">
+                            <text>京东红包券码：</text>
+                        </div>
+                        <div class="prize-ticket_content">
+                            <text>{{passwd}}</text>
+                            <div @click="copyValue(passwd)">
+                                <text>复制</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="use-pattern_body">
+                        <text class="use-pattern_title">使用方式：</text>
+                        <text class="use-pattern_content">1、手机右下角我的-我的钱包-礼品卡-绑定新卡-输入卡密绑定。</text>
+                        <text class="use-pattern_content">2、把京东自营商品加入购物车-点击去结算-结算页面找到【礼品卡(京东卡/E卡)】几张可用-点进去把E卡右侧圆圈打钩(√)(此时提示开启支付密码，按照系统提示即可)-确定-提交订单-输入设置的支付密码-提交订单。祝您生活愉快！</text>
+                        <text class="use-pattern_content">3.卡片有效期为36个月。</text>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style lang="less">
+	@import './index.less';
+</style>
+
+<script>
+	import router from '@system.router'
+	import clipboard from '@system.clipboard'
+	import prompt from '@system.prompt'
+	import storage from '@system.storage'
+    import request from '../../utils/request'
+
+	export default Custom_page ({
+
+        protected: {
+            img: '',
+            prizeList:[],
+            showPrizeDetail:false,
+            showPrizeRules:false,
+            noPrizeList:false,
+            code:'',
+            passwd:''
+        },
+        onInit() {
+            this.getPrizeList()
+        },
+        getPrizeList(){
+            const that = this;
+            storage.get({
+                key:'_id',
+                success:(res) => {
+                    request.post('lottery/list',{sid:res}).then(res => {
+                        if(res.status == 0){
+                            const data = res.data;
+                            if(data.length != 0){
+                                this.noPrizeList = false;
+                                for(let i = 0; i< data.length;i++){
+                                    // data[i].acquire_time 获取时间
+                                    if(data[i].isExpire == 'false'){
+                                        data[i].isExpire = false
+                                    }else{
+                                        data[i].isExpire = true
+                                    }
+                                    data[i].acquire_time = that.format(Number(data[i].acquire_time))
+                                    data[i].expire_time = that.format(Date.parse(new Date(data[i].expire_time)))
+                                }
+                            }else{
+                                this.noPrizeList = true;
+                            }
+                            that.prizeList = data
+                        }else{
+                            this.noPrizeList = true;
+                        }
+                        console.log(that.prizeList)
+                    }).catch(res => {
+                        this.noPrizeList = true;
+                    })
+                }
+            })
+        },
+        add0(m) { return m < 10 ? '0' + m : m },
+        format(shijianchuo) {
+			//shijianchuo是整数，否则要parseInt转换
+			var time = new Date(shijianchuo);
+			var y = time.getFullYear();
+			var m = time.getMonth() + 1;
+			var d = time.getDate();
+			var h = time.getHours();
+			var mm = time.getMinutes();
+			var s = time.getSeconds();
+			// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+			return y + '-' + this.add0(m) + '-' + this.add0(d) ;
+		},
+        goHome(){
+            router.replace({
+                uri:'/'
+            })
+        },
+        showPrizeDetailFn(){
+            this.showPrizeDetail = true;
+        },
+        closePrizeDetail(){
+            this.showPrizeDetail = false;
+        },
+        showPrizeRulesFn(){
+            this.showPrizeRules = true;
+        },
+        closePrizeRules(){
+            this.showPrizeRules = false;
+        },
+        lookRule(item){
+            this.showPrizeRulesFn()
+        },
+        exchange(item){
+            this.code = item.code
+            this.passwd = item.passwd;
+            this.showPrizeDetailFn()
+        },
+        copyValue(value){
+            clipboard.set({
+                text: value,
+                success: () => {
+                    prompt.showToast({
+                        message: '复制成功'
+                    })
+                },
+                fail: () => {
+                    prompt.showToast({
+                        message: '复制失败'
+                    })
+                }
+            })
+        }
+    })
+</script>

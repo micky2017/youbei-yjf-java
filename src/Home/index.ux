@@ -5,42 +5,58 @@
 			<!-- <div if="showGuide" class="guide-page_btn" >
 				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
 			</div> -->
-			<div class="go-app" if="showGuide && swIndex == 2">
+			<div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
 				<text onclick="skip()">立即体验</text>
 			</div>
-			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide">
-				<image class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
-					<!-- <image class="guide-page_image" width="100%" src="./images/guide_page_2.png" alt="">
-				<image class="guide-page_image" width="100%" src="./images/guide_page_3.png" alt=""> -->
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="true" if="showGuide && guideList.length>0">
+				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.pic}}" alt="">
 			</swiper>
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="true" if="showGuide && guideList.length <=0">
+				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
+			</swiper>
+
 		</div>
 		<tabs index="{{tabIndex}}" @change="reTab">
 		<!-- 主页 -->
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
-					<div class="title-bar">
-						<div class="city" @click="toDetail('Home/CityList')">
-							<text>{{cityName}}</text>
-							<text>▼</text>
-						</div>
-						<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
-							<div class="inner">
-								<div class="text right-btn">
-									<text>登录</text>
+					<div class="title-bar" if="tabIndex == 0">
+						<div class="header-content">
+							<div class="city" @click="toDetail('Home/CityList')">
+								<text class="city-name">{{cityName}}</text>
+								<text>▼</text>
+							</div>
+							<div if="activeSwitch == 'open'" class="notification-body">
+								<image width="18" height="19" resize-mode="contain" src="./images/notification_icon.png"></image>
+								<swiper loop="true" autoplay="true" indicator="false">
+									<text for="notificationList">{{$item}}</text>		
+								</swiper>
+							</div>
+							<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
+								<div class="inner">
+									<div class="text right-btn">
+										<text>登录</text>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="weather" if="{{isLogin}}">
-							<text>{{weather}}</text>
+							<div class="login" style="width:80px;" if="{{isLogin}}">
+								
+							</div>
 						</div>
 					</div>
 					<list>
 					<list-item>
 					<!-- 常用缴费 -->
 					<div class="common-body">
-						<swiper class="common-swiper" indicator-selected-color="#9A70C2" >
-							<image src="{{item}}" resize-mode="contain" for="item in bannerList" alt=""></image>
+						<swiper autoplay="true" class="common-swiper">
+							<image @click="goUrl($item)" if="homeBannerList.length > 0" src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
 						</swiper>
+						<swiper if="!showHomeBanner" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
+							<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
+						</swiper>
+						<div class="weather" if="{{isLogin}}">
+							<text>{{weather}}</text>
+						</div>
 						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
 						<div class="common-content">
@@ -57,7 +73,16 @@
 							</div>
 						</div>
 					</div>
-					<text class="fast-title">便捷缴费</text>
+					<div class="activity-entry-banner">
+					<!-- homeAdsList -->
+						<swiper if="homeAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+							<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in homeAdsList" alt=""></image>
+						</swiper>
+					</div>
+					<div class="fast-title">
+						<text class="fast-title_text">便捷缴费</text>
+						<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
+					</div>
 					</list-item>
 					<!-- 缴费类别 -->
 						<list-item>
@@ -66,7 +91,7 @@
 								<text>世界上最远的距离是没有网络</text>
 							</div>
 							<div class="grids">
-								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type)">
+								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,$item.icon)">
 									<div class="icon">
 										<image resize-mode="contain" src="{{$item.icon}}"></image>
 									</div>
@@ -80,13 +105,21 @@
 					</list>
 					<div class="add-icon" if="showShortcut && tabIndex == 0">
 						<div>
-							<image height="100px" src="./images/add_icon_text.png"></image>
+							<image if="activeSwitch == 'close'" height="100px" src="./images/add_icon_text.png"></image>
+							<image if="activeSwitch =='open'" height="100px" src="./images/activityImg/add_icon_text.png"></image>
 						</div>
 						<div>
 							<image @click="createShortcut()" height="50px" src="./images/add_icon_btn.png"></image>
 						</div>
 						
 						<image height="50px" src="./images/add_icon_source.png"></image>
+					</div>
+					<div if="showActiveModel" @click="closeActiveModel" class="activity-model-body">
+						<div>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+						</div>
+						<image class="activity-model_img" width="693" height="717" src="./images/activityImg/model_content_img.png"></image>
+						<image @click="toActive" class="activity-model_btn" width="340" height="90" src="./images/activityImg/model_content_btn.png"></image>
 					</div>
 				</div>
 				<!-- 缴费记录 -->
@@ -95,9 +128,16 @@
 						<div class="header">
 							<div class="title"><text>缴费记录</text></div>
 						</div>
+						<div class="records-banner">
+							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+								<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in jiluAdsList" alt=""></image>
+							</swiper>
+							<!-- <image src="./images/home-banner.jpg"></image> -->
+						</div>
 						<!-- 无缴费记录时 -->
 						<div class="no-records_body" if="orderPagingH5Model.recordsModel.length == 0">
-							<div if="{{!isLogin}}" @click="toDetail('User/SmsLogin')" class="no-records_title">
+							<image src="./images/no_payment_records.png" width="452" height="498" resize-mode="contain"></image>
+							<!-- <div if="{{!isLogin}}" @click="toDetail('User/SmsLogin')" class="no-records_title">
 								<div><text style="color:#9A70C2;font-weight:bold;">登录</text><text>后可查看您的缴费记录呦</text></div>
 							</div>
 							<div if="{{isLogin}}" class="no-records_title">
@@ -111,7 +151,7 @@
 
 							</div>
 							<div class="grids">
-								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'fast')">
+								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,$item.icon,'fast')">
 									<div class="icon">
 										<image resize-mode="contain" src="{{$item.icon}}"></image>
 									</div>
@@ -119,7 +159,7 @@
 										<text>{{$item.typeName}}</text>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 						<!-- 缴费记录列表 -->
 						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color	= "#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
@@ -164,7 +204,18 @@
 					</div>
 					<list>
 						<list-item>
+							<div class="records-banner">
+								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+									<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in myAdsList" alt=""></image>
+								</swiper>
+							</div>
 							<div class="list">
+								<div class="item" if="activeSwitch == 'open'"  @click="toPrize('Home/MyPrize')">
+									<div class="inner inner-arrow">
+										<image height="30" src="./images/about.png"></image>
+										<text>我的奖品</text>
+									</div>
+								</div>
 								<div class="item" @click="copyWx">
 									<div class="inner">
 										<image height="30" src="./images/feedback.png"></image>
@@ -251,10 +302,11 @@ import util from '../util.js';
 import storage from "@system.storage";
 import webview from '@system.webview'
 import clipboard from '@system.clipboard'
+
 const fetch = require('@system.fetch');
 const prompt = require('@system.prompt');
 const shortcut = require('@system.shortcut')
-// const device = require('@system.device');
+const device = require('@system.device');
 
 export default Custom_page({
 	public: {
@@ -265,11 +317,14 @@ export default Custom_page({
 		showGuide: false,
 		showShortcut:false,
 		sid: '',
+		showHomeBanner:false,
+		activeSwitch:'close',
 		tabIndex: 0,
 		weather:'',
 		guidePageList: [],
 		guideSecond: 3,
 		mobile: '',
+		imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
 		refreshing: false,
 		tab: 'i0',
 		pageSize: 10,
@@ -280,7 +335,15 @@ export default Custom_page({
 		netWork: true,
 		timer: '',
 		swIndex: 0,
-		bannerList:['./images/home-banner.jpg'],
+		notificationList:[],
+		brand:'',
+		showActiveModel:false,
+		guideList:[],
+		homeBannerList:[],
+		homeAdsList:[],
+		jiluAdsList:[],
+		myAdsList:[],
+		bannerList:[{pic:'./images/home-banner.jpg',url:''}],
 		cebPaymentCategoriesList: [],
 		orderPagingH5Model: {
 			pageInfo: {},
@@ -292,8 +355,17 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
+		device.getInfo({
+			success: (ret) => {
+				this.brand = ret.brand;
+				this.getActiveSwitch(this.brand)
+				// 设备品牌
+				// console.log(ret.brand)
+			}
+		})
 		// banner
-		this.getBanner();
+		// this.getBanner();
+		this.getNotification();
 		// weather
 		this.getWeather();
 		// 是否提示用户添加到桌面
@@ -317,11 +389,84 @@ export default Custom_page({
 		})
 
 	},
+	getNotification(){
+		request.post('lottery/inform').then(res => {
+			if(res.status == 0){
+				this.notificationList = res.data
+			}
+		})
+	},
+	getActiveSwitch(brand){
+		brand = 'oppo'
+		request.get(`jiaofei/active-switch?brand=${brand}`).then(res => {
+			if(res.status == 200){
+				if(res.data == 'open'){
+					this.getResource()
+					this.activeSwitch = 'open'
+					// 首次登录
+					this.onDayFirstLogin()
+				}else{
+					this.activeSwitch = 'close'
+				}
+				storage.set({
+					key:'activeSwitch',
+					value:this.activeSwitch
+				})
+			}
+		})
+	},
+	onDayFirstLogin(){
+		this.addChange('log')
+	},
+	// 请增加抽奖次数
+	addChange(type){
+		storage.get({
+			key:'_id',
+			success: (res) => {
+				if(res){
+					request.post('lottery/addChance',{type,sid:res}).then(res => {
+						if(res.status == 0 && type == 'log'){
+							this.showActiveModel = true;
+						}
+					})
+				}
+			},
+		})
+	},
+	// 获取资源位
+	getResource(){
+		request.get('jiaofei/get-resource-img').then(res => {
+			if(res.status == 200){
+				const data = res.data.pic_conf;
+				this.guideList = data.guide_pic.data//引导页
+				this.homeBannerList = data.home_banner.data//banner
+				if(this.homeBannerList.length >0){
+					this.showHomeBanner = true;
+				}
+				console.log(this.homeBannerList,this.showHomeBanner)
+				this.homeAdsList = data.home_ads.data//首页资源位
+				this.jiluAdsList = data.jilu_ads.data//缴费记录广告位
+				this.myAdsList = data.my_ads.data//我的广告位
+			}
+		})
+	},
+	toActive(){
+		router.push({
+			uri:'Home/Active'
+		})
+	},
+	showActiveModelFn(){
+		this.showActiveModel = true;
+	},
+	closeActiveModel(){
+		this.showActiveModel = false;
+	},
 	showProptShortcut(){
 		const that = this;
 		shortcut.hasInstalled({
 			success:  (ret) => {
 				if (ret) {
+					that.addChange('add');
 					that.showShortcut = false;
 				} else {
 					that.showShortcut = true;
@@ -332,6 +477,17 @@ export default Custom_page({
 	onDestroy() {
 		if (this.timer) {
 			clearInterval(this.timer)
+		}
+	},
+	toPrize(url){
+		if(this.isLogin){
+			router.push({
+				uri:url
+			})
+		}else{
+			router.push({
+				uri:'User/SmsLogin'
+			})
 		}
 	},
 	// 天气
@@ -348,6 +504,20 @@ export default Custom_page({
 			console.log(err)
 		})
 	},
+	goUrl(item){
+		if(item.url){
+			if(item.url.indexOf('http') != -1){
+				webview.loadUrl({
+					url: item.url,
+					allowthirdpartycookies: true
+				})
+			}else{
+				router.push({
+					uri:item.url
+				})
+			}
+		}
+	},
 	// 创建桌面快捷方式
 	createShortcut(){
 		shortcut.hasInstalled({
@@ -356,13 +526,15 @@ export default Custom_page({
 				prompt.showToast({
 					message: '已创建桌面图标'
 				})
-				this.showShortcut = false;					
+				this.showShortcut = false;	
+				this.addChange('add');
 			} else {
 				shortcut.install({
 					success:  () => {
 						prompt.showToast({
 							message: '成功创建桌面图标'
 						})
+						this.addChange('add');
 						this.showShortcut = false;					
 					},
 					fail: function (errmsg, errcode) {
@@ -540,10 +712,18 @@ export default Custom_page({
 						pageSize: 10,
 						currentPage: 1
 					}).then(res => {
-						console.log(res)
 
 						if (res.status == 200) {
 							this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+							const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+							if(recordsModel.length > 0){
+								const paymentDate = recordsModel[0].paymentDate
+								const date = this.format(Date.parse(new Date()))
+								console.log(date,paymentDate.split(' ')[0])
+								if(paymentDate.split(' ')[0] == date){
+									this.addChange('pay')
+								}
+							}
 							if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 								this.hasMoreData = false;
 							}
@@ -617,6 +797,19 @@ export default Custom_page({
 		});
 		let me = this;
 	},
+	add0(m) { return m < 10 ? '0' + m : m },
+	format(shijianchuo) {
+			//shijianchuo是整数，否则要parseInt转换
+			var time = new Date(shijianchuo);
+			var y = time.getFullYear();
+			var m = time.getMonth() + 1;
+			var d = time.getDate();
+			var h = time.getHours();
+			var mm = time.getMinutes();
+			var s = time.getSeconds();
+			// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+			return y + '-' + this.add0(m) + '-' + this.add0(d) ;
+		},
 	// 获取定位
 	getLocation() {
 		const that = this;
@@ -754,7 +947,7 @@ export default Custom_page({
 		router.push(obj)
 	},
 	// 缴费类别点击事件
-	toJFDetail(url, name, type,jfType) {
+	toJFDetail(url, name, type,icon,jfType) {
 		if(jfType == 'common'){
 			// 常用缴费
 			statis.statis('class_type_common_click',{ typeName: name ,external:this.external},this)
@@ -772,21 +965,70 @@ export default Custom_page({
 				title: name,
 				type,
 				external:this.external,
+				icon,
 			}
 		}
 		if (name.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
 		}
 		if (this.isLogin) {
-			router.push(obj)
+			// 跳转缴费页
+			this.getJfTypeDetail(obj)
+			// router.push(obj)
 		} else {
-			// obj.uri = "Home/Mobile"
 			router.push({
 				uri:'User/SmsLogin'
 			})
-			// router.push({
-			// 	uri: 'User/login'
-			// })
+		}
+	},
+	// 查询缴费项目
+	getJfTypeDetail(obj){
+		if(obj.params.title.indexOf("手机") != -1) {
+			obj.uri = "Home/Mobile"
+			router.push(obj)
+		}else{	
+			// 缴费项目信息
+			request.post('jiaofei/pay-type-detail', {
+				cityName: this.cityName,
+				type: obj.params.type,
+			}).then(res => {
+				if (res.status == 200) {
+					const item = res.data.paymentItemPagingModel;
+					this.paymentItemList = res.data.paymentItemList;
+					if(this.paymentItemList.length > 1){
+						// 列表选择
+						router.push({
+							uri:'Home/ProjectList',
+							params:{
+								title: obj.params.title,
+								type:obj.params.type,
+								icon:obj.params.icon,
+								cityName:this.cityName,
+								external:this.external,
+								paymentItemList:this.paymentItemList,//选择列表
+								paymentItemModelList:item.paymentItemModelList,//项目信息
+							}
+						})
+					}else{
+						console.log(obj.params.name)
+						// 账单详情
+						router.push({
+							uri:'Home/Recharge',
+							params:{
+								payName:'1',
+								title: obj.params.title,
+								type:obj.params.type,
+								icon:obj.params.icon,
+								external:this.external,
+								cityName:this.cityName,
+								paymentItemModelList:item.paymentItemModelList,//项目信息
+							}
+						})
+					}
+				} else {
+					this.showToast(res.msg, "back")
+				}
+			})
 		}
 	},
 	// 退出登录

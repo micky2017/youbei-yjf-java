@@ -3,41 +3,105 @@
     <template>
         <div class="login" onclick="inputFocus()">
             <TitleBar external="{{external}}" title="登录" color="#fff"></TitleBar>
-            <div class="tab-select">
+            <!-- <image width="100%" height="288"  resize-mode="contain" src="../../images/activityImg/login_banner.png"></image> -->
+            <!-- <img src="../../images/activityImg/login_banner.png" alt="" srcset=""> -->
+            <swiper if="loginAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+                <image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in loginAdsList" alt=""></image>
+            </swiper>
+            <div if="loginAdsList.length <= 0" style="height:280px">
+            </div>
+            <div class="login-body">
+                <div class='tabs'>
+                    <div class="tab-bar" mode="fixed">
+                        <div  if="tab_index == 0" class="tab-bar_item">
+                            <text class="tab-text">短信登录</text>
+                        </div>
+                        <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
+                            <text class="tab-text">密码登录</text>
+                        </div>
+                        <div @click="selectTab(0)" if="tab_index == 1" class="tab-bar_item no-selece_item">
+                            <text class="tab-text">短信登录</text>
+                        </div>
+                        <div if="tab_index == 1" class="tab-bar_item">
+                            <text class="tab-text">密码登录</text>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div if="tab_index == 0" class="tab-content-section">
+                            <div class="input" onclick="stopEvent()">
+                                <!-- <div class="name"><text>手机号</text></div> -->
+                                <div class="content">
+                                    <div class="input-body">
+                                        <input @change="smsPhone" value="{{sms_phone}}" id="sms_phone" type="number" placeholder="请输入手机号">
+                                    </div>
+                                    <div class="coutdown-content">
+                                        <div if="{{clickable}}" @click="countdown" class="countdown-body">
+                                            <text class="countdown-btn">{{codeText}}</text>
+                                        </div>
+                                        <div class="countdown-body seconds-body" if="{{!clickable}}">
+                                            <text class="seconds" >{{codeText}}</text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="info-prompt">
+                                <div></div>
+                                <text>手机号有误请重新输入</text>
+                            </div> -->
+                            <div class="input password-input" onclick="stopEvent()">
+                                <!-- <div class="name"><text>验证码</text></div> -->
+                                <div class="captcha">
+                                    <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="number" placeholder="请输入验证码">
+                                </div>
+                            </div>
+                            <div class="user-agreement">
+                                <text @click="toDetail('User/About/Protocol')">温馨提示：未注册云缴费快应用账号的手机号，登录时将自动注册，且代表您已同意<span class="agreement-text">《用户服务协议》</span></text>
+                            </div>
+                            <div class="btn">
+                                <input @click="smsLogin" type="button" value="登录">
+                            </div>
+                        </div>
+                        <div if="tab_index == 1" class="tab-content-section">
+                            <div class="input" onclick="stopEvent()">
+                                    <!-- <div class="name"><text>手机号</text></div> -->
+                                    <div class="content">
+                                        <input id="mobile" value="{{mobile}}" @change="changeMobile" type="number" placeholder="请输入手机号">
+                                    </div>
+                                </div>
+                                <div class="input password-input" onclick="stopEvent()">
+                                    <!-- <div class="name"><text>登录密码</text></div> -->
+                                    <div class="content">
+                                        <input id="password" value="{{password}}" @change="changePassword" type="password" placeholder="请输入登录密码">
+                                    </div>
+                                </div>
+                                <div class="btn">
+                                    <input @click="login" type="button" value="登录">
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <!-- <div class="tab-select">
                 <div @click="toDetail('User/PwLogin')">
                     <text>密码登录</text>
                 </div>
-            </div>
-            <div class="tab-content-section">
-                <div class="input" onclick="stopEvent()">
-                    <div class="name"><text>手机号</text></div>
-                    <div class="content">
-                        <input @change="smsPhone" value="{{sms_phone}}" id="sms_phone" type="number" placeholder="请输入手机号">
-                        <div if="{{clickable}}" @click="countdown" class="countdown-body">
-                            <text class="countdown-btn">{{codeText}}</text>
-                        </div>
-                        <div class="countdown-body seconds-body" if="{{!clickable}}">
-                            <text class="seconds" >{{codeText}}</text>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="info-prompt">
-                    <div></div>
-                    <text>手机号有误请重新输入</text>
-                </div> -->
-                <div class="input password-input" onclick="stopEvent()">
-                    <div class="name"><text>验证码</text></div>
-                    <div class="captcha">
-                        <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="number" placeholder="请输入验证码">
-                    </div>
-                </div>
-                <div class="user-agreement">
-                    <text @click="toDetail('User/About/Protocol')">温馨提示：未注册云缴费快应用账号的手机号，登录时将自动注册，且代表您已同意<span class="agreement-text">《用户服务协议》</span></text>
-                </div>
-                <div class="btn">
-                    <input @click="smsLogin" type="button" value="登录">
-                </div>
-            </div>
+            </div> -->
+
             <!-- 图形验证码 -->
             <div class="img-capthca_body" if="showCapthcha">
                 <div class="img-capthca_content">
@@ -65,12 +129,17 @@
     import request from '../../utils/request';
     import storage from "@system.storage";
     import fetch from '@system.fetch'
+    import webview from '@system.webview'
     import statis from '../../utils/statistics.js'
 
     export default Custom_page({
-        protected: {
-            show_toast: false,
+        public: {
             external: '',
+        },
+        protected: {
+            tab_index:0,
+            imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
+            show_toast: false,
             toast_text: '',
             sms_phone: '',
             sms_code: '',
@@ -79,7 +148,8 @@
             mobile: '',
             password: '',
             captcha:'',
-            capthchaValue:''
+            capthchaValue:'',
+            loginAdsList:[]
         },
         private: {
             detail: null,
@@ -87,6 +157,39 @@
             codeText: "获取验证码",
             clickable: true,
             timer: ''
+        },
+        onInit() {
+             storage.get({
+                key:'activeSwitch',
+                success:(res)=>{
+                    if(res == 'open'){
+                        this.getResource()
+                    }
+                }
+            })
+        },
+        // 获取资源位
+        getResource(){
+            request.get('jiaofei/get-resource-img').then(res => {
+                if(res.status == 200){
+                    const data = res.data.pic_conf;
+                    this.loginAdsList = data.login_ads.data
+                }
+            })
+        },
+        goUrl(item){
+            if(item.url){
+                if(item.url.indexOf('http') != -1){
+                    webview.loadUrl({
+                        url: item.url,
+                        allowthirdpartycookies: true
+                    })
+                }else{
+                    router.push({
+                        uri:item.url
+                    })
+                }
+            }
         },
         changeCapthcha(response){
             this.capthchaValue = response ? response.value : this.capthchaValue;
@@ -107,6 +210,10 @@
             //     this.captcha = res.data
             //     console.log(this.captcha)
             // })
+        },
+        selectTab(index){
+            this.inputFocus();
+            this.tab_index = index;
         },
         // 监听手机号输入
         changeMobile(response) {
@@ -159,6 +266,10 @@
                         value: res.data.sessionId,
                     })
                     storage.set({
+                        key: '_id',
+                        value: res.data._id,
+                    })
+                    storage.set({
                         key: 'mobile',
                         value: res.data.mobile,
                     })
@@ -174,13 +285,31 @@
             })
         },
         inputFocus() {
-            this.$element('sms_code').focus({ focus: false })
-            this.$element('sms_phone').focus({ focus: false })
-            // this.$element('mobile').focus({ focus: false })
-            // this.$element('password').focus({ focus: false })
+            if(this.tab_index == 0){
+                this.$element('sms_code').focus({ focus: false })
+                this.$element('sms_phone').focus({ focus: false })
+            }else{
+                this.$element('mobile').focus({ focus: false })
+                this.$element('password').focus({ focus: false })
+            }
         },
         stopEvent() {
             console.log(2)
+        },
+        // 请增加抽奖次数
+        addChange(type){
+            storage.get({
+                key:'_id',
+                success: (res) => {
+                    if(res){
+                        request.post('lottery/addChance',{type,sid:res}).then(res => {
+                            if(res.status == 0){
+                                this.showActiveModel = true;
+                            }
+                        })
+                    }
+                },
+            })
         },
         // 短信登录
         smsLogin() {
@@ -206,6 +335,14 @@
                     // fetch.fetch({
                     //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
                     // })
+                    if(res.data.isFirst){
+                        // 首次注册
+                        this.addChange('reg')
+                    }
+                    storage.set({
+                        key:'_id',
+                        value:res.data._id
+                    })
                     storage.set({
                         key: 'sid',
                         value: res.data.sessionId,

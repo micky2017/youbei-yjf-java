@@ -1,0 +1,49 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="web-body">
+        <TitleBar title="幸运抽奖"></TitleBar>
+        <web if="webUrl" trustedurl='{{trustedurl}}' src="{{webUrl}}"></web>
+    </div>
+</template>
+<style lang="less" scoped>
+    .web-body{
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        background-color: #f4f4f4;
+        padding-top: 100px;
+        align-items: center;
+        >web{
+            width: 100%;
+            height: 100vh;
+        }
+    }
+</style>
+<script>
+import storage from '@system.storage';
+export default Custom_page({
+    private: {
+        webUrl:'https://www.baidu.com',
+        trustedurl:['http://192.168.1.111:7010/lottery'],
+    },
+    onInit() {
+        storage.get({
+            key:'_id',
+            success:(data) => {
+                if(data){
+                    this.webUrl = `http://192.168.1.111:7010/lottery?sid=${data}`
+                }else{
+                    this.webUrl = 'http://192.168.1.111:7010/lottery'
+                }
+            },
+            fail:() => {
+                    this.webUrl = 'http://192.168.1.111:7010/lottery'
+            }
+        })
+    },
+    onReady() {
+        console.log(this.webUrl)
+    },
+})
+</script>
+

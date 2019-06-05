@@ -2,6 +2,11 @@
 <template>
     <div class="order-detail">
         <TitleBar title="缴费详情"></TitleBar>
+        <div class="records-banner">
+            <swiper if="detailAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+                <image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in detailAdsList" alt=""></image>
+            </swiper>
+        </div>
         <div class="detail">
             <div class="item top">
                 <div class="item-name"><text>支付金额：</text></div>
@@ -58,13 +63,17 @@
 <script>
 	import router from '@system.router'
     import request from '../utils/request'
-
+    import webview from '@system.webview';
+    import storage from '@system.storage';
+    
 	export default Custom_page ({
 		protected: {
 			url: '',
 			id: '',
 			title: '',
             tab: 'i0',
+            detailAdsList:[],
+            imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
             detail: {
                 status: '',
                 orderNo: '',
@@ -82,6 +91,17 @@
 			
 			tq: []
         },
+        onInit() {
+             console.log('aaaaaaaaaaa='+this.detailAdsList)
+            storage.get({
+                key:'activeSwitch',
+                success:(res)=>{
+                    if(res == 'open'){
+                        this.getResource()
+                    }
+                }
+            })
+        },
         onReady() {
             // /payment-records
             this.detail = JSON.parse(this.title);
@@ -96,8 +116,32 @@
                     // this.detail = detail
                     console.log(this.detail)
 				}
-			})
+            })
+           
             // console.log(this.title)
+        },
+        // 获取资源位
+        getResource(){
+            request.get('jiaofei/get-resource-img').then(res => {
+                if(res.status == 200){
+                    const data = res.data.pic_conf;
+                    this.detailAdsList = data.detail_ads.data
+                }
+            })
+        },
+        goUrl(item){
+            if(item.url){
+                if(item.url.indexOf('http') != -1){
+                    webview.loadUrl({
+                        url: item.url,
+                        allowthirdpartycookies: true
+                    })
+                }else{
+                    router.push({
+                        uri:item.url
+                    })
+                }
+            }
         },
 	})
 </script>

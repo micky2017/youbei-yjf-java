@@ -301,7 +301,7 @@
                     billQueryResultDataModel:JSON.stringify({})
                 }
                 statis.statis('pay_click',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
-                // params.testpackage = 'test'
+                params.testpackage = 'test'
                 request.post('pay/creat',params).then(res => {
                     console.log(res)
                     this.showLoading = false;
@@ -313,12 +313,6 @@
                                 trustedurl:['https://test-api.ubaycn.com/pay/cb'],
                                 allowthirdpartycookies: true
                             })
-                            // router.push({
-                            //     uri:'Home/Checkstand',
-                            //     params:{
-                            //         src:res.data.url
-                            //     }
-                            // })
                         }else{
                             this.showToast(res.data.respMsg)
                         }

@@ -6,111 +6,98 @@
     <div class="recharge" onclick="inputFocus()">
         <TitleBar external={{external}} title={{title}} color="#fff"></TitleBar>
         <YjfLoading if="showLoading" />
-        <div class="explain" if="{{paymentItem.description}}">
-
-            <!-- <div class="explain-left">
-                <text>！</text>
-            </div> -->
-            <div class="explain-right">
-                <text>{{paymentItem.description}}</text>
-                <!-- <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
-                <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
-                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div> -->
+        <div class="payment-content_bg"></div>
+        <div class="payment-content">
+            <div class="payment-icon">
+                <image width="60" height="60"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <text>{{title}}</text>
             </div>
-        </div>
-        <!-- <div class="input-body">
-            <text>充值号码</text>
-            <input type="tel" placeholder="请输入充值号码" />
-        </div> -->
-        <div class="payment-body">
-            <div class="payment-item">
-                <div class="payment-item_name">
-                    <text>缴费城市:</text>
-                </div>
-                <div class="payment-item_content">
-                    <text>{{cityName}}</text>
-                </div>
-            </div>
-            <!-- <div class="payment-item">
-                <div class="payment-item_name">
-                    <text>缴费金额:</text>
-                </div>
-                <div class="payment-item_content">
-                    <input type="text" />
-                </div>
-            </div> -->
-            <div class="payment-item">
-                <div class="payment-item_name">
-                    <text>缴费项目:</text>
-                </div>
-                <div class="payment-item_content">
-                    <div if="paymentItemList.length > 1" onclick="selectItem">
-                        <text>{{itemName}}▼</text>
+            <div class="payment-item_info">
+                <div class="payment-item">
+                    <div class="payment-item_name">
+                        <text>缴费城市:</text>
                     </div>
-                    <div if="paymentItemList.length == 1">
-                        <text>{{paymentItemList[0]}}</text>
-                    </div>
-                    <div if="payTimeTips" class="paymentConstraint">
-                        <text>{{payTimeTips}}</text>
+                    <div class="payment-item_content">
+                        <text>{{cityName}}</text>
                     </div>
                 </div>
-            </div>
-            <div class="payment-item">
-                <div class="payment-item_name">
-                    <text>收费单位:</text>
-                </div>
-                <div class="payment-item_content">
-                    <text>{{paymentItem.companyName}}</text>
-                </div>
-            </div>
-            <div class="payment-item" if="paymentItem.queryPaymentBillParamModelList.length == 0">
-                <div class="payment-item_name">
-                    <text>客户编号:</text>
-                </div>
-                <div class="payment-item_content">
-                    <div>
-                        <input  id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                <div class="payment-item">
+                    <div class="payment-item_name">
+                        <text>缴费项目:</text>
+                    </div>
+                    <div class="payment-item_content">
+                        <div if="payName == 1">
+                            <text>{{paymentItemModelList[0].paymentItemName}}</text>
+                        </div>
+                        <div if="payName == 2" onclick="backProjectList">
+                            <text>{{paymentItemModelList[0].paymentItemName}}▼</text>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="payment-item" for="item in paymentItem.queryPaymentBillParamModelList">
-                <div class="payment-item_name">
-                    <text>{{item.name}}:</text>
+                <div class="payment-item" if="paymentItemModelList[0].companyName">
+                    <div class="payment-item_name">
+                        <text>收费单位:</text>
+                    </div>
+                    <div class="payment-item_content">
+                        <div>
+                            <text>{{paymentItemModelList[0].companyName}}</text>
+                        </div>
+                    </div>
                 </div>
-                <div class="payment-item_content">
-                    <div if="item.filedType == 0">
-                        <input if="item.priorLevel == 1" value="{{billKey}}" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
-                        <input if="item.priorLevel != 1" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
-                        <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
-                        <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
+                <div class="payment-item" if="paymentItem.queryPaymentBillParamModelList.length == 0">
+                    <div class="payment-item_name">
+                        <text>客户编号:</text>
                     </div>
-                    <div onclick="changeItem1(item)" elif="item.filedType == 1">
-                        <text if="billItem">{{billItem}}▼</text>
-                        <text name="{{item.nameType}}" if="!billItem">请选择▼</text>
+                    <div class="payment-item_content">
+                        <div>
+                            <input  id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                        </div>
                     </div>
-                    <div elif="item.filedType == 2">
-                        <input type="checkbox" name="" id="" />
+                </div>
+                <div class="payment-item" for="item in paymentItem.queryPaymentBillParamModelList">
+                    <div class="payment-item_name">
+                        <text>{{item.name}}:</text>
                     </div>
-                    <div elif="item.filedType == 3">
-                        <input type="radio" name="" id="" />
-                    </div>
-                    <div else>
-                        <text>{{item.filedType}}</text>
+                    <div class="payment-item_content">
+                        <div if="item.filedType == 0">
+                            <input if="item.priorLevel == 1" value="{{billKey}}" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
+                            <input if="item.priorLevel != 1" id="{{item.nameType}}" name="{{item.nameType}}" onchange="changeItem(item)" type="text" placeholder="{{item.description}}" />
+                        </div>
+                        <div onclick="changeItem1(item)" elif="item.filedType == 1">
+                            <text if="billItem">{{billItem}}▼</text>
+                            <text name="{{item.nameType}}" if="!billItem">请选择▼</text>
+                        </div>
+                        <div elif="item.filedType == 2">
+                            <input type="checkbox" name="" id="" />
+                        </div>
+                        <div elif="item.filedType == 3">
+                            <input type="radio" name="" id="" />
+                        </div>
+                        <div else>
+                            <text>{{item.filedType}}</text>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 是否显示历史户号 -->
-        <div class="history-billkey" if="billkeys.length > 0">
-            <div>
-            	<text>历史户号记录</text>
+            <!-- 是否显示历史户号 -->
+            <div class="history-billkey">
                 <div>
-                    <div @click="changeBillkey(item)" class="{{historyBillkey == item ? 'se-his' : 'nse-his'}}" for="{{item in billkeys}}">
-                        <text class="{{historyBillkey == item ? 'se-his_text' : 'nse-his_text'}}">{{item}}</text>
+                    <div class="history-title">
+                        <image width="32" height='38' resize-mode="contain" src='../images/history-title_icon.png'></image>
+                        <text>历史缴费记录</text>
+                    </div>
+                    <div class="history-content">
+                        <div @click="changeBillkey(item)" if="billkeys.length > 0" class="{{historyBillkey == item ? 'se-his' : 'nse-his'}}" for="{{item in billkeys}}">
+                            <text class="{{historyBillkey == item ? 'se-his_text' : 'nse-his_text'}}">{{item}}</text>
+                        </div>
+                        <div if="billkeys.length <= 0">
+                            <text>暂无历史缴费记录</text>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
@@ -119,7 +106,7 @@
         <div class="picker-body" show="{{picker}}" @click="pickerShow('')">
             <div class="picker-content" show="{{picker}}">
                 <div class="picker-title">
-                    <text></text>
+                    <text style="width:80px"></text>
                     <text>{{pickerTitle}}</text>
                     <div class="close-picker" @click="pickerShow('')">
                         <text>✕</text>
@@ -158,6 +145,9 @@ export default Custom_page({
             cityName:"",
             title:"",
             type:"",
+            paymentItemModelList: [],
+            icon:'',
+            payName:'',
         },
     protected: {
         showLoading: false,
@@ -169,11 +159,12 @@ export default Custom_page({
         itemName: '',
         selectMoney: '',
         billItem: null,
+        iconUrl:'',
         // title: "",
         // type: "",
         // cityName: "",
         payTimeTips: '',
-        paymentItemModelList: [],
+        paymentItemModel:{},
         listPageModelList: [],
         paymentItemList: [],
         cityModel: {},
@@ -246,6 +237,9 @@ export default Custom_page({
         }
         this.picker = false;
     },
+    backProjectList(){
+        router.back()
+    },
     // 选择框切换
     changeMoney(value) {
         this.selectMoney = value;
@@ -311,9 +305,15 @@ export default Custom_page({
 					value:this.external
 				})
 			}
-		})
-        this.ifLogin()
-        // console.log(_.debounce)
+        })
+        if(this.payName){
+            this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
+            this.paymentItem = this.paymentItemModelList[0];
+            this.getIcon()
+            this.getHistoryBillkey();
+        }else{
+            this.ifLogin()
+        }
         
     },
     // 输入框监听
@@ -380,7 +380,102 @@ export default Custom_page({
         })
     },
     onInit() {
-        
+    },
+    getIcon(){
+        const iconList = [
+            {
+                icon: '/Home/images/icon/water.png',
+                typeName: '水费',
+                id: '',
+                path: 'Home/Recharge'
+            },
+            {
+                icon: '/Home/images/icon/power.png',
+                typeName: '电费',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/ranqi.png',
+                typeName: '燃气费',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/mobile.png',
+                typeName: '手机充值',
+                id: '',
+                path: 'Home/Recharge'
+            },
+            {
+                icon: '/Home/images/icon/tv.png',
+                typeName: '有线电视',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/jiayouka.png',
+                typeName: '加油卡',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/wuye.png',
+                typeName: '物业费',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/dang.png',
+                typeName: '党费',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/jiaoyu.png',
+                typeName: '教育考试',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/daishou.png',
+                typeName: '非税代收',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/qunuan.png',
+                typeName: '供暖费',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/liuliang.png',
+                typeName: '流量',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/qita.png',
+                typeName: '其他',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/etc.png',
+                typeName: 'ETC',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/yanglao.png',
+                typeName: '养老',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/jiaotong.png',
+                typeName: '交通',
+                id: ''
+            },
+            {
+                icon: '/Home/images/icon/tongxu.png',
+                typeName: '通讯费',
+                id: ''
+            }
+        ];
+        for(let i = 0;i<iconList.length;i++){
+            if(this.title.indexOf(iconList[i].typeName) != -1){
+                this.iconUrl = `${iconList[i].icon}`
+            }
+        }
     },
     // 获取历史记录
     getHistoryBillkey(){
@@ -488,10 +583,7 @@ export default Custom_page({
             this.showLoading = false;
             if (res.status == 200) {
                 if (res.data.msg.indexOf("成功") != -1) {
-
                     // 账单打点
-                    // const 
-
                     const statisParams = {
                         paymentName: this.paymentItem.paymentItemName,
                         external:this.external
@@ -499,16 +591,38 @@ export default Custom_page({
                     Object.assign(statisParams,this.reqData)
                     statis.statis('search_bill', statisParams, this)
                     this.setBillkey();
-                    router.push({
-                        uri: "Home/Inspect",
-                        params: {
-                            paymentItem: this.paymentItem,
-                            itemValue: this.deleteSpace(this.itemValue),
-                            reqData: this.reqData,
-                            data: res.data.billQueryResultModel,
-                            qryAcqSsn: res.data.qryAcqSsn,
-                        }
+                    const billQueryList = res.data.billQueryResultModel.billQueryResultDataModelList.map(item => {
+                        return item.beginDate
                     })
+                    if(billQueryList.length > 1){
+                        // 多账单
+                        router.push({
+                            uri:'Home/MoreBill',
+                            params: {
+                                title:this.title,
+                                paymentItem: this.paymentItem,
+                                itemValue: this.deleteSpace(this.itemValue),
+                                reqData: this.reqData,
+                                data: res.data.billQueryResultModel,
+                                qryAcqSsn: res.data.qryAcqSsn,
+                                billQueryList,
+                            }
+                        })
+                    }else{
+                        router.push({
+                            uri: "Home/Inspect",
+                            params: {
+                                title:this.title,
+                                paymentItem: this.paymentItem,
+                                itemValue: this.deleteSpace(this.itemValue),
+                                reqData: this.reqData,
+                                data: res.data.billQueryResultModel,
+                                qryAcqSsn: res.data.qryAcqSsn,
+                                modelIndex: 0,
+                            }
+                        })
+                    }
+                    
                 } else {
                     this.showToast(res.data.msg)
                 }

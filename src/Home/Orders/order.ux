@@ -6,16 +6,47 @@
 
 <template>
     <div class="order-body">
-        <TitleBar title="确认信息" color="#fff"></TitleBar>
+        <TitleBar title="预缴账单" color="#fff"></TitleBar>
         <YjfLoading if="showLoading" />
-        <div style="height:40px;"></div>
+
+        <div class="pay-fees">
+            <div class="payment-icon">
+                <image width="46" height="46"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <text>{{title}}</text>
+            </div>
+            <div class="payment-type">
+                <text>缴费金额</text>
+            </div>
+            <div class="payment-input_type">
+                <div>
+                    <text>{{payAmount}}元</text>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-user_info">
+            <div class="{{item.info_name == info_list[info_list.length -1].info_name ? 'payment-info_item no-boder' : 'payment-info_item'}}" for="item in info_list">
+                <text class="info-name">{{item.info_name}}</text>
+                <text class="info-value">{{item.info_value}}</text>
+            </div>
+        </div>
+
+        <!-- <div style="height:40px;"></div>
         <InfoList style="margin-top:40px" infoList="{{info_list}}"></InfoList>
         <text class="invoice">
             {{address}}
-        </text>
+        </text> -->
         <div class="next-btn" @click="toFinish()">
-            <text>支付</text>
+            <text>立即缴费</text>
         </div>
+
+
+
+
+
+
+
+
         <!-- <PayTypeList /> -->
         <!-- <div class="payType-body"> -->
             <div class="picker-body" show="{{picker}}" @click="pickerShow()">
@@ -57,6 +88,7 @@
         protected: {
             showLoading:false,
             reqData:{},
+            title:'',
             data:{},
             show_toast:false,
             qryAcqSsn:'',
@@ -66,6 +98,7 @@
             info_list: [],
             billObj:{},
             filed:[],
+            iconUrl:'',
             picker:false,
             payTypeName:'微信支付',
             selectValue:'',
@@ -95,10 +128,107 @@
                 }
             },1500)
         },
+        getIcon(){
+            const iconList = [
+                {
+                    icon: '/Home/images/icon/water.png',
+                    typeName: '水费',
+                    id: '',
+                    path: 'Home/Recharge'
+                },
+                {
+                    icon: '/Home/images/icon/power.png',
+                    typeName: '电费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/ranqi.png',
+                    typeName: '燃气费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/mobile.png',
+                    typeName: '手机充值',
+                    id: '',
+                    path: 'Home/Recharge'
+                },
+                {
+                    icon: '/Home/images/icon/tv.png',
+                    typeName: '有线电视',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiayouka.png',
+                    typeName: '加油卡',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/wuye.png',
+                    typeName: '物业费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/dang.png',
+                    typeName: '党费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiaoyu.png',
+                    typeName: '教育考试',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/daishou.png',
+                    typeName: '非税代收',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/qunuan.png',
+                    typeName: '供暖费',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/liuliang.png',
+                    typeName: '流量',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/qita.png',
+                    typeName: '其他',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/etc.png',
+                    typeName: 'ETC',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/yanglao.png',
+                    typeName: '养老',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/jiaotong.png',
+                    typeName: '交通',
+                    id: ''
+                },
+                {
+                    icon: '/Home/images/icon/tongxu.png',
+                    typeName: '通讯费',
+                    id: ''
+                }
+            ];
+            for(let i = 0;i<iconList.length;i++){
+                if(this.title.indexOf(iconList[i].typeName) != -1){
+                    this.iconUrl = `${iconList[i].icon}`
+                }
+            }
+        },
         onReady() {
             console.log(this.data)
             this.data = JSON.parse(this.data);
             const data = this.data;
+            this.getIcon()
             // const billObj = this.billObj
             // this.address = data.item7 || "";
             // printAddress
@@ -114,14 +244,6 @@
                 {
                     info_name: "收费单位",
                     info_value: data.companyName,
-                },
-                {
-                    info_name: "充值金额",
-                    info_value: `${this.payAmount}元`,
-                },
-                {
-                    info_name: "支付金额",
-                    info_value: `${this.payAmount}元`,
                 },
                 {
                     info_name: "发票获取",
@@ -164,7 +286,7 @@
             }
             console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
-            // params.testpackage = 'test'
+            params.testpackage = 'test'
             statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
 
             // APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});

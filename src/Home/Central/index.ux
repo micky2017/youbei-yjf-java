@@ -1,0 +1,88 @@
+<template>
+    <div class="regist">
+
+    </div>
+</template>
+
+<style lang="less">
+</style>
+
+<script>
+    import router from '@system.router'
+    import storage from"@system.storage";
+    import request from '../../utils/request'
+
+    export default Custom_page ({
+        public: {
+            cityName:"",
+            type:"",
+            uri:'',
+            external:'',
+            icon:'',
+            title:''
+        },
+        onReady() {
+           let obj = {
+               uri:'',
+               params:{
+                   cityName:this.cityName,
+                   type:this.type,
+                   icon:this.icon,
+                   title:this.title,
+                   external:this.external
+               }
+           }
+           this.getJfTypeDetail(obj)
+        },
+       getJfTypeDetail(obj){
+            if(obj.params.title.indexOf("手机") != -1) {
+                obj.uri = "Home/Mobile"
+                router.replace(obj)
+            }else{	
+                // 缴费项目信息
+                request.post('jiaofei/pay-type-detail', {
+                    cityName: this.cityName,
+                    type: obj.params.type,
+                }).then(res => {
+                    if (res.status == 200) {
+                        const item = res.data.paymentItemPagingModel;
+                        this.paymentItemList = res.data.paymentItemList;
+                        if(this.paymentItemList.length > 1){
+                            // 列表选择
+                            router.replace({
+                                uri:'Home/ProjectList',
+                                params:{
+                                    title: obj.params.title,
+                                    type:obj.params.type,
+                                    icon:obj.params.icon,
+                                    cityName:this.cityName,
+                                    external:this.external,
+                                    paymentItemList:this.paymentItemList,//选择列表
+                                    paymentItemModelList:item.paymentItemModelList,//项目信息
+                                }
+                            })
+                        }else{
+                            // 账单详情
+                            router.replace({
+                                uri:'Home/Recharge',
+                                params:{
+                                    payName:'1',
+                                    title: obj.params.title,
+                                    type:obj.params.type,
+                                    icon:obj.params.icon,
+                                    external:this.external,
+                                    cityName:this.cityName,
+                                    paymentItemModelList:item.paymentItemModelList,//项目信息
+                                }
+                            })
+                        }
+                    } else {
+                        outer.replace({
+                                uri:'Home'
+                        })
+                    }
+                })
+            }
+        },
+    })
+</script>

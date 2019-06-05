@@ -5,12 +5,15 @@
     <div class="city-list_body">
         <TitleBar title="选择城市" color="#fff" @click="hideInput"></TitleBar>
         <div class="search-city">
-            <text>🔍</text>
+            <!-- <text>🔍</text> -->
+            <image width="40" height="40" resize-mode="contain" src="../images/search_city_icon.png"></image>
             <input id="search-city" type="text" value="{{search_value}}"  @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
             <text show="{{show_close}}" @click="clearCityValue">❎</text>
         </div>
         <div class="location" @click="hideInput">
-            <text>您当前所在城市： {{city_name}}</text>
+            <text>您当前所在城市：</text>
+            <image width="34" height="34" resize-mode="contain" src="../images/location_icon.png"></image>
+            <text> &nbsp;{{city_name}}</text>
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
        

@@ -1,0 +1,278 @@
+.my-prize_body{
+    height: 100%;
+    flex-direction: column;
+    background-color: #f4f4f4;
+    padding-top: 169px;
+    align-items: center;
+    >list{
+        height: 100%;
+    }
+    // 列表
+    .prize-item{
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        // 奖品
+        .prize-item_body{
+            width:667px;
+            height:219px;
+            background-image: url('../images/activityImg/prize_item_bg.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            margin-bottom: 28px;
+            .prize-item_content{
+                width: 494px;
+                height: 100%;
+                flex-direction: column;
+                padding: 52px 0px 46px 57px;
+                >div{
+                    height: 50px;
+                    align-items: center;
+                }
+                .prize-item_name{
+                    >text{
+                        margin-left: 13px;
+                        font-size:24px;
+                        font-family:"SourceHanSansCN-Bold";
+                        font-weight:bold;
+                        color: #333333;
+                    }
+                }
+                .prize-item_time{
+                    >text{
+                        font-size:24px;
+                        font-family:"SourceHanSansCN-Regular";
+                        font-weight:400;
+                        color: #747474;
+                    }
+                }
+                .rules{
+                    // justify-content: space-between;
+                    .prize-content_btn{
+                        width:104px;
+                        height:41px;
+                        border: 2px solid #F3A65B;
+                        justify-content: center;
+                        align-items: center;
+                        margin-left: 44px;
+                        >text{
+                            font-size:22px;
+                            font-family:"SourceHanSansCN-Regular";
+                            font-weight:400;
+                            color: #F3A65B;
+                        }
+                    }
+                }
+                
+            }
+            .prize-item_price{
+                flex: 1;
+                height:100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 61px 0px 41px 0px;
+                justify-content: space-between;
+                .prize-item_price--body{
+                    .price-identify{
+                        color:#9B6DC7;
+                    }
+                    .price-value{
+                        font-size:60px;
+                        font-family:"SourceHanSansCN-Bold";
+                        font-weight:bold;
+                        color:#9B6DC7;
+                    }
+                }
+                .prize-item_btn{
+                    width:124px;
+                    height:43px;
+                    background-color:#F3A65B;
+                    border-radius:22px;
+                    justify-content: center;
+                    align-items: center;
+                    >text{
+                        color: #ffffff;
+                        font-size:24px;
+                        font-family:"SourceHanSansCN-Regular";
+                        font-weight:400;
+                    }
+                }
+            }
+        }
+        // 过期奖品
+        .prize-item_past{
+            .prize-item_content{
+                .rules{
+                    .prize-content_btn{
+                        border: 2px solid #999999;
+                        >text{
+                            color: #999999;
+                        }
+                    }
+                }
+                
+            }
+            .prize-item_price{
+                .prize-item_price--body{
+                    .price-identify{
+                        color:#999999;
+                    }
+                    .price-value{
+                        color:#999999;
+                    }
+                }
+                .prize-item_btn{
+                    background-color:#dedede;
+                    >text{
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+    // 无记录
+    .no-prize{
+        flex-direction: column;
+        align-items: center;
+        // justify-content: center;
+        height: 100%;
+        padding-top: 276px;
+        .no-prize_text{
+            font-size:36px;
+            font-family:"SourceHanSansCN-Regular";
+            font-weight:400;
+            color: #333333;
+            padding-top: 54px;
+            padding-bottom: 30px;
+        }
+        .no-prize_propt{
+            font-size:30px;
+            font-family:"SourceHanSansCN-Regular";
+            font-weight:400;
+            color: #747474;
+            height: 48px;
+            line-height: 48px;
+        }
+        >div{
+            width:185px;
+            height:76px;
+            background-color: #fff;
+            border: 1px solid #f2f2f2;
+            border-radius:8px;
+            justify-content: center;
+            align-items:center;
+            margin-top: 67px;
+            >text{
+                font-size:30px;
+                font-family:"SourceHanSansCN-Regular";
+                font-weight:400;
+                color: #9B6CD7;
+            }
+        }
+    }
+    // 奖券
+    .prize-detail_body{
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.3);
+        .prize-detail_content{
+            width: 562px;
+            height: 900px;
+            background-color: #fff;
+            flex-direction: column;
+            border-radius: 20px;
+            .prize-detail_title{
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+                height:97px;
+                background-color: #F3A65B;
+                justify-content: space-between;
+                padding: 10px 17px;
+                align-items: center;
+                >text{
+                    flex: 1;
+                    text-align: center;
+                    font-size:36px;
+                    font-family:"SourceHanSansCN-Medium";
+                    font-weight:500;
+                    color: #ffffff;
+                }
+            }
+            .prize-detail_info{
+                padding: 35px 32px;
+                flex-direction: column;
+                .prize-detail_ticket{
+                    flex-direction:column;
+                    height: 156px;
+                    justify-content: space-between;
+                    .prize-ticket_title{
+                        width:206px;
+                        height:42px;
+                        background-color:#F3A65B;
+                        border-radius:21px;
+                        justify-content: center;
+                        align-items: center;
+                        >text{
+                            font-size:24px;
+                            font-family:"SourceHanSansCN-Regular";
+                            font-weight:400;
+                            color: #ffffff;
+                        }
+                    }
+                    .prize-ticket_content{
+                        width: 100%;
+                        height: 84px;
+                        background-color: #F4F4F4;
+                        padding: 30px 20px 30px 35px;
+                        justify-content:space-between;
+                        >text{
+                            font-size:30px;
+                            font-family:"SourceHanSansCN-Medium";
+                            font-weight:500;
+                            color: #333333;
+                        }
+                        >div{
+                            width:73px;
+                            height:35px;
+                            background-color: #fff;
+                            justify-content: center;
+                            align-items: center;
+                            >text{
+                                font-size:24px;
+                                color: #333333;
+                            }
+                        }
+                    }
+                }
+                .end_ticket{
+                    margin-top:32px;
+                }
+                .use-pattern_body{
+                    margin-top: 31px;
+                    flex-direction:column;
+                    .use-pattern_title{
+                        color:#333333;
+                        font-size: 24px;
+                        font-weight: bold;
+                        margin-bottom: 29px;
+                    }
+                    .use-pattern_content{
+                        color:#666666;
+                        font-size: 22px;
+                        margin-bottom: 27px;
+                    }
+                }
+            }
+        }
+    }
+    .prize-rules_body{
+        .prize-detail_content{
+            height: 571px;
+        }
+    }
+}
