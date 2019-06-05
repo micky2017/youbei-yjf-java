@@ -48,9 +48,12 @@
 					<list-item>
 					<!-- 常用缴费 -->
 					<div class="common-body">
-						<swiper if="showHomeBanner" autoplay="true" class="common-swiper">
-							<image @click="goUrl($item)" if="homeBannerList.length > 0" src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
-						</swiper>
+						
+						<div if="showHomeBanner" class="common-swiper_content">
+							<swiper autoplay="true" class="common-swiper">
+								<image @click="goUrl($item)"  src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
+							</swiper>
+						</div>
 						<swiper if="!showHomeBanner" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
 							<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
 						</swiper>
