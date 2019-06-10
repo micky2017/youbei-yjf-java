@@ -310,7 +310,7 @@
     },
     toLogin(){
       router.push({
-        uri:`${this.hapUrl}Home/SmsLogin`,
+        uri:`${this.hapUrl}User/SmsLogin`,
         params:{
           external:'oppo-card'
         }
