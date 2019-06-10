@@ -53,11 +53,12 @@
 							</swiper>
 						</div>
 						
-						<div if="{{isLogin}}" class="weather" >
+						<div class="weather" >
 							<text if="{{isLogin}}">{{weather}}</text>
+							<text if="{{!isLogin}}"></text>
 						</div>
-						<div if="{{!isLogin}}" class="weather no-login" >
-						</div>
+						<!-- <div if="{{!isLogin}}" class="weather no-login" >
+						</div> -->
 						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
 						<div class="common-content">
