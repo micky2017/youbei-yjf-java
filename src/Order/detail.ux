@@ -4,7 +4,7 @@
         <TitleBar title="缴费详情"></TitleBar>
         <div class="records-banner">
             <swiper if="detailAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-                <image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in detailAdsList" alt=""></image>
+                <image @click="goUrl(item,'detailAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in detailAdsList" alt=""></image>
             </swiper>
         </div>
         <div class="detail">
@@ -63,6 +63,7 @@
 <script>
 	import router from '@system.router'
     import request from '../utils/request'
+    import statis from '../utils/statistics'
     import webview from '@system.webview';
     import storage from '@system.storage';
     
@@ -129,7 +130,10 @@
                 }
             })
         },
-        goUrl(item){
+        goUrl(item,source){
+            if(source){
+                statis.statis('banner_click',{source: source},this)
+            }
             if(item.url){
                 if(item.url.indexOf('http') != -1){
                     webview.loadUrl({

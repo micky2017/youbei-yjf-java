@@ -6,12 +6,12 @@
     align-items: center;
     .pay-fees{
         width:700px;
-        height: 346px;
+        height: 232px;
         border-radius:16px;
         background-color: #fff;
         padding: 30px 40px;
         flex-direction: column;
-        justify-content: space-between;
+        // justify-content: space-between;
         .payment-icon{
             width: 100%;
             height: 60px;
@@ -24,13 +24,40 @@
         }
         .payment-type{
             width:100%;
-            justify-content: center;
+            // padding: 0px 53px 0px 32px;
             align-items: center;
+            height: 172px;
+            justify-content: space-between;
             // margin: 30px 0px 20px 0px;
             >text{
-                font-size:36px;
+                font-size:30px;
                 font-weight:400;
                 color: #666666;
+            }
+            >div{
+                >input{
+                    width:280px;
+                    height:66px;
+                    font-size: 38px;
+                    color: #333333;
+                    text-align: right;
+                    border-width: 2px;
+                    border-style: solid;
+                    border-color: #eaeaea;
+                    border-radius:16px;
+                    padding-right: 20px;
+                    line-height: 66px;
+                    ::placeholder{
+                        color: #999999;
+                        font-size: 38px;
+                    }
+                }
+                >text{
+                    font-size:42px;
+                    font-family:AlibabaPuHuiTiR;
+                    font-weight:400;
+                    color: #333333;
+                }
             }
         }
         .payment-input_type{
@@ -42,12 +69,33 @@
                     font-size: 72px;
                     border-bottom: 1px solid #cccccc;
                 }
+                .input-payment_amount{
+                    font-size:48px;
+                    font-family:SourceHanSansCN-Regular;
+                    font-weight:400;
+                    ::placeholder{
+                        color: #bfbfbf;
+                    }
+                }
                 >text{
                     color: #666666;
                     font-size: 72px;
                 }
             }
             
+        }
+    }
+    .pay-input{
+        justify-content: flex-start;
+        .payment-input_type{
+            margin-top: 80px;
+            >div{
+                .input-payment_amount{
+                    padding-bottom: 37px;
+                    width: 450px;
+                    text-align: center;
+                }
+            }
         }
     }
     .payment-user_info{
@@ -60,7 +108,9 @@
         .payment-info_item{
             width: 100%;
             padding:30px 0px;
-            border-bottom: 1px solid #EAEAEA;
+            border-bottom-width: 1px;
+            border-bottom-color: #EAEAEA;
+            border-bottom-style: solid;
             align-items:center;
             .info-name{
                 width: 35%;

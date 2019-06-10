@@ -159,14 +159,13 @@
                 key: 'cityId',
                 value: cityId,
             })
-            console.log(this.type)
             if(this.type){
                 this.getPayType(cityName)
             }else{
                 router.push({
                     uri:"Home",
                     params:{
-                        tabIndex:this.tabIndex,
+                        tabIndex:this.tabIndex
                     }
                 })
             }

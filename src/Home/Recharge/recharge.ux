@@ -9,7 +9,7 @@
         <div class="payment-content_bg"></div>
         <div class="payment-content">
             <div class="payment-icon">
-                <image width="60" height="60"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <image width="58" height="58"  resize-mode="contain" src="{{iconUrl}}"></image>
                 <text>{{title}}</text>
             </div>
             <div class="payment-item_info">

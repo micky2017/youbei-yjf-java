@@ -13,26 +13,25 @@
                 <text>{{title}}</text>
             </div>
             <div class="payment-type">
-                <text if="!inputValue">请选择充值金:</text>
+                <text if="!inputValue">请选择充值金额:</text>
                 <text if="inputValue && billObj.payAmount == '0'">请输入充值金额:</text>
                 <text if="inputValue && billObj.payAmount != '0'">缴费金额</text>
-            </div>
-            <div class="payment-input_type">
+            <!-- </div> -->
+            <!-- <div class="payment-input_type"> -->
                 <div if="!inputValue" @click="pickerShow('选择金额')">
                     <text>{{money}} ▼</text>
                 </div>
                 <div if="billObj.payAmount == '0'">
-                    <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
-                    <text>元</text>
+                    <input class="input-payment_amount" id="payAmount" value="{{payAmountValue}}" placeholder="" onchange="payAmount" type="number" name="payAmount" />
+                    <!-- <text>元</text> -->
                 </div>
                 <div if="billObj.payAmount != '0'">
-                    <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
-                    <text>元</text>
-                    <!-- <text>{{payAmountValue}}元</text> -->
+                    <!-- <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
+                    <text>元</text> -->
+                    <text>{{payAmountValue}}元</text>
                 </div>
             </div>
         </div>
-
         <div class="payment-user_info">
             <div class="{{item.info_name == info_list[info_list.length -1].info_name ? 'payment-info_item no-boder' : 'payment-info_item'}}" for="item in info_list">
                 <text class="info-name">{{item.info_name}}</text>
@@ -348,7 +347,7 @@
             }
         },
         inputFocus(){
-            if(this.inputValue){
+            if(this.$element('payAmount')){
                 this.$element('payAmount').focus({focus:false})
             }
         },

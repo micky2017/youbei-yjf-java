@@ -54,6 +54,7 @@ function createShortcut () {
             prompt.showToast({
               message: '成功创建桌面图标'
             })
+            // statis.statis('hasInstalled_success',{},this)
           },
           fail: function (errmsg, errcode) {
             // prompt.showToast({

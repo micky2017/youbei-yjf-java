@@ -26,12 +26,7 @@
 								<text class="city-name">{{cityName}}</text>
 								<text>▼</text>
 							</div>
-							<div if="activeSwitch == 'open'" class="notification-body">
-								<image width="18" height="19" resize-mode="contain" src="./images/notification_icon.png"></image>
-								<swiper loop="true" autoplay="true" indicator="false">
-									<text for="notificationList">{{$item}}</text>		
-								</swiper>
-							</div>
+							
 							<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
 								<div class="inner">
 									<div class="text right-btn">
@@ -49,14 +44,15 @@
 					<!-- 常用缴费 -->
 					<div class="common-body">
 						
-						<div if="showHomeBanner" class="common-swiper_content">
-							<swiper autoplay="true" class="common-swiper">
-								<image @click="goUrl($item)"  src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
+						<div class="common-swiper_content">
+							<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true">
+								<image @click="goUrl($item,'HomeBannerList')"  src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
+							</swiper>
+							<swiper if="homeBannerList.length <= 0" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
+								<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
 							</swiper>
 						</div>
-						<swiper if="!showHomeBanner" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
-							<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
-						</swiper>
+						
 						<div if="{{isLogin}}" class="weather" >
 							<text if="{{isLogin}}">{{weather}}</text>
 						</div>
@@ -78,20 +74,32 @@
 							</div>
 						</div>
 					</div>
-					<div class="activity-entry-banner">
-					<!-- homeAdsList -->
-						<swiper if="homeAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-							<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in homeAdsList" alt=""></image>
-						</swiper>
+					<!-- <div if="activeSwitch == 'open'" class="notification">
+					
+					</div> -->
+					<div if="activeSwitch == 'open'" class="notification-body">
+						<div class="notification-content">
+							<image resize-mode="contain" src="./images/notification_icon.png"></image>
+							<swiper vertical="true" loop="true" autoplay="true" indicator="false">
+								<text for="notificationList">{{$item}}</text>		
+							</swiper>
+						</div>
+						<div class="activity-entry-banner">
+							<swiper indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+								<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in homeAdsList" alt=""></image>
+							</swiper>
+						</div>
 					</div>
-					<div class="fast-title">
-						<text class="fast-title_text">便捷缴费</text>
-						<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
-					</div>
+
+					
+					
 					</list-item>
 					<!-- 缴费类别 -->
 						<list-item>
-							
+							<div class="fast-title">
+								<text class="fast-title_text">便捷缴费</text>
+								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
+							</div>
 							<div class="no-network" if="!netWork">
 								<text>世界上最远的距离是没有网络</text>
 							</div>
@@ -135,7 +143,7 @@
 						</div>
 						<div class="records-banner">
 							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-								<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in jiluAdsList" alt=""></image>
+								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in jiluAdsList" alt=""></image>
 							</swiper>
 							<!-- <image src="./images/home-banner.jpg"></image> -->
 						</div>
@@ -211,13 +219,13 @@
 						<list-item>
 							<div class="records-banner">
 								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-									<image @click="goUrl(item)" src="{{imgUrl}}{{item.pic}}"  for="item in myAdsList" alt=""></image>
+									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in myAdsList" alt=""></image>
 								</swiper>
 							</div>
 							<div class="list">
 								<div class="item" if="activeSwitch == 'open'"  @click="toPrize('Home/MyPrize')">
 									<div class="inner inner-arrow">
-										<image height="30" src="./images/about.png"></image>
+										<image height="30" src="./images/prize_icon.png"></image>
 										<text>我的奖品</text>
 									</div>
 								</div>
@@ -343,9 +351,9 @@ export default Custom_page({
 		notificationList:[],
 		brand:'',
 		showActiveModel:false,
-		guideList:[],
+		guideList:[{pic:''}],
 		homeBannerList:[],
-		homeAdsList:[],
+		homeAdsList:[{pic:''}],
 		jiluAdsList:[],
 		myAdsList:[],
 		bannerList:[{pic:'./images/home-banner.jpg',url:''}],
@@ -386,7 +394,8 @@ export default Custom_page({
 				}else{
 					this.getGuidePage()
 					this.showGuide = true;
-					util.createShortcut();
+					this.createShortcut()
+					// util.createShortcut();
 					storage.set({
 						key:'showGuide',
 						value:'true'
@@ -404,7 +413,7 @@ export default Custom_page({
 		})
 	},
 	getActiveSwitch(brand){
-		brand = 'oppo'
+		// brand = 'oppo'
 		request.get(`jiaofei/active-switch?brand=${brand}`).then(res => {
 			if(res.status == 200){
 				if(res.data == 'open'){
@@ -414,6 +423,7 @@ export default Custom_page({
 					this.onDayFirstLogin()
 				}else{
 					this.activeSwitch = 'close'
+					this.guideList = []
 				}
 				storage.set({
 					key:'activeSwitch',
@@ -450,7 +460,6 @@ export default Custom_page({
 				if(this.homeBannerList.length >0){
 					this.showHomeBanner = true;
 				}
-				console.log(this.homeBannerList,this.showHomeBanner)
 				this.homeAdsList = data.home_ads.data//首页资源位
 				this.jiluAdsList = data.jilu_ads.data//缴费记录广告位
 				this.myAdsList = data.my_ads.data//我的广告位
@@ -475,6 +484,7 @@ export default Custom_page({
 				if (ret) {
 					that.addChange('add');
 					that.showShortcut = false;
+					statis.statis('hasInstalled_success',{},this)
 				} else {
 					that.showShortcut = true;
 				}
@@ -487,6 +497,7 @@ export default Custom_page({
 		}
 	},
 	toPrize(url){
+		statis.statis('my_prize_click',{external:this.external},this)
 		if(this.isLogin){
 			router.push({
 				uri:url
@@ -499,7 +510,6 @@ export default Custom_page({
 	},
 	// 天气
 	getWeather(){
-		console.log(1)
 		request.get(`user/get-weather?city=${this.cityName}`).then(res => {
 			console.log(res.data)
 			if(res.data.forecast){
@@ -511,7 +521,10 @@ export default Custom_page({
 			console.log(err)
 		})
 	},
-	goUrl(item){
+	goUrl(item,source){
+		if(source){
+			statis.statis('banner_click',{source: source,external:this.external},this)
+		}
 		if(item.url){
 			if(item.url.indexOf('http') != -1){
 				webview.loadUrl({
@@ -538,6 +551,7 @@ export default Custom_page({
 			} else {
 				shortcut.install({
 					success:  () => {
+						statis.statis('hasInstalled_success',{},this)
 						prompt.showToast({
 							message: '成功创建桌面图标'
 						})
@@ -1032,8 +1046,10 @@ export default Custom_page({
 						})
 					}
 				} else {
-					this.showToast(res.msg, "back")
+					this.showToast(res.msg)
 				}
+			}).catch(err => {
+				this.showToast(res.msg)
 			})
 		}
 	},
@@ -1066,12 +1082,9 @@ export default Custom_page({
 		})
 		storage.delete({
 			key: 'mobile',
-			success: function (data) {
-				console.log('handling success')
-			},
-			fail: function (data, code) {
-				console.log(`handling fail, code = ${code}`)
-			}
+		})
+		storage.delete({
+			key: '_id',
 		})
 	},
 

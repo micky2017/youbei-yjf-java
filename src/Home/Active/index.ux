@@ -24,20 +24,20 @@ import storage from '@system.storage';
 export default Custom_page({
     private: {
         webUrl:'',
-        trustedurl:['https://test-api.ubaycn.com/lottery'],
+        trustedurl:['https://api.ubaycn.com/lottery'],
     },
     onInit() {
         storage.get({
             key:'_id',
             success:(data) => {
                 if(data){
-                    this.webUrl = `https://test-api.ubaycn.com/lottery?sid=${data}`
+                    this.webUrl = `https://api.ubaycn.com/lottery?sid=${data}`
                 }else{
-                    this.webUrl = 'https://test-api.ubaycn.com/lottery'
+                    this.webUrl = 'https://api.ubaycn.com/lottery'
                 }
             },
             fail:() => {
-                    this.webUrl = 'https://test-api.ubaycn.com/lottery'
+                    this.webUrl = 'https://api.ubaycn.com/lottery'
             }
         })
     },

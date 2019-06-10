@@ -9,7 +9,10 @@
             </div>
             <list @click='inputFocus'>
                 <list-item @click="affirmItem($item)" type="{{$item}}" for="searchList">
-                    <div class="jf-list_item" >
+                    <div if="$item != searchList[searchList.length - 1]" class="jf-list_item" >
+                        <text>{{$item}}</text>
+                    </div>
+                    <div if="$item == searchList[searchList.length - 1]" class="jf-list_item no-border_bottom" >
                         <text>{{$item}}</text>
                     </div>
                 </list-item>
