@@ -56,6 +56,12 @@
       "User/About": {
         "component": "about"
       },
+      "User/Setting": {
+        "component": "index"
+      },
+      "User/GroupManage": {
+        "component": "index"
+      },
       "User/About/Protocol": {
         "component": "protocol"
       },

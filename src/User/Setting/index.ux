@@ -1,0 +1,84 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+	<div class="setting-body">
+        <TitleBar title='设置' color="#fff"></TitleBar>
+        <div class="item" @click="toDetail('User/About')">
+            <div class="inner inner-arrow">
+                <image height="30" src="./images/about.png"></image>
+                <text>关于云缴费</text>
+            </div>
+        </div>
+        <div class="logout-body" if="{{isLogin}}" @click="logout">
+            <text>退出登录</text>
+        </div>
+	</div>
+</template>
+<style lang="less">
+    @import "./index.less";
+</style>
+<script>
+import statis from '../../utils/statistics.js'
+import storage from '@system.storage'
+import router from '@system.router'
+import prompt from '@system.prompt'
+export default Custom_page({
+    protected: {
+       isLogin:false
+    },
+    onReady() {
+        storage.get({
+			key: "sid",
+			success: (data) => {
+				if (data) {
+                    this.isLogin = true;
+                }
+            },
+            fail: () => {
+
+            }
+        })
+    },
+    toDetail(uri){
+        router.push({
+            uri,
+        })
+    },
+    // 退出登录
+	logout() {
+		statis.statis('logout_click',{mobile:this.mobile},this)
+		const that = this;
+		storage.delete({
+			key: 'sid',
+			success: function (data) {
+				// // console.log('handling success')
+				// that.pageSize = 10;
+				// that.currentPage = 1;
+				// that.sid = '';
+				// that.mobile = '';
+				// that.isLogin = false;
+				// that.hasMoreData = false;
+				// console.log(that.isLogin)
+				// that.orderPagingH5Model = {
+				// 	pageInfo: {},
+				// 	recordsModel: []
+				// }
+				prompt.showToast({
+					message: '退出登录成功'
+                });
+                router.replace({
+                    uri:'/'
+                })
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		storage.delete({
+			key: 'mobile',
+		})
+		storage.delete({
+			key: '_id',
+		})
+	},
+})
+</script>

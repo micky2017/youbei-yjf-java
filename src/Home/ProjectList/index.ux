@@ -26,7 +26,8 @@
 </style>
 
 <script>
-	import router from '@system.router'
+    import router from '@system.router'
+    import storage from '@system.storage'
     // import request from '../../utils/request'
 
 	export default Custom_page ({
@@ -50,6 +51,23 @@
         },
         onReady() {
             console.log(this.paymentItemList)
+            storage.get({
+                key:'external',
+                success: (data) => {
+                    if(data && data != ''){
+                        storage.set({
+                            key:'external',
+                            value:this.external
+                        })
+                    }
+                },
+                fail: (err) => {
+                    storage.set({
+                        key:'external',
+                        value:this.external
+                    })
+                }
+            })
         },
         inputFocus(){
                 this.$element('search').focus({ focus: false })

@@ -1,0 +1,44 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="group-manage_body">
+        <TitleBar title='户号管理' color="#fff"></TitleBar>
+        <div class="group-body">
+            <div class="group-body_title">
+                <text>我家</text>
+                <div>
+                    <text>我家</text>
+                    <text>我家</text>
+                </div>
+            </div>
+            <div class="group-manage_content" for="['','','']">
+                <div class="group-content_left">
+                    <image width="80" height="80" resize-mode="contain" src="../../Home/images/icon/power.png"></image>
+                    <div>
+                        <text class="pay-type_text">电费</text>
+                        <text class="pay-bill">060616809</text>
+                    </div>
+                </div>
+                <div class="group-content_right">
+                    <text>我家</text>
+                    <text>我家</text>
+                </div>
+            </div>
+        </div>
+        <div class="group-body">
+           <div class="add-group">
+                <text>➕</text>
+                <text>新增分组</text>
+           </div>
+        </div>
+    </div>
+</template>
+<style lang="less">
+ @import './index.less';
+</style>
+<script>
+export default Custom_page({
+    private: {
+        
+    },
+})
+</script>

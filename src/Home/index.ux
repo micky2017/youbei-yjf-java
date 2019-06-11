@@ -206,7 +206,13 @@
 				<!-- 我的 -->
 				<div class="tab-content-section user">
 					<div class="user-header">
-						<div class="title"><text>我的</text></div>
+						<div class="title">
+							<text></text>
+							<text>我的</text>
+							<div class="user-header_setting" @click="toDetail('User/Setting')">
+								<image resize-mode="contain" src="./images/user_setting_btn.png"></image>
+							</div>
+						</div>
 						<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
 							<image object-fit="contain" resize-mode="contain"  width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
@@ -230,7 +236,22 @@
 										<text>我的奖品</text>
 									</div>
 								</div>
+								<div class="item" @click="toDetail('User/GroupManage')">
+									<div class="inner inner-arrow">
+										<image height="30" src="./images/kefu.png"></image>
+										<text>分组管理</text>
+									</div>
+								</div>
 								<div class="item" @click="copyWx">
+									<div class="inner">
+										<image height="30" src="./images/kefu.png"></image>
+										<text>微信公众号</text>
+										<div class="inner-body">
+											<text>ubaycn</text>
+										</div>
+									</div>
+								</div>
+								<!-- <div class="item" @click="copyWx">
 									<div class="inner">
 										<image height="30" src="./images/feedback.png"></image>
 										<text>反馈建议</text>
@@ -239,19 +260,22 @@
 											<text class="inner-body_pleacehoder">真诚期待您的建议</text>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="item" @click="call">
-									<div class="inner inner-arrow">
+									<div class="inner">
 										<image height="30" src="./images/kefu.png"></image>
 										<text>客服电话</text>
+										<div class="inner-body">
+											<text>4009095595</text>
+										</div>
 									</div>
 								</div>
-								<div class="item" @click="toDetail('User/About')">
+								<!-- <div class="item" @click="toDetail('User/About')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/about.png"></image>
 										<text>关于云缴费</text>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="list" if="showShortcut">
 								<div class="item" style="margin-top:22px;" @click="createShortcut()">
@@ -260,9 +284,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="logout-body" if="{{isLogin}}" @click="logout">
-								<text>退出登录</text>
-							</div>
+							
 						</list-item>
 					</list>
 
@@ -416,6 +438,7 @@ export default Custom_page({
 	getActiveSwitch(brand){
 		// brand = 'oppo'
 		request.get(`jiaofei/active-switch?brand=${brand}`).then(res => {
+			
 			if(res.status == 200){
 				if(res.data == 'open'){
 					this.getResource()
@@ -789,7 +812,6 @@ export default Custom_page({
 						this.netWork = false
 					})
 				} else {
-
 					// 获取城市定位
 					this.getLocation()
 				}
@@ -842,6 +864,7 @@ export default Custom_page({
 				fetch.fetch({
 					url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
 					responseType: 'json',
+					method:'GET',
 					success: (res) => {
 						const city = res.data.result.addressComponent.city || '北京市'
 						that.cityName = city;
@@ -850,6 +873,8 @@ export default Custom_page({
 							// console.log(res)
 							if (res.status == 200) {
 								that.cebPaymentCategoriesList = res.data;
+							}else{
+								this.showToast(res.msg)
 							}
 						}).catch(err => {
 							that.netWork = false
