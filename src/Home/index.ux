@@ -997,13 +997,13 @@ export default Custom_page({
 	toJFDetail(url, name, type,icon,jfType) {
 		if(jfType == 'common'){
 			// 常用缴费
-			statis.statis('class_type_common_click',{ typeName: name ,external:this.external},this)
+			statis.statis('class_type_common_click',{ typeName: name ,cityName:this.cityName,external:this.external},this)
 		}else if(jfType == 'fast'){
 			// 快速缴费
-			statis.statis('class_type_fast_click',{ typeName: name,external:this.external },this)
+			statis.statis('class_type_fast_click',{ typeName: name, cityName:this.cityName,external:this.external },this)
 		}else{
 			// 首页缴费
-			statis.statis('class_type_click',{ typeName: name,external:this.external },this)
+			statis.statis('class_type_click',{ typeName: name,cityName:this.cityName,external:this.external },this)
 		}
 		
 		const obj = {
@@ -1072,10 +1072,14 @@ export default Custom_page({
 						})
 					}
 				} else {
-					this.showToast(res.msg)
+					prompt.showToast({
+						message: res.msg
+					});
 				}
 			}).catch(err => {
-				this.showToast(res.msg)
+				prompt.showToast({
+					message: '网络错误'
+				});
 			})
 		}
 	},
