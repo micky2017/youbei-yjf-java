@@ -30,6 +30,34 @@
                 <text>新增分组</text>
            </div>
         </div>
+        <div if='false' class="modification-body">
+            <div class="modification-content">
+                <div class="modification-title">
+                    <text>请输入新的分组名称</text>
+                </div>
+                <div class="modification-input">
+                    <input placeholder="请输入分组名称" type="text"></input>
+                </div>
+                <div class="modification-btn">
+                    <text>取消</text>
+                    <text class="modification-save_btn">保存</text>
+                </div>
+            </div>
+        </div>
+        <div if="false" class="modification-body delete-body">
+            <div class="modification-content">
+                <div class="modification-title">
+                    <text>请输入新的分组名称</text>
+                </div>
+                <div class="modification-input">
+                    <text>分组下的户号也将一同删除</text>
+                </div>
+                <div class="modification-btn">
+                    <text>取消</text>
+                    <text class="modification-save_btn">删除</text>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style lang="less">

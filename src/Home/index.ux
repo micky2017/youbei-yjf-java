@@ -391,6 +391,9 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
+		// router.push({
+		// 	uri:"Home/Active"
+		// })
 		// storage.set({
 		// 	key:'activeSwitch',
 		// 	value:this.activeSwitch

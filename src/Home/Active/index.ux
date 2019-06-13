@@ -26,6 +26,7 @@ export default Custom_page({
         webUrl:'',
         trustedurl:['https://api.ubaycn.com/lottery'],
     },
+    // http://192.168.1.111:8020/jumpToYjf/index.html
     onInit() {
         storage.get({
             key:'_id',
