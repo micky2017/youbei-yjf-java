@@ -164,7 +164,7 @@
       cebPaymentCategoriesList: [],
       hapUrl:'hap://app/com.ubaycn.yjf/'
     },
-    onInit(){
+    onShow(){
       storage.get({
         key:'sid',
         success:(res) => {
@@ -178,7 +178,21 @@
             this.ifLogin = false;
         }
       })
-      this.getLocation()
+      storage.get({
+        key:'cityName',
+        success:(data) => {
+          if(data){
+            if(data != this.city){
+              this.getPaytypeList(data)
+            }
+          }else{
+              this.getPaytypeList(this.city)
+          }
+        },
+        fail:() => {
+          this.getLocation()
+        }
+      })
     },
     // 经纬度转城市
     geocoder(data){
