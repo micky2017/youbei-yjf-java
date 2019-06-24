@@ -1,8 +1,8 @@
 {
   "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.3.6",
-  "versionCode": "20",
+  "versionName": "1.3.7",
+  "versionCode": "21",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
@@ -94,6 +94,9 @@
       },
       "Home/Checkstand": {
         "component": "checkstand"
+      },
+      "Home/Channel": {
+        "component": "index"
       },
       "Home/MyPrize": {
         "component": "index"

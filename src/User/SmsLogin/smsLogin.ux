@@ -5,11 +5,14 @@
             <TitleBar external="{{external}}" title="登录" color="#fff"></TitleBar>
             <!-- <image width="100%" height="288"  resize-mode="contain" src="../../images/activityImg/login_banner.png"></image> -->
             <!-- <img src="../../images/activityImg/login_banner.png" alt="" srcset=""> -->
-            <swiper if="loginAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-                <image @click="goUrl(item,'loginAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in loginAdsList" alt=""></image>
-            </swiper>
-            <div if="loginAdsList.length <= 0" style="height:280px">
+            <div class='common-swiper_content'>
+                <swiper if="loginAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+                    <image @click="goUrl(item,'loginAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in loginAdsList" alt=""></image>
+                </swiper>
+                <image if="loginAdsList.length <= 0" src="../../images/login_background.jpg"></image>
             </div>
+            <!-- <div if="loginAdsList.length <= 0" style="height:280px">
+            </div> -->
             <div class="login-body">
                 <div class='tabs'>
                     <div class="tab-bar" mode="fixed">
@@ -81,6 +84,7 @@
                         </div>
                     </div>
                 </div>
+                <image if="reg_pic" class="reg_pic" src="{{imgUrl}}{{reg_pic}}"></image>
             </div>
             
             
@@ -149,6 +153,7 @@
             password: '',
             captcha:'',
             capthchaValue:'',
+            reg_pic:'',
             loginAdsList:[]
         },
         private: {
@@ -159,6 +164,20 @@
             timer: ''
         },
         onInit() {
+            if(this.external){
+                storage.set({
+                    key:'external',
+                    value:this.external
+                })
+            }
+            storage.get({
+                key:'reg_pic',
+                success:(data) => {
+                    if(data){
+                        this.reg_pic = data
+                    }
+                }
+            })
              storage.get({
                 key:'activeSwitch',
                 success:(res)=>{
