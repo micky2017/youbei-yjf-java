@@ -1,0 +1,68 @@
+<template>
+    <div>
+    </div>
+</template>
+<style lang="less">
+
+</style>
+<script>
+import request from '../../utils/request'
+const device = require('@system.device');
+const router = require('@system.router');
+const storage = require('@system.storage');
+
+export default {
+    public: {
+        external:'',
+    },
+    onReady() {
+        device.getInfo({
+			success: (ret) => {
+				request.get(`jiaofei/channel-switch?channel=${this.external}&brand=${ret.brand}`).then(res => {
+                    console.log(res)
+                    if(res.status == 200){
+                        storage.set({
+                            key:'activeSwitch',
+                            value:res.data.isOpen
+                        })
+                        storage.set({
+                            key:'external',
+                            value:this.external
+                        })
+                        storage.set({
+                            key:'activeUrl',
+                            value:res.data.url
+                        })
+                        if(res.data.reg_pic){
+							storage.set({
+								key:'reg_pic',
+								value:res.data.reg_pic
+							})
+						}else{
+							storage.delete({
+								key:'reg_pic'
+							})
+						}
+                        if(res.data.isOpen == 'open'){
+                            router.replace({
+                                uri:'Home/Active',
+                                params:{
+                                    external:this.external
+                                }
+                            })
+                        }else{
+                            router.push({
+                                uri:'Home',
+                                params:{
+                                    external:this.external
+                                }
+                            })
+                        }
+                    }
+                })
+			}
+		})
+        
+    },
+}
+</script>
