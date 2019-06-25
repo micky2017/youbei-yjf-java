@@ -33,6 +33,7 @@
                     </div>
                 </div>
                 <div if="{{$item.isExpire}}" class="prize-item_body prize-item_past">
+                <!-- <div if="false" class="prize-item_body prize-item_past"> -->
                     <div class="prize-item_content">
                         <div class="prize-item_name">
                             <image width="30" height="30" src='../images/activityImg/prize_item_icon_default.png'></image>

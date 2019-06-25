@@ -6,8 +6,8 @@
             <div class="group-body_title">
                 <text>我家</text>
                 <div>
-                    <text>我家</text>
-                    <text>我家</text>
+                    <text onclick="showModificationFn">我家</text>
+                    <text onclick="showDeleteFn">我家</text>
                 </div>
             </div>
             <div class="group-manage_content" for="['','','']">
@@ -24,13 +24,13 @@
                 </div>
             </div>
         </div>
-        <div class="group-body">
+        <div class="group-body" onclick="showModificationFn">
            <div class="add-group">
                 <text>➕</text>
                 <text>新增分组</text>
            </div>
         </div>
-        <div if='false' class="modification-body">
+        <div if='showModification' @click="closeWindow" class="modification-body">
             <div class="modification-content">
                 <div class="modification-title">
                     <text>请输入新的分组名称</text>
@@ -44,10 +44,10 @@
                 </div>
             </div>
         </div>
-        <div if="false" class="modification-body delete-body">
+        <div if="showDelete" @click="closeWindow" class="modification-body delete-body">
             <div class="modification-content">
                 <div class="modification-title">
-                    <text>请输入新的分组名称</text>
+                    <text>确认删除分组？</text>
                 </div>
                 <div class="modification-input">
                     <text>分组下的户号也将一同删除</text>
@@ -66,7 +66,18 @@
 <script>
 export default Custom_page({
     private: {
-        
+        showModification:false,
+        showDelete:false,
     },
+    showModificationFn(){
+        this.showModification = true;
+    },
+    showDeleteFn(){
+        this.showDelete = true;
+    },
+    closeWindow(){
+        this.showModification = false;
+        this.showDelete = false;
+    }
 })
 </script>

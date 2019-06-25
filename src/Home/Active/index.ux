@@ -1,7 +1,7 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="web-body">
-        <TitleBar title="幸运抽奖"></TitleBar>
+        <TitleBar external={{external}} title="幸运抽奖"></TitleBar>
         <web if="webUrl" trustedurl='{{trustedurl}}' src="{{webUrl}}"></web>
     </div>
 </template>
@@ -22,28 +22,60 @@
 <script>
 import storage from '@system.storage';
 export default Custom_page({
+    protected: {
+        external: '',
+        mobile:'',
+        source:''
+
+    },
     private: {
         webUrl:'',
-        trustedurl:['https://api.ubaycn.com/lottery'],
+        // trustedurl:['https://api.ubaycn.com/lottery'],
+        trustedurl:[],
     },
     // http://192.168.1.111:8020/jumpToYjf/index.html
     onInit() {
         storage.get({
+            key:'mobile',
+            success:(mobile) => {
+                this.mobile = mobile
+            }
+        })
+        storage.get({
+            key:'external',
+            success:(data) => {
+                if(data && data != this.external && this.external != ''){
+                    this.source = this.external || 'master';
+                }else{
+                    this.source = data;
+                }
+            }
+        })
+
+        storage.get({
+            key:'activeUrl',
+           success: (activeUrl) => {
+               this.trustedurl.push(activeUrl)
+               this.activeUrl = activeUrl
+               this.getWebUrl()
+           }
+        })
+        
+    },
+    getWebUrl() {
+         storage.get({
             key:'_id',
             success:(data) => {
                 if(data){
-                    this.webUrl = `https://api.ubaycn.com/lottery?sid=${data}`
+                    this.webUrl = `${this.activeUrl}?sid=${data}&external=${this.source}&mobile=${this.mobile}`
                 }else{
-                    this.webUrl = 'https://api.ubaycn.com/lottery'
+                    this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
                 }
             },
             fail:() => {
-                    this.webUrl = 'https://api.ubaycn.com/lottery'
+                    this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
             }
         })
-    },
-    onReady() {
-        console.log(this.webUrl)
     },
 })
 </script>
