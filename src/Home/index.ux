@@ -1,6 +1,7 @@
 
 <template>
 	<div class="yjf-home">
+		<!-- 引导页 -->
 		<div if="showGuide" class="guide-page">
 			<!-- <div if="showGuide" class="guide-page_btn" >
 				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
@@ -61,7 +62,7 @@
 						</div> -->
 						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
-						<div class="common-content">
+						<div if="!isGroup" class="common-content">
 							<text class="common-content_title">常用缴费</text>
 							<div class="common-content_body">
 								<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
@@ -71,6 +72,33 @@
 									<div class="text">
 										<text>{{$item.typeName}}</text>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div if="isGroup" class="common-content group-content">
+							<div if="$item.children.length>0" class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
+								<div class="group-item_title">
+									<text>{{$item.groupName}}</text>
+									<div if="$idx == 0" @click="toDetail('User/GroupManage')" >
+										<image width="26" height="26" resize-mode="contain" src="../images/groupImg/add_group_icon.png"></image>
+										<text>分组管理</text>									
+									</div>
+								</div>
+								<div @click="goRechargeDetail($item.groupName,item)" class="group-item_cell" for="item in $item.children">
+									<div class="group-cell_head">
+										<div class="group-head_left">
+										    <image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
+										    <text>{{item.typeName}}</text>
+										</div>
+										<!-- <text>▼</text> -->
+										<text>{{item.bill}}</text>
+									</div>
+									<!-- <div class="group-cell_content">
+										<div class="group-cell_item">
+											<text>{{item.bill}}</text> -->
+											<!--<text>*秀儿</text> -->
+										<!-- </div>
+									</div> -->
 								</div>
 							</div>
 						</div>
@@ -236,9 +264,9 @@
 										<text>我的奖品</text>
 									</div>
 								</div>
-								<div class="item" @click="toDetail('User/GroupManage')">
+								<div if="isLogin" class="item" @click="toGroupManage">
 									<div class="inner inner-arrow">
-										<image height="30" src="./images/kefu.png"></image>
+										<image height="30" src="./images/fenzu_manage.png"></image>
 										<text>分组管理</text>
 									</div>
 								</div>
@@ -263,7 +291,7 @@
 								</div> -->
 								<div class="item" @click="call">
 									<div class="inner">
-										<image height="30" src="./images/kefu.png"></image>
+										<image height="30" src="./images/kefu_mobile.png"></image>
 										<text>客服电话</text>
 										<div class="inner-body">
 											<text>4009095595</text>
@@ -376,6 +404,8 @@ export default Custom_page({
 		showActiveModel:false,
 		guideList:[{pic:''}],
 		homeBannerList:[],
+		isGroup:false,
+		groupList:[],
 		homeAdsList:[{pic:''}],
 		jiluAdsList:[],
 		myAdsList:[],
@@ -391,18 +421,6 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
-		// router.push({
-		// 	uri:"Home/Active"
-		// })
-		// this.getResource()
-		// this.activeSwitch = 'open'
-		// storage.set({
-		// 	key:'activeSwitch',
-		// 	value:'open'
-		// })
-		// router.push({
-		// 	uri:'Home/Channel'
-		// })
 		device.getInfo({
 			success: (ret) => {
 				this.brand = ret.brand;
@@ -505,6 +523,18 @@ export default Custom_page({
 	},
 	onDayFirstLogin(){
 		this.addChange('log')
+	},
+	toGroupManage(){
+		if(this.isLogin){
+			router.push({
+				uri:'User/GroupManage'
+			})
+		}else{
+			router.push({
+				uri:'User/SmsLogin'
+			})
+		}
+		
 	},
 	// 请增加抽奖次数
 	addChange(type){
@@ -692,6 +722,20 @@ export default Custom_page({
 		})
 	},
 	onShow() {
+		// 获取分组
+		storage.get({
+			key:'_id',
+			success:(data) => {
+				if(data){
+					request.post('user/get-group',{sid:data,isHome:true}).then(res =>{
+						if(res.status == 200){
+							this.isGroup = res.data.isGroup
+							this.groupList = res.data.group
+						}
+					})
+				}
+			}
+		})
 		router.clear()
 	},
 	//打电话
@@ -761,6 +805,7 @@ export default Custom_page({
 		})
 	},
 	onReady() {
+		
 		storage.get({
 			key:'external',
 			success: (data) => {
@@ -849,6 +894,7 @@ export default Custom_page({
 		storage.get({
 			key: "cityName",
 			success: (data) => {
+				console.log(data)
 				if (data && data != "" && data != null) {
 					this.cityName = data;
 					// 缴费类别
@@ -882,7 +928,7 @@ export default Custom_page({
 				console.log(`handling fail, code = ${code}`)
 			}
 		})
-
+		
 		getUserInfo((data) => {
 			// prompt.showToast({
 			// 	message: data.sid
@@ -1075,6 +1121,69 @@ export default Custom_page({
 				uri:'User/SmsLogin'
 			})
 		}
+	},
+	goRechargeDetail(groupName,billitem){
+		this.showLoading = true;
+		// 缴费项目信息
+		request.post('jiaofei/pay-type-detail', {
+			cityName: billitem.cityName,
+			type: billitem.type,
+		}).then(res => {
+			console.log(res)
+			this.showLoading = false;
+			if (res.status == 200) {
+				const item = res.data.paymentItemPagingModel;
+				this.paymentItemList = res.data.paymentItemList;
+				if(this.paymentItemList.length > 1){
+					const paymentItemModelList = item.paymentItemModelList;
+					let paymentList = []
+					for(let i = 0;i<paymentItemModelList.length;i++){
+						const element = paymentItemModelList[i]
+						console.log(billitem)
+						console.log(element.paymentItemId,billitem.paymentItemId)
+						if(element.paymentItemId == billitem.paymentItemId){
+							paymentList.push(element)
+						}
+					}
+					router.push({
+						uri:'Home/Recharge',
+						params:{
+							payName:'1',
+							title: billitem.typeName,
+							type:billitem.type,
+							icon:billitem.imagUrl,
+							cityName:billitem.cityName,
+							paymentItemModelList:paymentList,//项目信息
+							groupName,
+							oldGroupName:groupName,
+							oldBill:billitem.bill
+						}
+					})
+				}else{
+					// 账单详情
+					router.push({
+						uri:'Home/Recharge',
+						params:{
+							payName:'1',
+							title: billitem.typeName,
+							type:billitem.type,
+							icon:billitem.imagUrl,
+							cityName:billitem.cityName,
+							paymentItemModelList:item.paymentItemModelList,//项目信息
+							groupName,
+							oldGroupName:groupName,
+							oldBill:billitem.bill
+						}
+					})
+				}
+			} else {
+				this.showToast(res.msg);
+			}
+		}).catch(err => {
+			console.log(err)
+			this.showLoading = false;
+			this.showToast('网络错误');
+		})
 	},
 	// 查询缴费项目
 	getJfTypeDetail(obj){

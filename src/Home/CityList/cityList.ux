@@ -169,7 +169,6 @@
                     }
                 })
             }
-            
             this.showSearch = false;
             this.search_value = "";
             this.hideInput()

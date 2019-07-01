@@ -117,16 +117,16 @@
     height: 90px;
   }
 
-  /* .img-active {
+  .img-active {
     width: 100%;
     height: 100%;
     opacity: 0;
     border-radius: 36px;
   }
   .img-active:active {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.5);
-  } */
+    opacity: 0;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+  }
   .icon-row{
     width: 100%;
     justify-content: space-between;
@@ -158,7 +158,7 @@
       netWork:true,//网络
       loading:true,//加载
       ifLogin:false,
-      city:'北京市',
+      city:'',
       // 水电燃气充值
       cebPaymentCategoriesList: [],
       hapUrl:'hap://app/com.ubaycn.yjf/'
@@ -187,6 +187,7 @@
             }
           }else{
             if(this.cebPaymentCategoriesList.length <= 0){
+              this.city = '北京市'
               this.getPaytypeList(this.city)
             }
           }
@@ -400,15 +401,29 @@
       }
     },
     handleClick(item, index) {
+      router.push({
+        uri:`${this.hapUrl}Home`
+      })
       storage.get({
         key: "sid",
-      }).then(res => {
-        if (res.data) {
-          // 登录
-          this.getJfTypeDetail(item)
-        } else {
+        success:(res) => {
+          if (res) {
+            // 登录
+            this.getJfTypeDetail(item)
+          } else {
+            // 未登录
+            let obj = {
+              uri: `${this.hapUrl}User/SmsLogin`
+            }
+            if (item['params']) {
+              obj['params'] = item['params']
+            }
+            router.push(obj);
+          }
+        },
+        fail:(err) => {
           // 未登录
-           let obj = {
+          let obj = {
             uri: `${this.hapUrl}User/SmsLogin`
           }
           if (item['params']) {
@@ -416,15 +431,6 @@
           }
           router.push(obj);
         }
-      }).catch(err => {
-        // 未登录
-        let obj = {
-          uri: `${this.hapUrl}User/SmsLogin`
-        }
-        if (item['params']) {
-          obj['params'] = item['params']
-        }
-        router.push(obj);
       })
      
     }

@@ -1,8 +1,8 @@
 {
   "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.3.7",
-  "versionCode": "21",
+  "versionName": "1.3.9",
+  "versionCode": "23",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
@@ -17,7 +17,16 @@
     { "name": "system.prompt" },
     { "name": "system.router" },
     { "name": "system.geolocation" },
-    { "name": "system.shortcut" }
+    { "name": "system.shortcut" },
+    {
+      "name": "service.share",
+      "params": {
+        "appSign": "YkpaZEZGMUUrMCt4RmptdjhKUFRGYnVyOWptNTNpYzNYRDlvbitUSVh5SllETzFSaWplK09LUHpOaG8xalI2T2dQVjVZSVVkdmk5VDVCMjZ3M3d0dDVub1VQREs5TU1rK1NzU1JuaDZEZ2xFUDJkc09iM3AxRi9VUzB4ZDZNcXJCaGFtMWdMR05Rclcvb3V3OFRFT1ZqWTduR25vdXpHcGVQdzBpN2ZvK2pLQ0tFYnVQbEFwWVVKWUZueURpcitETEs3S3NXNkFIT1ZiWkhHTUErNDZiUm5GMVNVRU9rQ2tDanVZc3NINkUzTmNlN05OK2lvbmRRbWdldHRRR04wSDRMQkFKdUwyMlU3VWF5YjdEa2NyNjg4WnluanY2emNkQ29tQmcvOEV6ekFTOXdYSTlTbVNwSW5zUlpRUmlJQXQ5REpaSlUyTlIrSG9vdlAwTGUxamNRPT0=",
+        "qqKey": "",
+        "wxKey": "wx0c60077ef87148bc",
+        "sinaKey": ""
+      }
+    }
   ],
   "permissions": [
     { "origin": "*" }
@@ -61,6 +70,12 @@
       },
       "User/GroupManage": {
         "component": "index"
+      },
+      "User/GroupSelect": {
+        "component": "index"
+      },
+      "User/Recharge": {
+        "component": "recharge"
       },
       "User/About/Protocol": {
         "component": "protocol"

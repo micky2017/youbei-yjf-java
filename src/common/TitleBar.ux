@@ -1,9 +1,9 @@
 <template>
     <div class="TitleBar" >
-        <div class="left" @click="back" if="!external">
+        <div class="left" @click="back" if="!external || external == 'master'">
             <image height="30" src="/common/images/back.png"></image>
         </div>
-        <div class="left qita" @click="goHome" if="external">
+        <div class="left qita" @click="goHome" if="external && external != 'master'">
             <image height="50" src="/common/images/qita.png"></image>
         </div>
         <div class="center">

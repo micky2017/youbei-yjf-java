@@ -99,7 +99,7 @@
         </div>
 
         <div class="payment-content group-manage">
-            <text if="paymentItem.createPaymentBillParamsModelList && paymentItem.createPaymentBillParamsModelList[0].payTimeTips">{{paymentItem.createPaymentBillParamsModelList[0].payTimeTips}}</text>
+            <text if="paymentItem.createPaymentBillParamsModelList">{{paymentItem.createPaymentBillParamsModelList[0].payTimeTips}}</text>
             <div class="group-manage_content">
                 <div class="group-manage_left">
                     <image resize-mode="contain" width="40" src="../../images/groupImg/group_icon.png"></image>
@@ -173,6 +173,8 @@ export default Custom_page({
         selectMoney: '',
         billItem: null,
         iconUrl:'',
+        oldGroupName:'',
+        oldBill:'',
         // title: "",
         // type: "",
         // cityName: "",
@@ -190,8 +192,6 @@ export default Custom_page({
         filedName: '',
         billkeys:[],
         historyBillkey:'',
-        oldGroupName:'我家',
-        oldBill:'',
         billKey:'',
         groupName:'我家',
         reqData: {
@@ -213,7 +213,7 @@ export default Custom_page({
     pushSelect(){
         router.push({
             uri:'User/GroupSelect',
-            params:{
+             params:{
                 groupName:this.groupName,
             }
         })
@@ -356,7 +356,6 @@ export default Custom_page({
         if(this.payName){
             this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
             this.paymentItem = this.paymentItemModelList[0];
-            console.log(this.paymentItem)
             this.getIcon()
             this.getHistoryBillkey();
         }else{
@@ -429,7 +428,6 @@ export default Custom_page({
     },
     onInit() {
         this.billKey = this.oldBill;
-        this.groupName = this.oldGroupName;
     },
     getIcon(){
         const iconList = [
@@ -596,20 +594,31 @@ export default Custom_page({
             }
         })
     },
-    saveGroup(params){
+    saveGroup(){
+        console.log(111111)
         storage.get({
             key:'_id',
             success:(data) => {
-                request.post('user/save-group',{
+                const obj = {
                     sid:data,
-                    paymentItemId:this.paymentItem.paymentItemId,
-                    groupName:this.groupName,
+                    paymentItemId:this.paymentItemModelList[0].paymentItemId,
+                    groupName:this.oldGroupName,
                     cityName:this.cityName,
                     type:this.type,
-                    bill:params.billKey
-                }).then(res => {
-                    console.log(res)
+                    bill:this.oldBill,
+                    newGroupName:this.groupName,
+                    newBill:this.billKey,
+                }
+                console.log(obj)
+                request.post('user/reset-bill',obj).then(res => {
+                    if(res.status == 200){
+                        this.showToast('修改成功');
+                        router.back()
+                    }else{
+                        this.showToast('修改失败')
+                    }
                 }).catch(err => {
+                        thisshowToast('网络错误')
 
                 })
             }
@@ -618,17 +627,22 @@ export default Custom_page({
     // 查询缴费账单
     toInspect() {
         this.inputFocus()
-        statis.statis('search_bill_click', {external:this.external}, this)
-        const list = this.paymentItem.queryPaymentBillParamModelList
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].isNull == 0) {
-                if (!this.reqData[list[i].nameType]) {
-                    this.showToast('您有信息未填写');
-                    return;
-                }
-            }
-        }
-        this.showLoading = true;
+        // statis.statis('search_bill_click', {external:this.external}, this)
+        // const list = this.paymentItem.queryPaymentBillParamModelList
+        // for (let i = 0; i < list.length; i++) {
+        //     if (list[i].isNull == 0) {
+        //         if (!this.reqData[list[i].nameType]) {
+        //             this.showToast('您有信息未填写');
+        //             return;
+        //         }
+        //     }
+        // }
+        // this.showLoading = true;
+        this.saveGroup()
+
+
+
+        return;
         // 查询账单
         const params = {
             itemCode: this.paymentItem.paymentItemId,
@@ -648,8 +662,7 @@ export default Custom_page({
         }
         Object.assign(params, this.reqData);
         // paymentItemId  cityName type bill payName groupName
-        this.saveGroup(params)
-        console.log(params)
+
         // 查缴
         request.post('jiaofei/generate-bill', params).then(res => {
             this.showLoading = false;

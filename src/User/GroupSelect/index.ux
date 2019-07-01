@@ -1,0 +1,133 @@
+<import src="../../common/TitleBar.ux"></import>
+<template>
+    <div class="group-manage_body">
+        <TitleBar title='分组选择' color="#fff"></TitleBar>
+        <list>
+            <list-item class="group-select_content">
+                <div @click="selectGroup($item.groupName)" class="group-select_item" style="{{$idx == (groupList.length - 1) ? 'border-bottom-width:0px': 'border-bottom-width:1px'}}" for="groupList">
+                    <div class="group-select_left">
+                        <image width="50" height="50" resize-mode="contain" src="{{groupIconList[$idx%4]}}.png"></image>
+                        <text>{{$item.groupName}}</text>
+                    </div>
+                    <div>
+                        <image if="groupName == $item.groupName" width="40" height="40" resize-mode="contain" src="../../images/groupImg/select_group_icon.png"></image>
+                        <image if="groupName != $item.groupName" width="40" height="40" resize-mode="contain" src="../../images/groupImg/noselect_group_icon.png"></image>
+                    </div>
+                </div>
+            </list-item>
+            <list-item class="group-select_content add-group_content" @click="showModificationFn">
+                <div class="group-select_item">
+                    <div class="group-select_left">
+                        <image width="50" height="50" resize-mode="contain" src="../../images/groupImg/group_choose_icon.png"></image>
+                        <text>自定义分组名称</text>
+                    </div>
+                    <div>
+                        <image width="40" height="40" resize-mode="contain" src="../../images/groupImg/new_group_icon.png"></image>
+                    </div>
+                </div>
+            </list-item>
+        </list>
+        <div if='showModification' @click="closeWindow" class="modification-body">
+            <div @click="voidFn" class="modification-content">
+                <div class="modification-title">
+                    <text>请输入新的分组名称</text>
+                </div>
+                <div class="modification-input">
+                    <input id="groupValue" value="{{groupNameValue}}" @change="changeGroupName" placeholder="请输入分组名称" type="text"></input>
+                </div>
+                <div class="modification-btn">
+                    <text @click="closeWindow">取消</text>
+                    <text @click="saveGroupInfo" class="modification-save_btn">保存</text>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style lang="less">
+ @import './index.less';
+</style>
+<script>
+import storage from '@system.storage';
+import request from '../../utils/request'
+import router from '@system.router';
+export default Custom_page({
+    private: {
+        groupList: [],
+        showModification:false,
+        groupNameValue:'',
+        _id:'',
+        groupIconList:['../../images/groupImg/group_home_icon','../../images/groupImg/group_parent_icon','../../images/groupImg/group_fd_icon','../../images/groupImg/group_friend_icon']
+
+    },
+    protected: {
+        groupName:'' 
+    },
+    onReady() {
+        this.getGroup()
+    },
+    getGroup(){
+        storage.get({
+            key:'_id',
+            success:(data) => {
+                this._id = data;
+                request.post('user/get-group',{sid:data}).then(res => {
+                    if(res.status == 200){
+                        this.groupList = res.data.group
+                    }
+                })
+            }
+        })
+    },
+    voidFn(){
+        return false;
+    },
+    inputFocus() {
+        if(this.$element('groupValue')){
+            this.$element('groupValue').focus({ focus: false })
+        }
+    },
+    changeGroupName(response){
+            this.groupNameValue = response ? response.value : this.groupNameValue;
+    },
+    saveGroupInfo(){
+        if(this.groupNameValue == ''){
+            this.showToast('请填写分组名称')
+            return false;
+        }
+        this.inputFocus()
+        //新增
+        request.post('user/add-group',{
+            sid:this._id,
+            groupName:this.groupNameValue
+        }).then(res => {
+            this.closeWindow();
+            this.item = {}
+            this.groupNameValue = ''
+            if(res.status == 200){
+                // this.showToast('新增分组成功');
+                this.getGroup();
+            }else{
+                // this.showToast('新增分组失败');
+            }
+        }).catch(err =>{
+                // this.showToast('网络错误');
+        })
+    },
+    showModificationFn(){
+        this.showModification = true;
+    },
+    closeWindow(){
+        this.showModification = false;
+    },
+    selectGroup(groupName){
+        this.groupName = groupName;
+        storage.set({
+            key:'groupName',
+            value:groupName,
+            success:(res) => {
+                router.back()
+            }
+        })
+    }
+})
+</script>
