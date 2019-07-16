@@ -99,9 +99,17 @@
 <script>
     const router = require('@system.router')
     export default {
-        props: ['title','color','external','righttext','type'],
+        props: ['title','color','external','righttext','type','payType'],
         back(){
             router.back();
+        },
+        goMy(){
+            router.replace({
+                uri:'Home',
+                params:{
+                    tabIndex:2
+                }
+            });
         },
         goHome(){
             router.replace({

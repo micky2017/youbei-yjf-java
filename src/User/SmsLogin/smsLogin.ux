@@ -133,6 +133,7 @@
     import request from '../../utils/request';
     import storage from "@system.storage";
     import fetch from '@system.fetch'
+    import shortcut from '@system.shortcut';
     import webview from '@system.webview'
     import statis from '../../utils/statistics.js'
 
@@ -346,8 +347,16 @@
             }
             const params = {
                 mobile: this.sms_phone,
-                code: this.sms_code
+                code: this.sms_code,
+                shortcut:false,
             }
+            shortcut.hasInstalled({
+                success:  (ret) => {
+                    if (ret) {
+                       params.shortcut = true;
+                    }
+                }
+            })
             request.post('user/login/sms', params).then(res => {
                 if (res.status == 200) {
                     this.showToast("登录成功");
@@ -357,9 +366,20 @@
                     // fetch.fetch({
                     //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
                     // })
+                    console.log(res.data.isFirst)
                     if(res.data.isFirst){
+                        storage.set({
+                            key:'firstLogin',
+                            value:'true'
+                        })
                         // 首次注册
                         this.addChange('reg')
+                    }
+                    if(res.data.regIqy){
+                        storage.set({
+                            key:'regIqy',
+                            value:'true'
+                        })
                     }
                     storage.set({
                         key:'_id',

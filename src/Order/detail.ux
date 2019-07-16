@@ -46,7 +46,7 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费金额：</text></div>
-                <div class="item-content"><text>{{detail.payAmount}}</text></div>
+                <div class="item-content"><text>{{detail.payAmount}}元</text></div>
             </div>
             <!-- <div class="item">
                 <div class="item-name"><text>发票获取：</text></div>

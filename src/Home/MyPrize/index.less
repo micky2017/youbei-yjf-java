@@ -12,6 +12,7 @@
         width: 100%;
         flex-direction: column;
         align-items: center;
+
         // 奖品
         .prize-item_body{
             width:667px;
@@ -20,6 +21,22 @@
             background-repeat: no-repeat;
             background-size: 100% 100%;
             margin-bottom: 28px;
+            .iqiyi_body{
+                flex-direction:column;
+
+                >image{
+                    width:667px;
+                    height:219px;
+                }
+                .dh_btn{
+                    align-self: flex-end;
+                    width: 45px;
+                    height: 200px;
+                    margin-top: -200px;
+                    margin-right: 53px;
+                }
+            }
+           
             .prize-item_content{
                 width: 494px;
                 height: 100%;
@@ -96,6 +113,76 @@
                         font-family:"SourceHanSansCN-Regular";
                         font-weight:400;
                     }
+                }
+            }
+        }
+        .iqy-item_body{
+            background-image: url('../images/activityImg/iqy_item_bg.png');
+            .prize-item_content{
+                .prize-item_name{
+                    >text{
+                        font-size:30px;
+                        color: #333333;
+                    }
+                }
+                .prize-item_time{
+                    margin-top: 20px;
+                    .prize-content_btn{
+                        border-color: #99BF6B;
+                        >text{
+                            color: #99BF6B;
+                        }
+                    }
+                }
+            }
+            .prize-item_price{
+                .prize-item_price--body{
+                    .price-identify{
+                        color: #99BF6B;
+                    }
+                    .price-value{
+                        color: #99BF6B;
+                    }
+                }
+                .prize-item_btn{
+                    background-color: #99BF6B;
+                }
+            }
+            .copy-password{
+                .prize-item_price--body{
+                    .price-identify{
+                        padding: 0px 30px;
+                        lines:2;
+                        text-align:center;
+                        color: #747474;
+                        font-size: 22px;
+                    }
+                }
+                .prize-item_btn{
+                    border-width: 1px;
+                    border-color:#BDBDBD; 
+                    border-radius: 6px;
+                    background-color: #F0F0F0;
+                    >text{
+                        font-size: 20px;
+                        color: #747474;
+                    }
+                }
+            }
+        }
+        .store-item_body{
+            .prize-item_price{
+                .prize-item_price--body{
+                    .price-identify{
+                        color:#DBAF7A;
+                    }
+                    .price-value{
+                        color: #DBAF7A;
+                    }
+                }
+                .prize-item_btn{
+                    background-color: #DBAF7A;
+                    color: #ffffff;
                 }
             }
         }
@@ -279,6 +366,13 @@
     .prize-rules_body{
         .prize-detail_content{
             height: 571px;
+        }
+    }
+    .prize-iqy_body{
+        .prize-detail_content{
+            .prize-detail_title{
+                background-color: #99BF6B;
+            }
         }
     }
 }

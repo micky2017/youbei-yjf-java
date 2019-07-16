@@ -16,7 +16,11 @@
         onInit() {
             if(this.text.indexOf('|') != -1){
                 const strArr = this.text.split('|');
-                this.text = strArr[1]
+                if(strArr.length >= 3){
+                    this.text = strArr[1] + ',' + strArr[2]
+                }else{
+                    this.text = strArr[1]
+                }
             }
         },
         onShow() {

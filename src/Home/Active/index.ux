@@ -1,8 +1,8 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="web-body">
-        <TitleBar external={{external}} title="幸运抽奖"></TitleBar>
-        <web if="webUrl" trustedurl='{{trustedurl}}' src="{{webUrl}}"></web>
+        <TitleBar external={{external}} title="{{headTitle}}"></TitleBar>
+        <web @message='onMessageFn' if="webUrl" trustedurl='{{trustedurl}}' src="{{webUrl}}"></web>
     </div>
 </template>
 <style lang="less" scoped>
@@ -21,20 +21,26 @@
 </style>
 <script>
 import storage from '@system.storage';
+import share from '@service.share';
+const prompt = require('@system.prompt');
+
 export default Custom_page({
     protected: {
         external: '',
         mobile:'',
-        source:''
-
+        source:'',
+        title:'',
+        headTitle:'幸运抽奖'
     },
     private: {
         webUrl:'',
         // trustedurl:['https://api.ubaycn.com/lottery'],
         trustedurl:[],
     },
-    // http://192.168.1.111:8020/jumpToYjf/index.html
     onInit() {
+        if(this.title != ''){
+            this.headTitle = this.title
+        }
         storage.get({
             key:'mobile',
             success:(mobile) => {
@@ -56,6 +62,8 @@ export default Custom_page({
             key:'activeUrl',
            success: (activeUrl) => {
                this.trustedurl.push(activeUrl)
+               this.trustedurl.push(`https://life.ubaycn.com/wx/#/product`)
+               this.trustedurl.push(`https://life.ubaycn.com/#/product`)
                this.activeUrl = activeUrl
                this.getWebUrl()
            }
@@ -68,15 +76,48 @@ export default Custom_page({
             success:(data) => {
                 if(data){
                     this.webUrl = `${this.activeUrl}?sid=${data}&external=${this.source}&mobile=${this.mobile}`
+                    this.trustedurl.push(`${this.activeUrl}/?sid=${data}&external=${this.source}&mobile=${this.mobile}#/`)
                 }else{
                     this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
+                    this.trustedurl.push(`${this.activeUrl}/?external=${this.source}&mobile=${this.mobile}#/`)
                 }
             },
             fail:() => {
                     this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
+                    this.trustedurl.push(`${this.activeUrl}/?external=${this.source}&mobile=${this.mobile}#/`)
+
             }
         })
     },
+    onMessageFn(info){
+         let message = info.message;
+        const url = info.url;
+        message = JSON.parse(message)
+        if(message.type == 1){
+             this.trustedurl.push(`${this.activeUrl}${message.location}`)
+        }else{
+            share.share({
+                shareType: 0,
+                title: message.title,
+                summary: message.summary,
+                imagePath: message.imagePath,
+                targetUrl: message.targetUrl,
+                platforms: ['WEIXIN','WEIXIN_CIRCLE'],
+                success: function(data) {
+                    prompt.showToast({
+                        message: '分享成功'
+                    })
+                },
+                fail: function(data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                    console.log(`data=${data}`)
+                    prompt.showToast({
+                        message: '分享失败'
+                    })
+                }
+            })
+        }
+    }
 })
 </script>
 

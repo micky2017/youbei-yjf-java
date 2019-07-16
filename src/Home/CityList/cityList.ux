@@ -11,7 +11,7 @@
             <text show="{{show_close}}" @click="clearCityValue">❎</text>
         </div>
         <div class="location" @click="hideInput">
-            <text>您当前所在城市：</text>
+            <text>您当前选择城市：</text>
             <image width="34" height="34" resize-mode="contain" src="../images/location_icon.png"></image>
             <text> &nbsp;{{city_name}}</text>
         </div>

@@ -46,7 +46,7 @@
 					<div class="common-body">
 						
 						<div class="common-swiper_content">
-							<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true">
+							<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true" loop="true">
 								<image @click="goUrl($item,'HomeBannerList')"  src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
 							</swiper>
 							<swiper if="homeBannerList.length <= 0" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
@@ -75,6 +75,7 @@
 								</div>
 							</div>
 						</div>
+						<!-- 分组管理 -->
 						<div if="isGroup" class="common-content group-content">
 							<div if="$item.children.length>0" class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
 								<div class="group-item_title">
@@ -106,22 +107,21 @@
 					<!-- <div if="activeSwitch == 'open'" class="notification">
 					
 					</div> -->
-					<div if="activeSwitch == 'open'" class="notification-body">
-						<div class="notification-content">
-							<image resize-mode="contain" src="./images/notification_icon.png"></image>
+					
+					<!-- 首页广告位 -->
+					<div if="homeAdsList.length > 0" class="notification-body">
+						<div if="notificationList.length > 0" class="notification-content">
+							<!-- <image resize-mode="contain" src="./images/notification_icon.png"></image> -->
 							<swiper vertical="true" loop="true" autoplay="true" indicator="false">
-								<text for="notificationList">{{$item}}</text>		
+								<text lines="1" style="text-overflow:hidden" for="notificationList">{{$item}}</text>		
 							</swiper>
 						</div>
-						<div class="activity-entry-banner">
-							<swiper indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
+						<div  class="activity-entry-banner">
+							<swiper autoplay="true" loop="true" indicator="true" class="common-swiper" indicator-selected-color="#9A70C2" >
 								<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in homeAdsList" alt=""></image>
 							</swiper>
 						</div>
 					</div>
-
-					
-					
 					</list-item>
 					<!-- 缴费类别 -->
 						<list-item>
@@ -145,7 +145,7 @@
 						</list-item>
 						
 					</list>
-					<div class="add-icon" if="showShortcut && tabIndex == 0">
+					<div class="add-icon" if="showShortcut && tabIndex == 0 && isLogin">
 						<div>
 							<image if="activeSwitch == 'close'" height="100px" src="./images/add_icon_text.png"></image>
 							<image if="activeSwitch =='open'" height="100px" src="./images/activityImg/add_icon_text.png"></image>
@@ -156,12 +156,31 @@
 						
 						<image height="50px" src="./images/add_icon_source.png"></image>
 					</div>
+					<div class="add-icon" if="showShortcut && tabIndex == 0 && !isLogin">
+						<image class="jde-add_img" @click="createShortcut()" width="550" resize-mode="contain" src="./images/activityImg/JDE_add_img.png" />
+					</div>
 					<div if="showActiveModel" @click="closeActiveModel" class="activity-model-body">
 						<div>
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 						<image class="activity-model_img" width="693" height="717" src="./images/activityImg/model_content_img.png"></image>
 						<image @click="toActive" class="activity-model_btn" width="340" height="90" src="./images/activityImg/model_content_btn.png"></image>
+					</div>
+					<div if="showIqiyiActiveModel" @click="closeActiveModel" class="activity-model-body iqiyi-model">
+						
+						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/iqiyi_model.png"></image>
+						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
+						<div>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+						</div>
+					</div>
+					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model">
+						
+						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_bg.png"></image>
+						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
+						<div>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+						</div>
 					</div>
 				</div>
 				<!-- 缴费记录 -->
@@ -258,7 +277,7 @@
 								</swiper>
 							</div>
 							<div class="list">
-								<div class="item" if="activeSwitch == 'open'"  @click="toPrize('Home/MyPrize')">
+								<div class="item" if="isLogin"  @click="toPrize('Home/MyPrize')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/prize_icon.png"></image>
 										<text>我的奖品</text>
@@ -367,6 +386,8 @@ import storage from "@system.storage";
 import webview from '@system.webview'
 import clipboard from '@system.clipboard'
 
+import share from '@service.share';
+
 const fetch = require('@system.fetch');
 const prompt = require('@system.prompt');
 const shortcut = require('@system.shortcut')
@@ -381,12 +402,14 @@ export default Custom_page({
 		showGuide: false,
 		showShortcut:false,
 		sid: '',
+		showIqiyiActiveModel:false,
 		showHomeBanner:false,
 		activeSwitch:'close',
 		tabIndex: 0,
 		weather:'',
 		guidePageList: [],
 		guideSecond: 3,
+		showJDEActiveModel:false,
 		mobile: '',
 		imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
 		refreshing: false,
@@ -406,7 +429,7 @@ export default Custom_page({
 		homeBannerList:[],
 		isGroup:false,
 		groupList:[],
-		homeAdsList:[{pic:''}],
+		homeAdsList:[],
 		jiluAdsList:[],
 		myAdsList:[],
 		bannerList:[{pic:'./images/home-banner.jpg',url:''}],
@@ -421,10 +444,27 @@ export default Custom_page({
 		tq: []
 	},
 	onInit() {
+		storage.set({
+			key:"activeSwitch",
+			value:'close'
+		})
+		
+		this.activeSwitch = 'close';
+		storage.get({
+			key:'regIqy',
+			success:(data) => {
+				if(data == 'true'){
+					this.showIqiyiActiveModel = true;
+					storage.delete({
+						key:'regIqy'
+					})
+				}
+			}
+		})
 		device.getInfo({
 			success: (ret) => {
 				this.brand = ret.brand;
-				this.getActiveSwitch(this.brand)
+				// this.getActiveSwitch(this.brand)
 			}
 		})
 		// banner
@@ -453,6 +493,20 @@ export default Custom_page({
 			}
 		})
 
+	},
+	getActiveImage(source){
+		request.post('jiaofei/get-active-img',{source}).then(res => {
+			if(res.status == 200){
+				const data = res.data.pic_conf;
+				this.guideList = data.guide_pic.data//引导页
+				this.homeBannerList = data.home_banner.data//banner
+				console.log(this.homeBannerList)
+				if(this.homeBannerList.length >0){
+					this.showHomeBanner = true;
+				}
+				this.homeAdsList = data.home_ads.data//首页资源位
+			}	    
+		})
 	},
 	getNotification(){
 		request.post('lottery/inform').then(res => {
@@ -577,6 +631,8 @@ export default Custom_page({
 	},
 	closeActiveModel(){
 		this.showActiveModel = false;
+		this.showIqiyiActiveModel = false;
+		this.showJDEActiveModel = false;
 	},
 	showProptShortcut(){
 		const that = this;
@@ -599,6 +655,8 @@ export default Custom_page({
 	},
 	toPrize(url){
 		statis.statis('my_prize_click',{external:this.external},this)
+		this.showIqiyiActiveModel = false;
+		this.showJDEActiveModel = false;
 		if(this.isLogin){
 			router.push({
 				uri:url
@@ -626,18 +684,48 @@ export default Custom_page({
 		if(source){
 			statis.statis('banner_click',{source: source,external:this.external},this)
 		}
-		if(item.url){
-			if(item.url.indexOf('http') != -1){
-				webview.loadUrl({
-					url: item.url,
-					allowthirdpartycookies: true
-				})
-			}else{
-				router.push({
-					uri:item.url
-				})
+		if(this.isLogin){
+			if(item.url){
+				if(item.url.indexOf('http') != -1){
+					// webview.loadUrl({
+					// 	url: item.url,
+					// 	allowthirdpartycookies: true
+					// })
+					storage.set({
+						key:'activeUrl',
+						value:item.url,
+						// value:'http://192.168.1.101:8020/jumpToYjf/index.html',
+						// value:'https://test-life.ubaycn.com',
+						success:() => {
+							router.push({
+								uri:'Home/Active',
+								params:{
+									title:item.desc
+								}
+							})
+						}
+					})
+				}else{
+					if(item.url != '-'){
+						router.push({
+							uri:item.url
+						})
+					}
+					
+				}
+			}
+		}else{
+			if(item.url){
+				if(item.url == '/' || item.url =='/Home'){
+					this.skip()
+				}else{
+					router.push({
+						uri:'User/SmsLogin'
+					})
+				}
 			}
 		}
+		
 	},
 	// 创建桌面快捷方式
 	createShortcut(){
@@ -648,6 +736,7 @@ export default Custom_page({
 					message: '已创建桌面图标'
 				})
 				this.showShortcut = false;	
+				this.showJDEActiveModel = true;
 				this.addChange('add');
 			} else {
 				shortcut.install({
@@ -657,7 +746,8 @@ export default Custom_page({
 							message: '成功创建桌面图标'
 						})
 						this.addChange('add');
-						this.showShortcut = false;					
+						this.showShortcut = false;	
+						this.showJDEActiveModel = true;				
 					},
 					fail: function (errmsg, errcode) {
 						// prompt.showToast({
@@ -811,11 +901,13 @@ export default Custom_page({
 			success: (data) => {
 				if(data && data != ''){
 					this.external = data;
+					this.getActiveImage(this.external)
 				}else{
 					storage.set({
 						key:'external',
 						value:this.external
 					})
+					this.getActiveImage(this.external)
 				}
 			},
 			fail: (err) => {
@@ -1073,20 +1165,41 @@ export default Custom_page({
 	},
 	// 页面跳转
 	toDetail(url, name) {
-		let obj
-		if (name) {
-			obj = {
-				uri: url,
-				params: {
-					title: name
+		console.log(this.external)
+		console.log(this.external == 'testShare')
+		if(this.external == 'testShare'){
+			share.share({
+				shareType: 0,
+				title: '测试标题',
+				summary: '测试摘要',
+				imagePath: '/images/icon/power.png',
+				// imagePath: 'https://cdn.ubaycn.com/upload/images/2019-06-04/c6e8b88b88810cc3a6ee2b5e48d588c5.png',
+				targetUrl: 'http://www.quickapp.cn',
+				success: function(data) {
+					console.log('handling success')
+				},
+				fail: function(data, code) {
+					console.log(`handling fail, code = ${code}`)
+					console.log(`data=${data}`)
+				}
+			})
+		}else{
+			let obj
+			if (name) {
+				obj = {
+					uri: url,
+					params: {
+						title: name
+					}
+				}
+			} else {
+				obj = {
+					uri: url
 				}
 			}
-		} else {
-			obj = {
-				uri: url
-			}
+			router.push(obj)
 		}
-		router.push(obj)
+		
 	},
 	// 缴费类别点击事件
 	toJFDetail(url, name, type,icon,jfType) {

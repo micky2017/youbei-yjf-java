@@ -1,11 +1,12 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="my-prize_body">
-        <TitleBar title="我的奖品"></TitleBar>
+        <TitleBar payType={{pay}} title="我的奖品"></TitleBar>
         <!-- 奖品列表 -->
         <list if="!noPrizeList">
             <list-item class="prize-item" for="prizeList" type="{{$item}}">
-                <div if="{{!($item.isExpire)}}" class="prize-item_body">
+            <!--  -->
+                <div if="{{!($item.isExpire) && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}"  class="prize-item_body">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
                             <image width="30" height="30" src='../images/activityImg/prize_item_icon.png'></image>
@@ -32,7 +33,8 @@
                         </div>
                     </div>
                 </div>
-                <div if="{{$item.isExpire}}" class="prize-item_body prize-item_past">
+                <!--  -->
+                <div if="{{$item.isExpire && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}"  class="prize-item_body prize-item_past">
                 <!-- <div if="false" class="prize-item_body prize-item_past"> -->
                     <div class="prize-item_content">
                         <div class="prize-item_name">
@@ -60,20 +62,121 @@
                         </div>
                     </div>
                 </div>
+                <div if="$item.code == 'iqiyicode' && !($item.isExpire)" class="prize-item_body iqy-item_body">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>领取时间: {{$item.acquire_time}}</text>
+                            <!-- <text>领取时间: {{$item.expire_time}}</text> -->
+                            <div class="prize-content_btn" @click="showIqyPrizeRulesFn($item)">
+                                <text>使用规则</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div if="!$item.passwd"  class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn" @click="toIqiyi()">
+                            <text>去使用</text>
+                        </div>
+                    </div>
+                    <div if="$item.passwd" class="prize-item_price copy-password">
+                        <div class="prize-item_price--body">
+                            <!-- <text class="price-identify">1234treefsddsvdsssdf</text> -->
+                            <text class="price-identify">{{$item.passwd}}</text>
+                            <!-- <text class="price-value">{{$item.prize_num}}</text> -->
+                        </div>
+                        <div class="prize-item_btn" @click="copyValue($item.passwd)">
+                            <text>复制</text>
+                        </div>
+                    </div>
+                </div>
+                <div if="$item.code == 'iqiyicode' && $item.isExpire" class="prize-item_body iqy-item_body prize-item_past">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>有效期至: {{$item.expire_time}}</text>
+                            <div class="prize-content_btn">
+                                <text>使用规则</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div if="!$item.passwd"  class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn">
+                            <text>去使用</text>
+                        </div>
+                    </div>
+                    <div if="$item.passwd" class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <text class="price-identify">{{$item.passwd}}</text>
+                        </div>
+                        <div class="prize-item_btn" @click="copyValue($item.passwd)">
+                            <text>复制</text>
+                        </div>
+                    </div>
+                </div>
+                <div if="$item.code == 'storeCode' && !($item.isExpire)" class="prize-item_body store-item_body">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>有效期至: {{$item.expire_time}}</text>
+                        </div>
+                    </div>
+                    <div class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn" @click="toStore()">
+                            <text>去使用</text>
+                        </div>
+                    </div>
+                </div>
+                <div if="$item.code == 'storeCode' && $item.isExpire" class="prize-item_body store-item_body prize-item_past">
+                    <div class="prize-item_content">
+                        <div class="prize-item_name">
+                            <text>{{$item.prize_name}}</text>
+                        </div>
+                        <div class="prize-item_time rules">
+                            <text>有效期至: {{$item.expire_time}}</text>
+                        </div>
+                    </div>
+                    <div  class="prize-item_price">
+                        <div class="prize-item_price--body">
+                            <text class="price-identify">￥</text>
+                            <text class="price-value">{{$item.prize_num}}</text>
+                        </div>
+                        <div class="prize-item_btn">
+                            <text>去使用</text>
+                        </div>
+                    </div>
+                </div>
             </list-item>
         </list>
         <!-- 暂无记录 -->
         <div class="no-prize" if="noPrizeList">
             <image width="268px" height="163px" src="../images/activityImg/money_icon.png"></image>
             <text class="no-prize_text">暂无奖券</text>
-            <text class="no-prize_propt">悄悄告诉你，缴费成功</text>
-            <text class="no-prize_propt">可以获得一次抽奖机会哦～</text>
+            <!-- <text class="no-prize_propt">悄悄告诉你，缴费成功</text>
+            <text class="no-prize_propt">可以获得一次抽奖机会哦～</text> -->
             <div class="no-prize_btn" @click="goHome">
                 <text>我要云缴费</text>
             </div>
         </div>
         <!-- 使用规则 -->
-        <div if="showPrizeRules" @click="closePrizeRules" class="prize-detail_body prize-rules_body">
+        <div if="showPrizeRules" @click="closePrizeRulesFn" class="prize-detail_body prize-rules_body">
             <div class="prize-detail_content">
                 <div class="prize-detail_title">
                     <div></div>
@@ -88,6 +191,27 @@
                         <text class="use-pattern_content">1、打开京东页面后在手机右下角我的-我的钱包-礼品卡-绑定新卡-输入卡密绑定；</text>
                         <text class="use-pattern_content">2、把京东自营商品加入购物车-点击去结算-结算页面找到【礼品卡(京东卡/E卡)】几张可用-点进去把E卡右侧圆圈打钩(√)(此时提示开启支付密码，按照系统提示即可)-确定-提交订单-输入设置的支付密码-提交订单。</text>
                         <text class="use-pattern_content">3.卡片有效期为36个月</text>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 爱奇艺使用规则 -->
+        <div if="showIqyPrizeRules" @click="closeIqyPrizeRules" class="prize-detail_body prize-rules_body prize-iqy_body">
+            <div class="prize-detail_content">
+                <div class="prize-detail_title">
+                    <div></div>
+                    <text>使用规则</text>
+                    <div>
+                        <image @click="closePrizeRules" width="44" height="44" resize-mode="contain" src="../images/activityImg/close_bg_btn.png"></image>
+                    </div>
+                </div>
+                <div class="prize-detail_info">
+                    <div class="use-pattern_body">
+                        <text class="use-pattern_content">1、完成购买后即可获得VIP会员激活码</text>
+                        <text class="use-pattern_content">2、在爱奇艺网站或APP登录账号后，输入激活码可激活VIP会员卡。</text>
+                        <text class="use-pattern_content">3、激活成功后立即升为爱奇艺VIP会员，享受VIP服务。</text>
+                        <text class="use-pattern_content">4、请在此激活码有效期内使用，过期作废，不可退款。</text>
+                        <text class="use-pattern_content">5、此激活码严禁倒卖、转让，不可兑换现金，请妥善保管，遗失泄露等不补。</text>
                     </div>
                 </div>
             </div>
@@ -150,18 +274,50 @@
     import statis from '../../utils/statistics.js'
 
 	export default Custom_page ({
-
+        public: {
+            pay:'', 
+        },
         protected: {
             img: '',
             prizeList:[],
             showPrizeDetail:false,
             showPrizeRules:false,
             noPrizeList:false,
+            showIqyPrizeRules:false,
             code:'',
             passwd:''
         },
-        onInit() {
+        onShow() {
             this.getPrizeList()
+        },
+        toIqiyi(){
+            storage.set({
+                key:'activeUrl',
+                value:'http://192.168.1.101:7010/iqiyi',
+                // value:'https://api.ubaycn.com/iqiyi',
+                success:() => {
+                    router.push({
+                        uri:'Home/Active',
+                        params:{
+                            title:'爱奇艺会员'
+                        }
+                    })
+                }
+            })
+        },
+        toStore(){
+            storage.set({
+                key:'activeUrl',
+                value:'https://life.ubaycn.com/wx',
+                success:() => {
+                    router.push({
+                        uri:'Home/Active',
+                        params:{
+                            title:'游贝商城'
+                        }
+                    })
+                }
+            })
         },
         getPrizeList(){
             const that = this;
@@ -199,16 +355,21 @@
         },
         add0(m) { return m < 10 ? '0' + m : m },
         format(shijianchuo) {
-			//shijianchuo是整数，否则要parseInt转换
-			var time = new Date(shijianchuo);
-			var y = time.getFullYear();
-			var m = time.getMonth() + 1;
-			var d = time.getDate();
-			var h = time.getHours();
-			var mm = time.getMinutes();
-			var s = time.getSeconds();
-			// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
-			return y + '-' + this.add0(m) + '-' + this.add0(d) ;
+            if(shijianchuo){
+                //shijianchuo是整数，否则要parseInt转换
+                var time = new Date(shijianchuo);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+                // + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+                return y + '-' + this.add0(m) + '-' + this.add0(d) ;
+            }else{
+                return ''
+            }
+			
 		},
         goHome(){
             statis.statis('pay_cost',{},this)
@@ -227,6 +388,12 @@
         },
         closePrizeRules(){
             this.showPrizeRules = false;
+        },
+        showIqyPrizeRulesFn(){
+            this.showIqyPrizeRules = true;
+        },
+        closeIqyPrizeRules(){
+            this.showIqyPrizeRules = false;
         },
         lookRule(item){
             this.showPrizeRulesFn()
