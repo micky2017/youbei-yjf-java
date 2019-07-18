@@ -3,7 +3,15 @@
     <div class="suggest_body">
         <TitleBar payType={{pay}} title="建议反馈"></TitleBar>
         <div class="contacts-info_body">
-        
+            <div class="contacts-item">
+                <text>请输入联系人信息</text>
+            </div>
+            <div class="contacts-item">
+                <text>请输入联系人信息</text>
+            </div>
+            <div class="contacts-item">
+                <text>请输入联系人信息</text>
+            </div>
         </div>
 
         <div class="suggest-body">
