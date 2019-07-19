@@ -7,15 +7,23 @@
                 <text>请输入联系人信息</text>
             </div>
             <div class="contacts-item">
-                <text>请输入联系人信息</text>
+                <image src="../images/contacts_icon.png"></image>
+                <input type="text" placeholder="请填写姓名" ></input>
             </div>
             <div class="contacts-item">
-                <text>请输入联系人信息</text>
+                <image src="../images/mobile_icon.png"></image>
+                <input type="text" placeholder="请填写联系方式" ></input>
             </div>
+            <text>联系人信息将为您加密传输，保护您的隐私</text>
         </div>
 
         <div class="suggest-body">
-        
+            <textarea placeholder="请描述您的问题，以便我们尽快为您处理（必填）">
+            
+            </textarea>
+            <div class="add-img_body">
+                <image @click="selectImg" src="../images/add_img_btn.png"></image>
+            </div>
         </div>
 
         <div class="submit-button">
@@ -29,9 +37,11 @@
 </style>
 
 <script>
-	import router from '@system.router'
-    import request from '../../utils/request'
+    import router from '@system.router'
+    import media from '@system.media'
+    import yjfRequest from '../../utils/request'
     import statis from '../../utils/statistics.js'
+    import request from '@system.request'
 
 	export default Custom_page ({
         public: {
@@ -46,6 +56,58 @@
             showIqyPrizeRules:false,
             code:'',
             passwd:''
+        },
+        generateMixed(n) {
+            const chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+            let res = "";
+            for(let i = 0; i < n ; i ++) {
+                let id = Math.ceil(Math.random()*35);
+                res += chars[id];
+            }
+            return res;
+        },
+        selectImg(){
+            media.pickImage({
+                success: (data) => {
+                    console.log(`handling success: ${data.uri}`)
+                    console.log(data)
+                    this.uploadImg(data.uri)
+                },
+                fail:  (data, code) => {
+                    console.log(data)
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
+        },
+        uploadImg(uri){
+            const imageName = this.generateMixed(24)
+            const filename = uri.split('/')[uri.split('/').length -1]
+            console.log(filename)
+            request.upload({
+                url: 'https://cms.ubaycn.com/api/upload/oss',
+                files: [
+                    {
+                        uri: uri,
+                        name: 'img',
+                        filename:filename,
+                    }
+                ],
+                data: [
+                    {
+                        name: 'md5',
+                        value: imageName,//24位随机码
+                    }
+                ],
+                success: (data) => {
+                    console.log('handling success')
+                    console.log(data)
+                    // console.log(data.data.data.url)
+                },
+                fail: (data, code) => {
+                    console.log(data)
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
         }
     })
 </script>

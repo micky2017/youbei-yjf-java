@@ -18,6 +18,8 @@
     { "name": "system.router" },
     { "name": "system.geolocation" },
     { "name": "system.shortcut" },
+    { "name": "system.media" },
+    { "name": "system.request" },
     {
       "name": "service.share",
       "params": {
