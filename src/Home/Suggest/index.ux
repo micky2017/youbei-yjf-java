@@ -1,6 +1,7 @@
 <import src="../../common/TitleBar.ux"></import>
+<import name="toast" src="../../common/Toast/index.ux"></import>
 <template>
-    <div class="suggest_body">
+    <div class="suggest_body" @click="inputFocus">
         <TitleBar payType={{pay}} title="建议反馈"></TitleBar>
         <div class="contacts-info_body">
             <div class="contacts-item">
@@ -8,27 +9,32 @@
             </div>
             <div class="contacts-item">
                 <image src="../images/contacts_icon.png"></image>
-                <input type="text" placeholder="请填写姓名" ></input>
+                <input id="name" onchange="changeName" type="text" placeholder="请填写姓名" ></input>
             </div>
             <div class="contacts-item">
                 <image src="../images/mobile_icon.png"></image>
-                <input type="text" placeholder="请填写联系方式" ></input>
+                <input id="mobile" onchange="changeMobile" value="{{mobile}}" type="tel" placeholder="请填写联系方式" ></input>
             </div>
             <text>联系人信息将为您加密传输，保护您的隐私</text>
         </div>
 
         <div class="suggest-body">
-            <textarea placeholder="请描述您的问题，以便我们尽快为您处理（必填）">
+            <textarea id="suggest" value="{{suggest}}" onchange="changeSuggest" placeholder="请描述您的问题，以便我们尽快为您处理（必填）">
             
             </textarea>
             <div class="add-img_body">
+                <div for="imgs">
+                    <image class="add-img" resize-mode="stretch" src="https://cdn.ubaycn.com{{$item}}"></image>
+                    <image class="delete-img" @click="deleteImg($idx)" resize-mode="contain" src="../images/delete_img.png"></image>
+                </div>
                 <image @click="selectImg" src="../images/add_img_btn.png"></image>
             </div>
         </div>
 
-        <div class="submit-button">
+        <div class="submit-button" @click="submitSuggest">
             <text>提交反馈</text>
         </div>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
     </div>
 </template>
 
@@ -39,6 +45,7 @@
 <script>
     import router from '@system.router'
     import media from '@system.media'
+    import storage from '@system.storage';
     import yjfRequest from '../../utils/request'
     import statis from '../../utils/statistics.js'
     import request from '@system.request'
@@ -54,8 +61,14 @@
             showPrizeRules:false,
             noPrizeList:false,
             showIqyPrizeRules:false,
+            show_toast: false,
+            toast_text: '',
+            userPhone:'',
             code:'',
-            passwd:''
+            mobile:'',
+            passwd:'',
+            suggest:'',
+            imgs:[]
         },
         generateMixed(n) {
             const chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -65,6 +78,29 @@
                 res += chars[id];
             }
             return res;
+            
+        },
+        onReady() {
+            storage.get({
+                key:'mobile',
+                success:(data) => {
+                    if(data){
+                        this.mobile = data;
+                        this.userPhone = data;
+                    }
+                }
+            })
+        },
+         showToast(text) {
+            this.toast_text = text;
+            this.show_toast = true;
+            setTimeout(() => {
+                this.show_toast = false;
+            }, 1500)
+        },
+        deleteImg(idx){
+            console.log(idx)
+            this.imgs.splice(idx,1)
         },
         selectImg(){
             media.pickImage({
@@ -78,6 +114,20 @@
                     console.log(`handling fail, code = ${code}`)
                 }
             })
+        },
+        changeMobile(response){
+            this.mobile = response ? response.value : this.mobile;
+        },
+        changeName(response){
+            this.name = response ? response.value : this.name;
+        },
+        changeSuggest(response){
+            this.suggest = response ? response.value : this.suggest;
+        },
+        inputFocus() {
+            this.$element('name').focus({ focus: false })
+            this.$element('mobile').focus({ focus: false })
+            this.$element('suggest').focus({ focus: false })
         },
         uploadImg(uri){
             const imageName = this.generateMixed(24)
@@ -98,15 +148,52 @@
                         value: imageName,//24位随机码
                     }
                 ],
-                success: (data) => {
+                success: (res) => {
                     console.log('handling success')
-                    console.log(data)
+                    console.log(res.data)
+                    const data = JSON.parse(res.data)
+                    if(data.status == 200){
+                        const imgUrl = data.data.url
+                        this.imgs.push(imgUrl)
+                    }
                     // console.log(data.data.data.url)
                 },
                 fail: (data, code) => {
                     console.log(data)
                     console.log(`handling fail, code = ${code}`)
                 }
+            })
+        },
+        submitSuggest(){
+            if(!this.name){
+                this.showToast("请填写姓名");
+                return false;
+            }
+            if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
+                this.showToast("手机号码有误，请重填");
+                return false;
+            } 
+             if(!this.suggest){
+                this.showToast("请填写反馈意见");
+                return false;
+            }
+
+            const params = {
+                name:this.name,
+                mobile:this.mobile,
+                suggest:this.suggest,
+                phone:this.userPhone,
+                imgs:this.imgs.join('|')
+            }
+            yjfRequest.post('suggest/submit',params).then(res => {
+                console.log(res)
+                if(res.status == 200){
+                    this.showToast("反馈成功")
+                }else{
+                    this.showToast("网络错误")
+                }
+            }).catch(err => {
+                    this.showToast("网络错误")
             })
         }
     })

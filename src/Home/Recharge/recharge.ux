@@ -617,6 +617,8 @@ export default Custom_page({
     },
     // 查询缴费账单
     toInspect() {
+        console.log(this.reqData)
+        // this.reqData['billkey'] = this.billkey;
         this.inputFocus()
         statis.statis('search_bill_click', {external:this.external}, this)
         const list = this.paymentItem.queryPaymentBillParamModelList
