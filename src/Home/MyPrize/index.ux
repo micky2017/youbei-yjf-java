@@ -293,8 +293,8 @@
         toIqiyi(){
             storage.set({
                 key:'activeUrl',
-                value:'http://192.168.1.101:7010/iqiyi',
-                // value:'https://api.ubaycn.com/iqiyi',
+                // value:'http://192.168.1.101:7010/iqiyi',
+                value:'https://api.ubaycn.com/iqiyi',
                 success:() => {
                     router.push({
                         uri:'Home/Active',

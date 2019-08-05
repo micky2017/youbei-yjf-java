@@ -2,11 +2,11 @@ import fetch from '@system.fetch';
 import storage from"@system.storage";
 
 const  requestHandle = (params)  => {
-    if(params.data){
-      params.data.testpackage = "test";
-    }else{
-      params.url = params.url.indexOf('?') != -1 ? `${params.url}&testpackage=test` : `${params.url}?testpackage=test`
-    }
+    // if(params.data){
+    //   params.data.testpackage = "test";
+    // }else{
+    //   params.url = params.url.indexOf('?') != -1 ? `${params.url}&testpackage=test` : `${params.url}?testpackage=test`
+    // }
     // if(params.data){
     //   params.data.environment = "duli";
     // }else{
