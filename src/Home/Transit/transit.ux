@@ -16,14 +16,15 @@
 
     export default Custom_page ({
         public: {
-            cityName:"",
-            type:"",
+            cityName:"北京市",
+            type:"水费",
             uri:'',
-            external:''
+            external:'vivo',
+            paymentItemList:[]
         },
         onReady() {
-            this.uri = this.$page.uri
-            this.getParams()
+            // this.uri = this.$page.uri
+            // this.getParams()
             if(!this.cityName){
                 this.cityName = "北京市"
             }
@@ -41,16 +42,18 @@
             storage.get({
 				key:"sid",
 				success: (data) => {
+                    console.log('transit')
                     console.log(data)
 					if(data){
                         // 缴费类别
-                        console.log(this.cityName)
+                        console.log('transit'+this.cityName)
 						request.post('jiaofei/pay-type-lst',{cityName:decodeURI(this.cityName)}).then(res => {
 							console.log(res)
+							console.log('transit'+this.type)
 							if(res.status == 200){
                                 for(let i = 0;i<res.data.length;i++){
                                     const item = res.data[i];
-                                    if(item.typeName.indexOf(types[this.type]) != -1){
+                                    if(item.typeName.indexOf(this.type) != -1){
                                         if(item.typeName.indexOf('手机') != -1){
                                             router.replace({
                                                 uri:'Home/Mobile',
@@ -61,14 +64,15 @@
                                                 }
                                             })
                                         }else{
-                                            router.replace({
-                                                uri:'Home/Recharge',
-                                                params:{
-                                                    title:item.typeName,
-                                                    type:item.type,
-                                                    external:this.external,
-                                                }
-                                            })
+                                            this.toRecharge(types.indexOf(decodeURI(this.type)))
+                                            // router.replace({
+                                            //     uri:'Home/Recharge',
+                                            //     params:{
+                                            //         title:item.typeName,
+                                            //         type:item.type,
+                                            //         external:this.external,
+                                            //     }
+                                            // })
                                         }
                                         
                                     }
@@ -103,6 +107,57 @@
                 }
             })
             
+        },
+        toRecharge(type){
+            console.log(222)
+            // 缴费项目信息
+			request.post('jiaofei/pay-type-detail', {
+				cityName: decodeURI(this.cityName),
+				type,
+			}).then(res => {
+				if (res.status == 200) {
+					const item = res.data.paymentItemPagingModel;
+					this.paymentItemList = res.data.paymentItemList;
+					if(this.paymentItemList.length > 1){
+						// 列表选择
+						router.push({
+							uri:'Home/ProjectList',
+							params:{
+								title: decodeURI(this.type),
+								type,
+								// icon:obj.params.icon,
+								cityName:decodeURI(this.cityName),
+								external:this.external,
+								paymentItemList:this.paymentItemList,//选择列表
+								paymentItemModelList:item.paymentItemModelList,//项目信息
+							}
+						})
+					}else{
+						console.log(obj.params.name)
+						// 账单详情
+						router.push({
+							uri:'Home/Recharge',
+							params:{
+								payName:'1',
+								title: obj.params.title,
+								type:obj.params.type,
+								icon:obj.params.icon,
+								external:this.external,
+								cityName:this.cityName,
+								paymentItemModelList:item.paymentItemModelList,//项目信息
+							}
+						})
+					}
+				} else {
+					prompt.showToast({
+						message: res.msg
+					});
+				}
+			}).catch(err => {
+				prompt.showToast({
+					message: '网络错误'
+				});
+			})
         },
         getParams(){
             const params = this.uri.split("?")[1]

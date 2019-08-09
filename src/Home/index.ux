@@ -455,7 +455,9 @@ export default Custom_page({
 			key:"activeSwitch",
 			value:'close'
 		})
-		
+		// router.push({
+		// 	uri:'Home/Transit'
+		// })
 		this.activeSwitch = 'close';
 		storage.get({
 			key:'regIqy',
