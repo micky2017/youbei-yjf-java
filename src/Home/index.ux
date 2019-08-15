@@ -318,6 +318,12 @@
 										</div>
 									</div>
 								</div>
+								<div class="item" if="isLogin" @click="toHelpcenter">
+									<div class="inner inner-arrow">
+										<image height="30" src="./images/helpcenter.png"></image>
+										<text>帮助中心</text>
+									</div>
+								</div>	
 								<div class="item" if="isLogin"  @click="toPrize('Home/Suggest')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/suggest_icon.png"></image>
@@ -661,6 +667,11 @@ export default Custom_page({
 		if (this.timer) {
 			clearInterval(this.timer)
 		}
+	},
+	toHelpcenter(){
+		router.push({
+			uri:'User/Helpcenter'
+		})
 	},
 	toPrize(url){
 		statis.statis('my_prize_click',{external:this.external},this)

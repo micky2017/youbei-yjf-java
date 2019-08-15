@@ -1,0 +1,54 @@
+<import src="../../common/TitleBar.ux"></import>
+
+<template>
+    <div class="about-body">
+        <TitleBar title="用户协议"></TitleBar>
+        <div class="article">
+            <text class="header">云缴费常用问题列表&补充</text>
+            <text class="title">云缴费快应用如何下载安装？</text>
+            <text class="content">答：快应用用户无需下载安装也无需担心定期更新，即点即用，享受原生应用的性能体验。</text>
+            <text class="title">如何找到这个应用？</text>
+            <text class="content">答：使用快应用程序超过5分钟会提示是否需要创建桌面快捷方式，若没有创建可在应用市场中搜索「云缴费」进入。</text>
+            <text class="title">云缴费快应用支持哪些手机使用？</text>
+            <text class="content">答： 此快应用适用于包括：小米、华为、中兴、金立、联想、魅族、努比亚、OPPO、vivo、一加品牌的安卓手机。支持安卓版本最好在5.0以上。</text>
+            <text class="title">定位结果错了怎么办？</text>
+            <text class="content">答：进入云缴费首页后需要用户进行地理位置获取授权允许。若用户未同意授权或者网络信号不稳定等原因可能会出现定位错误的情况。用户可以在应用管理中心允许地理位置获取或手动点击左上角标进行位置选择。</text>
+            <text class="title">如何注册？</text>
+            <text class="content">答：初次使用用户可先进行注册，点击「没有账号，点击注册」进入到注册页面注册，也可使用短信登录直接登录使用。</text>
+            <text class="title">忘记密码怎么办？</text>
+            <text class="content">答：若用户注册后长时间未登录，忘记账号密码，可点击忘记密码重设密码。在忘记登陆密码页面，填写手机号获取验证码之后。重新输入密码即可修改成功。修改密码成功后需要重新登录。</text>
+            <text class="title">云缴费都提供哪些功能？</text>
+            <text class="content">答：云缴费目前支持全国水、电、燃气、通讯、有线电视、加油卡、手机充值、流量充值、教育考试、物业费、党费、非税代收、交通罚款等17大类，数千项缴费服务，而且在亲们的支持下，云缴费的服务范围将不断发展扩大！</text>
+            <text class="title">使用云缴费快应用收手续费吗？</text>
+            <text class="content">答：免费的呦，亲！无需安装下载、使用免费！</text>
+            <text class="title">缴费结果是失败，但扣钱了怎么办？</text>
+            <text class="content">答：偶尔缴费单位系统不稳定而导致缴费失败，请您千万不要着急。我们会为您追回该笔资金，但是由于各家银行处理时间不尽相同，资金最后返还到您的账户上的时间不定，一般是0—7个工作日，请您随时关注。同时我们也会与缴费单位沟通，不断提升服务水平和质量！</text>
+            <text class="title">缴费结果是处理中，但扣钱了怎么办？</text>
+            <text class="content">答：偶尔缴费单位系统不稳定或者网络信号不好而导致缴费结果未明，请您千万不要着急。这种情况我们会在2天后更新相关交易状态，如果交易失败，我们将向支付公司申请退款，由支付公司负责追回该笔资金。但是由于各支付公司和各家银行处理时间不尽相同，资金返还您账户的时间不确定，一般是0—7个工作日，请您随时关注。</text>
+            <text class="title">支付失败怎么办？</text>
+            <text class="content">答：如果是通过银联支付，可能是由于您输入的卡信息有误或者该卡片没有签约支付功能，所以银联没有验证通过，您可以与该张银行卡所属银行联系或者换张签约支付功能的银联卡进行支付；如果是通过支付宝或微信支付，可能是由于您输入的支付密码错误，或者银行卡余额不足。</text>
+            <text class="title">常用缴费是什么？有什么用呢？</text>
+            <text class="content">答：亲，如果您缴费的信息是固定不变的，那么在您缴费成功后系统将自动为您保存下来，下次就无需再输入相关信息，可直接点击相应的常用缴费就能缴费了，让您的缴费体验更加便捷、易用。同时您可以对常用缴费进行简单的删除等操作维护。</text>
+            <text class="title">登录客户端提示版本升级？</text>
+            <text class="content">答：为了给您带来更好的使用体验，云缴费客户端系统进行了全面升级，增加了新功能，并优化了缴费流程，需要您更新客户端才能继续使用哦！</text>
+            <text class="title">充值金额多久可以到账？</text>
+            <text class="content">答：在收到充值成功提示后，一般会在30分钟之内到账。但由于月末月初为运营商对账期间，系统稳定性较差导致到账时间延迟，可以联系运营商进行查询。</text>
+            <text class="title">显示充值成功但未收到运营商充值成功短信？</text>
+            <text class="content">答：短信仅为运营商提供的附加服务，与当地运营商系统及网络信号等相关，不能作为最终入账的依据，请您致电运营商客服电话咨询最终的到账结果，如果确认未入账可以与客服联系为您返还充值卡。</text>
+            
+        </div>
+
+    </div>
+</template>
+
+<style lang="less">
+   @import 'index.less';
+</style>
+
+<script>
+    const router = require('@system.router')
+    export default Custom_page ({
+        
+       
+    })
+</script>

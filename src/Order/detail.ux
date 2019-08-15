@@ -16,6 +16,7 @@
                 <div class="item-name"><text>缴费状态：</text></div>
                 <div class="item-content"><text class="purple">{{detail.status == 0 ? "处理中" : (detail.status == 1? "缴费成功" :(detail.status == 2 ? "缴费失败" : "退款成功"))}}</text></div>
             </div>
+            <div class="item-point" if="{{detail.status == 2}}"><img src="reason.png" @click="isShow"/><text>资金将会在1-3个工作日内退还到原支付宝账户</text></div>
             <div class="item">
                 <div class="item-name"><text>交易时间：</text></div>
                 <div class="item-content"><text>{{detail.paymentDate}}</text></div>
@@ -66,7 +67,8 @@
     import statis from '../utils/statistics'
     import webview from '@system.webview';
     import storage from '@system.storage';
-    
+    import prompt from '@system.prompt'
+
 	export default Custom_page ({
 		protected: {
 			url: '',
@@ -146,6 +148,27 @@
                     })
                 }
             }
+        },
+        isShow(){
+            prompt.showDialog({
+                title: '支付失败怎么办？',
+                message: '答：如果是通过银联支付，可能是由于您输入的卡信息有误或者该卡片没有签约支付功能，所以银联没有验证通过，您可以与该张银行卡所属银行联系或者换张签约支付功能的银联卡进行支付；如果是通过支付宝或微信支付，可能是由于您输入的支付密码错误，或者银行卡余额不足。',
+                buttons: [
+                    {
+                    text: '关闭',
+                    color: '#333'
+                    }
+                ],
+                success: function(data) {
+                    console.log('handling callback')
+                },
+                cancel: function() {
+                    console.log('handling cancel')
+                },
+                fail: function(data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
         },
 	})
 </script>
