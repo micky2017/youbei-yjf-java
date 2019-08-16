@@ -4,7 +4,7 @@
     <div class="about-body">
         <TitleBar title="用户协议"></TitleBar>
         <div class="article">
-            <text class="header">云缴费常用问题列表&补充</text>
+            <text class="header">云缴费常用问题列表</text>
             <text class="title">云缴费快应用如何下载安装？</text>
             <text class="content">答：快应用用户无需下载安装也无需担心定期更新，即点即用，享受原生应用的性能体验。</text>
             <text class="title">如何找到这个应用？</text>
