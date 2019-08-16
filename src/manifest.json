@@ -85,6 +85,9 @@
       "User/About/Statement": {
         "component": "statement"
       },
+      "User/Helpcenter": {
+        "component":"Helpcenter"
+      },
       "Home/ProjectList": {
         "component": "index"
       },
