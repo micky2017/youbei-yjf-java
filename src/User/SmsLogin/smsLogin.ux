@@ -375,10 +375,10 @@
                         // 首次注册
                         this.addChange('reg')
                     }
-                    if(res.data.regIqy){
+                    if(res.data.regGiving){
                         storage.set({
-                            key:'regIqy',
-                            value:'true'
+                            key:'regGiving',
+                            value:res.data.regGiving
                         })
                     }
                     storage.set({

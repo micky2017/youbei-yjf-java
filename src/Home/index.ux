@@ -6,9 +6,9 @@
 			<!-- <div if="showGuide" class="guide-page_btn" >
 				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
 			</div> -->
-			<div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
+			<!-- <div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
 				<text onclick="skip()">立即体验</text>
-			</div>
+			</div> -->
 			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.pic}}" alt="">
 			</swiper>
@@ -174,10 +174,10 @@
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
-					<div if="false" @click="closeActiveModel" class="activity-model-body iqiyi-model">
-					<!-- <div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
+					<!-- <div if="" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
+					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model">
 						
-						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_bg.png"></image>
+						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
@@ -460,12 +460,17 @@ export default Custom_page({
 		// })
 		this.activeSwitch = 'close';
 		storage.get({
-			key:'regIqy',
+			key:'regGiving',
 			success:(data) => {
-				if(data == 'true'){
+				if(data == 'iqy'){
 					this.showIqiyiActiveModel = true;
 					storage.delete({
-						key:'regIqy'
+						key:'regGiving'
+					})
+				}else if(data == 'jde'){
+					this.showJDEActiveModel = true;
+					storage.delete({
+						key:'regGiving'
 					})
 				}
 			}
@@ -745,7 +750,7 @@ export default Custom_page({
 					message: '已创建桌面图标'
 				})
 				this.showShortcut = false;	
-				this.showJDEActiveModel = true;
+				// this.showJDEActiveModel = true;
 				this.addChange('add');
 			} else {
 				shortcut.install({
@@ -756,7 +761,7 @@ export default Custom_page({
 						})
 						this.addChange('add');
 						this.showShortcut = false;	
-						this.showJDEActiveModel = true;				
+						// this.showJDEActiveModel = true;				
 					},
 					fail: function (errmsg, errcode) {
 						// prompt.showToast({
