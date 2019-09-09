@@ -72,10 +72,10 @@ const  requestHandle = (params)  => {
       // params.testpackage = 'test'
       return requestHandle({
         method: 'post',
-        // url: `https://api.ubaycn.com/${url}`,
-        url: `https://test-api.ubaycn.com/${url}`,
+        url: `https://api.ubaycn.com/${url}`,
+        // url: `https://test-api.ubaycn.com/${url}`,
         // url: `http://192.168.8.121:7010/${url}`,
-        // url: `http://192.168.1.138:7010/${url}`,
+        // url: `http://192.168.1.157:7010/${url}`,
         data: params
       })
     },
@@ -88,9 +88,9 @@ const  requestHandle = (params)  => {
       return requestHandle({
         method: 'get',
         // url: queryString(`http://192.168.8.121:7010/${url}`, params),
-        // url: queryString(`http://192.168.1.138:7010/${url}`, params),
-        url: queryString(`https://test-api.ubaycn.com/${url}`, params),
-        // url: queryString(`https://api.ubaycn.com/${url}`, params),
+        // url: queryString(`http://192.168.1.157:7010/${url}`, params),
+        // url: queryString(`https://test-api.ubaycn.com/${url}`, params),
+        url: queryString(`https://api.ubaycn.com/${url}`, params),
         data:{},
       })
     }

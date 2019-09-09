@@ -111,9 +111,9 @@
 					<!-- 首页广告位 -->
 					<div if="homeAdsList.length > 0" class="notification-body">
 						<div if="notificationList.length > 0" class="notification-content">
-							<!-- <image resize-mode="contain" src="./images/notification_icon.png"></image> -->
+							<image resize-mode="contain" src="./images/notification_icon.png"></image>
 							<swiper vertical="true" loop="true" autoplay="true" indicator="false">
-								<text lines="1" style="text-overflow:hidden" for="notificationList">{{$item}}</text>		
+								<text lines="1" for="notificationList">{{$item}}</text>
 							</swiper>
 						</div>
 						<div  class="activity-entry-banner">
