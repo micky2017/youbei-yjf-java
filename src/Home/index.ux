@@ -695,16 +695,18 @@ export default Custom_page({
 	// 天气
 	getWeather() {
 		console.log("获取天气成功：");
-		request.get("user/get-weather", { city: "北京市" }).then(res => {
-			// request.get(`user/get-weather?city=北京市`).then(res => {
-			console.log("111", res);
+		request.get("user/get-weather", { city: this.cityName }).then(res => {
+			// console.log(res);
+			if(typeof res.data == "string"){
+				res.data = JSON.parse(res.data);
+			}
+			console.log(res.data);
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
-				this.weather = `${wendu}℃ ${weather}`
+				this.weather = "${wendu}℃ ${weather}";
 			}
 		}).catch(err => {
-			console.log(222)
 			console.log(err)
 		})
 		// fetch.fetch({
