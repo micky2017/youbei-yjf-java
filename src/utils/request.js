@@ -19,7 +19,7 @@ const requestHandle = (params) => {
     storage.get({
       key: "sid",
     }).then(res => {
-        console.log("request success");
+      console.log("request success");
       return fetch.fetch({
         url: params.url,
         header: {
