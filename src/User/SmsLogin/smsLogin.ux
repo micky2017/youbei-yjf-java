@@ -1,535 +1,565 @@
     <import src="../../common/TitleBar.ux"></import>
     <import name="toast" src="../../common/Toast/index.ux"></import>
     <template>
-        <div class="login" onclick="inputFocus()">
-            <TitleBar external="{{external}}" title="登录" color="#fff"></TitleBar>
-            <!-- <image width="100%" height="288"  resize-mode="contain" src="../../images/activityImg/login_banner.png"></image> -->
-            <!-- <img src="../../images/activityImg/login_banner.png" alt="" srcset=""> -->
-            <div class='common-swiper_content'>
-                <swiper if="loginAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-                    <image @click="goUrl(item,'loginAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in loginAdsList" alt=""></image>
-                </swiper>
-                <image if="loginAdsList.length <= 0" src="../../images/login_background.jpg"></image>
-            </div>
-            <!-- <div if="loginAdsList.length <= 0" style="height:280px">
-            </div> -->
-            <div class="login-body">
-                <div class='tabs'>
-                    <div class="tab-bar" mode="fixed">
-                        <div  if="tab_index == 0" class="tab-bar_item">
-                            <text class="tab-text">短信登录</text>
-                        </div>
-                        <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
-                            <text class="tab-text">密码登录</text>
-                        </div>
-                        <div @click="selectTab(0)" if="tab_index == 1" class="tab-bar_item no-selece_item">
-                            <text class="tab-text">短信登录</text>
-                        </div>
-                        <div if="tab_index == 1" class="tab-bar_item">
-                            <text class="tab-text">密码登录</text>
-                        </div>
+    <div class="login" onclick="inputFocus()">
+        <TitleBar external="{{external}}" title="登录" color="#fff"></TitleBar>
+        <!-- <image width="100%" height="288"  resize-mode="contain" src="../../images/activityImg/login_banner.png"></image> -->
+        <!-- <img src="../../images/activityImg/login_banner.png" alt="" srcset=""> -->
+        <div class='common-swiper_content'>
+            <swiper if="loginAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
+                <image @click="goUrl(item,'loginAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in loginAdsList" alt=""></image>
+            </swiper>
+            <image if="loginAdsList.length <= 0" src="../../images/login_background.jpg"></image>
+        </div>
+        <!-- <div if="loginAdsList.length <= 0" style="height:280px"></div> -->
+        <div class="login-body">
+            <div class='tabs'>
+                <div class="tab-bar" mode="fixed">
+                    <div if="tab_index == 0" class="tab-bar_item">
+                        <text class="tab-text">短信登录</text>
                     </div>
-                    <div class="tab-content">
-                        <div if="tab_index == 0" class="tab-content-section">
-                            <div class="input" onclick="stopEvent()">
-                                <!-- <div class="name"><text>手机号</text></div> -->
-                                <div class="content">
-                                    <div class="input-body">
-                                        <input @change="smsPhone" value="{{sms_phone}}" id="sms_phone" type="number" placeholder="请输入手机号">
+                    <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
+                        <text class="tab-text">密码登录</text>
+                    </div>
+                    <div @click="selectTab(0)" if="tab_index == 1" class="tab-bar_item no-selece_item">
+                        <text class="tab-text">短信登录</text>
+                    </div>
+                    <div if="tab_index == 1" class="tab-bar_item">
+                        <text class="tab-text">密码登录</text>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div if="tab_index == 0" class="tab-content-section">
+                        <div class="input" onclick="stopEvent()">
+                            <!-- <div class="name"><text>手机号</text></div> -->
+                            <div class="content">
+                                <div class="input-body">
+                                    <input @change="smsPhone" value="{{sms_phone}}" id="sms_phone" type="number" placeholder="请输入手机号">
+                                </div>
+                                <div class="coutdown-content">
+                                    <div if="{{clickable}}" @click="countdown" class="countdown-body">
+                                        <text class="countdown-btn">{{codeText}}</text>
                                     </div>
-                                    <div class="coutdown-content">
-                                        <div if="{{clickable}}" @click="countdown" class="countdown-body">
-                                            <text class="countdown-btn">{{codeText}}</text>
-                                        </div>
-                                        <div class="countdown-body seconds-body" if="{{!clickable}}">
-                                            <text class="seconds" >{{codeText}}</text>
-                                        </div>
+                                    <div class="countdown-body seconds-body" if="{{!clickable}}">
+                                        <text class="seconds">{{codeText}}</text>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="info-prompt">
+                        </div>
+                        <!-- <div class="info-prompt">
                                 <div></div>
                                 <text>手机号有误请重新输入</text>
                             </div> -->
-                            <div class="input password-input" onclick="stopEvent()">
-                                <!-- <div class="name"><text>验证码</text></div> -->
-                                <div class="captcha">
-                                    <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="number" placeholder="请输入验证码">
-                                </div>
-                            </div>
-                            <div class="user-agreement">
-                                <text @click="toDetail('User/About/Protocol')">温馨提示：未注册云缴费快应用账号的手机号，登录时将自动注册，且代表您已同意<span class="agreement-text">《用户服务协议》</span></text>
-                            </div>
-                            <div class="btn">
-                                <input @click="smsLogin" type="button" value="登录">
+                        <div class="input password-input" onclick="stopEvent()">
+                            <!-- <div class="name"><text>验证码</text></div> -->
+                            <div class="captcha">
+                                <input id="sms_code" @change="smsCode" value="{{sms_code}}" type="number" placeholder="请输入验证码">
                             </div>
                         </div>
-                        <div if="tab_index == 1" class="tab-content-section">
-                            <div class="input" onclick="stopEvent()">
-                                    <!-- <div class="name"><text>手机号</text></div> -->
-                                    <div class="content">
-                                        <input id="mobile" value="{{mobile}}" @change="changeMobile" type="number" placeholder="请输入手机号">
-                                    </div>
-                                </div>
-                                <div class="input password-input" onclick="stopEvent()">
-                                    <!-- <div class="name"><text>登录密码</text></div> -->
-                                    <div class="content">
-                                        <input id="password" value="{{password}}" @change="changePassword" type="password" placeholder="请输入登录密码">
-                                    </div>
-                                </div>
-                                <div class="btn">
-                                    <input @click="login" type="button" value="登录">
-                                </div>
-                            
+                        <div class="user-agreement">
+                            <text @click="toDetail('User/About/Protocol')">温馨提示：未注册云缴费快应用账号的手机号，登录时将自动注册，且代表您已同意<span class="agreement-text">《用户服务协议》</span></text>
+                        </div>
+                        <div class="btn">
+                            <input @click="smsLogin" type="button" value="登录">
+                        </div>
+                    </div>
+                    <div if="tab_index == 1" class="tab-content-section">
+                        <div class="input" onclick="stopEvent()">
+                            <!-- <div class="name"><text>手机号</text></div> -->
+                            <div class="content">
+                                <input id="mobile" value="{{mobile}}" @change="changeMobile" type="number" placeholder="请输入手机号">
+                            </div>
+                        </div>
+                        <div class="input password-input" onclick="stopEvent()">
+                            <!-- <div class="name"><text>登录密码</text></div> -->
+                            <div class="content">
+                                <input id="password" value="{{password}}" @change="changePassword" type="password" placeholder="请输入登录密码">
+                            </div>
+                        </div>
+                        <div class="btn">
+                            <input @click="login" type="button" value="登录">
                         </div>
                     </div>
                 </div>
-                <image if="reg_pic" class="reg_pic" src="{{imgUrl}}{{reg_pic}}"></image>
             </div>
-            <!-- <div class="tab-select">
+            <image if="reg_pic" class="reg_pic" src="{{imgUrl}}{{reg_pic}}"></image>
+        </div>
+        <!-- <div class="tab-select">
                 <div @click="toDetail('User/PwLogin')">
                     <text>密码登录</text>
                 </div>
             </div> -->
 
-            <!-- 图形验证码 -->
-            <div class="img-capthca_body" if="showCapthcha">
-                <div class="img-capthca_content">
-                    <text>请填写图形验证码</text>
-                    <div class="image-capthca">
-                        <input value="{{capthchaValue}}" @change="changeCapthcha" type="text" />
-                        <image src="{{captcha}}" alt=""></image>
-                    </div>
-                    <div class="image-capthca_btn">
-                        <text @click="closeCapthcha">取消</text>
-                        <text class="capthca-confirm" @click="countdown">确定</text>
-                    </div>
+        <!-- 图形验证码 -->
+        <div class="img-captcha_body" if="showCaptcha">
+            <div class="img-captcha_content">
+                <text>请填写图形验证码</text>
+                <div class="image-captcha">
+                    <input value="{{captchaValue}}" @change="changeCaptcha" type="text" />
+                    <image src="{{captcha}}" alt=""></image>
+                </div>
+                <div class="image-captcha_btn">
+                    <text @click="closeCaptcha">取消</text>
+                    <text class="captcha-confirm" @click="countdown">确定</text>
                 </div>
             </div>
-            <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
         </div>
-    </template>
+        <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
+    </div>
+</template>
 
     <style lang="less">
-    @import "./smsLogin.less";
-    </style>
+@import './smsLogin.less';
+</style>
 
     <script>
-    import router from '@system.router';
-    import request from '../../utils/request';
-    import storage from "@system.storage";
-    import fetch from '@system.fetch'
-    import shortcut from '@system.shortcut';
-    import webview from '@system.webview'
-    import statis from '../../utils/statistics.js'
-    import account from '@service.account'
-    import device from '@system.device'
+import router from '@system.router';
+import request from '../../utils/request';
+import storage from "@system.storage";
+import fetch from '@system.fetch'
+import shortcut from '@system.shortcut';
+import webview from '@system.webview'
+import statis from '../../utils/statistics.js'
+import account from '@service.account'
+import device from '@system.device'
 
-    export default Custom_page({
-        public: {
-            external: '',
-        },
-        protected: {
-            tab_index:0,
-            imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
-            show_toast: false,
-            toast_text: '',
-            sms_phone: '',
-            sms_code: '',
-            showCapthcha:false,
-            tab: 'i0',
-            mobile: '',
-            password: '',
-            captcha:'',
-            capthchaValue:'',
-            reg_pic:'',
-            loginAdsList:[],
-            vivoOpenid:"",
-            sourceType:"1",
-            sourceName:"",
-        },
-        private: {
-            detail: null,
-            tq: [],
-            codeText: "获取验证码",
-            clickable: true,
-            timer: ''
-        },
-        onInit() {
-            if(this.external){
-                storage.set({
-                    key:'external',
-                    value:this.external
-                })
-            }
-            storage.get({
-                key:'reg_pic',
-                success:(data) => {
-                    if(data){
-                        this.reg_pic = data
-                    }
-                }
-            })
-             storage.get({
-                key:'activeSwitch',
-                success:(res)=>{
-                    if(res == 'open'){
-                        this.getResource()
-                    }
-                }
-            })
-        },
-        // 获取资源位
-        getResource(){
-            request.get('jiaofei/get-resource-img').then(res => {
-                if(res.status == 200){
-                    const data = res.data.pic_conf;
-                    this.loginAdsList = data.login_ads.data
-                }
-            })
-        },
-        goUrl(item,source){
-            if(source){
-                statis.statis('banner_click',{source: source},this)
-            }
-            if(item.url){
-                if(item.url.indexOf('http') != -1){
-                    webview.loadUrl({
-                        url: item.url,
-                        allowthirdpartycookies: true
-                    })
-                }else{
-                    router.push({
-                        uri:item.url
-                    })
-                }
-            }
-        },
-        changeCapthcha(response){
-            this.capthchaValue = response ? response.value : this.capthchaValue;
-        },
-        closeCapthcha(){
-            this.showCapthcha = false;
-        },
-        showCapthchaFn(capthchaImg){
-            this.showCapthcha = true;
-            this.captcha = capthchaImg;
-        },
-        // 监听密码输入
-        changePassword(response) {
-            this.password = response ? response.value : this.password;
-        },
-        onReady() {
-            // request.get('user/captcha').then(res => {
-            //     this.captcha = res.data
-            //     console.log(this.captcha)
-            // })
-        },
-        selectTab(index){
-            this.inputFocus();
-            this.tab_index = index;
-        },
-        // 监听手机号输入
-        changeMobile(response) {
-            this.mobile = response ? response.value : this.mobile;
-        },
-        onDestroy() {
-            clearInterval(this.timer);
-        },
-        reTab(tab) {
-            let me = this;
-            me.tab = 'i' + tab.index;
-        },
-        smsPhone(response) {
-            this.sms_phone = response ? response.value : this.sms_phone;
-        },
-        smsCode(response) {
-            this.sms_code = response ? response.value : this.sms_code;
-        },
-        // 显示toast
-        showToast(text) {
-            this.toast_text = text;
-            this.show_toast = true;
-            setTimeout(() => {
-                this.show_toast = false;
-            }, 1500)
-        },
-        // 登录
-        login() {
-            if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
-                this.showToast("手机号码有误，请重填");
-                return false;
-            }
-            if (!this.password) {
-                this.showToast("请输入密码");
-                return false;
-            }
-            const params = {
-                mobile: this.mobile,
-                password: this.password
-            }
-            statis.statis('login_click', { mobile: this.mobile }, this)
-
-            request.post('user/login', params).then(res => {
-                console.log(res)
-                if (res.status == 200) {
-                    statis.statis('login_click_success', { mobile: this.mobile }, this)
-                    this.showToast("登录成功");
-                    storage.set({
-                        key: 'sid',
-                        value: res.data.sessionId,
-                    })
-                    storage.set({
-                        key: '_id',
-                        value: res.data._id,
-                    })
-                    storage.set({
-                        key: 'mobile',
-                        value: res.data.mobile,
-                    })
-                    router.replace({
-                        uri: "/"
-                    })
-                } else {
-                    this.showToast(`${res.msg},请尝试短信登录`);
-                }
-
-            }).catch(err => {
-                this.showToast("网络错误");
-            })
-        },
-        inputFocus() {
-            if(this.tab_index == 0){
-                this.$element('sms_code').focus({ focus: false })
-                this.$element('sms_phone').focus({ focus: false })
-            }else{
-                this.$element('mobile').focus({ focus: false })
-                this.$element('password').focus({ focus: false })
-            }
-        },
-        stopEvent() {
-            console.log(2)
-        },
-        // 请增加抽奖次数
-        addChange(type){
-            storage.get({
-                key:'_id',
-                success: (res) => {
-                    if(res){
-                        request.post('lottery/addChance',{type,sid:res}).then(res => {
-                            if(res.status == 0){
-                                this.showActiveModel = true;
-                            }
-                        })
-                    }
-                },
-            })
-        },
-        // 短信登录
-        smsLogin() {
-            let that = this;
-            statis.statis('sms_login_click', { mobile: this.sms_phone }, this)
-            if (!(/^1[3456789]\d{9}$/.test(this.sms_phone))) {
-                this.showToast("手机号码有误，请重填");
-                return false;
-            }
-            if (this.sms_code.length != 4) {
-                this.showToast("请输入四位验证码");
-                return false;
-            }
-            // that.brand();
-            device.getInfo({
-                success: function(ret) {
-                    console.log(ret);
-                    that.sourceName=ret.brand;
-                    if(that.sourceName == "HUAWEI"){
-                        that.sourceType = "1"
-                    }else if(that.sourceName == "vivo"){
-                        that.sourceType = "2"
-                    }else if(that.sourceName == "Xiaomi"){
-                        that.sourceType = "3"
-                    }else{
-                        that.sourceType = "999"
-                    }
-                    console.log("当前手机型号:"+that.sourceName,"当前手机传参："+that.sourceType);
-                    if(that.external == "vivoNegative"){
-                        account.authorize({
-                            type: 'code',
-                            redirectUri: 'https://t.ubaycn.com/',
-                            success: function(data) {
-                                // console.log(`handling success: ${data.code}`)
-                                let postCode = data.code
-                                console.log(postCode);
-                                fetch.fetch({
-                                    url: 'https://t.ubaycn.com/ub/api/vivo/getAccessToken?code='+postCode,
-                                    success: function (response) {
-                                        // console.log(`the status code of the response:`+response)
-                                        const strToObj = JSON.parse(response.data)
-                                        console.log(response);
-                                        let postToken = strToObj.data.accessToken
-                                        console.log(postToken);
-                                        account.getProfile({
-                                            token: postToken,
-                                            success: function(data) {
-                                                console.log(data)
-                                                that.vivoOpenid = data.openid;
-                                                that.Loginmsg();
-                                            },
-                                            fail: function(data, code) {
-                                                console.log(`handling fail, code = ${code}`)
-                                            }
-                                        })
-                                    },
-                                    fail: function (data, code) {
-                                        console.log(`handling fail, errMsg = ${data}`)
-                                        console.log(`handling fail, errCode = ${code}`)
-                                    }
-                                })
-                            },
-                            fail: function(data, code) {
-                                console.log(`handling fail, code = ${code}`)
-                            }
-                        })
-                    }else{
-                        that.Loginmsg();
-                    }
-                }
-            })
-            
-        },
-        // 正则手机号并发送验证码
-        verifyPhone() {
-            statis.statis('sms_code_click', { mobile: this.sms_phone }, this)
-            if (!(/^1[3456789]\d{9}$/.test(this.sms_phone))) {
-                this.showToast("手机号码有误，请重填");
-                return false;
-            } else {
-                request.post('user/sms', { mobile: this.sms_phone ,captcha:this.capthchaValue}).then((res) => {
-                    console.log(res)
-                    if(res.status == 200){
-                        this.closeCapthcha()
-                        this.showToast("验证码发送成功！");
-                        statis.statis('sms_code_click_success', { mobile: this.sms_phone }, this)
-                    }else if(res.status == 400){
-                        this.showToast(res.msg);
-                        this.showCapthchaFn(res.data.data);
-                        clearInterval(this.timer);
-                        this.clickable = true;
-                        this.codeText = "再次发送"
-                    }else{
-                        this.showToast("网络错误");
-                        clearInterval(this.timer);
-                        this.clickable = true;
-                        this.codeText = "再次发送"
-                    }
-                    
-                }).catch(err => {
-                    this.showToast("网络错误");
-                })
-                return true;
-            }
-        },
-        // 验证码倒计时
-        countdown() {
-            const smsType = this.verifyPhone()
-            if (smsType) {
-                this.clickable = false;
-                if (this.codeText.indexOf("获取") != -1 || this.codeText.indexOf("发送") != -1) {
-                    this.codeText = "60s"
-                    // this.$element('sms_phone').focus({focus:false})
-                    this.inputFocus()
-                }
-                this.timer = setInterval(() => {
-                    let code = Number(this.codeText.substring(0, 2));
-                    if (code <= 1) {
-                        clearInterval(this.timer);
-                        this.clickable = true;
-                        this.codeText = "再次发送"
-                    } else {
-                        const sec = code - 1
-                        this.codeText = (sec < 10 ? '0' + sec : sec) + "s"
-                    }
-                }, 1000)
-
-            }
-        },
-        // 跳转toDetail
-        toDetail(path){
-            router.push({
-                uri:path
-            })
-        },
-        // login
-        Loginmsg(){
-            const params = {
-                mobile: this.sms_phone,
-                code: this.sms_code,
-                shortcut:false,
-                openId:this.vivoOpenid,
-                sourceType:this.sourceType,
-            }
-            shortcut.hasInstalled({
-                success:  (ret) => {
-                    if (ret) {
-                       params.shortcut = true;
-                    }
-                }
-            })
-            console.log("传参：");
-            console.log(params);
-                    console.log("当前手机型号:"+this.sourceName,"当前手机传参："+this.sourceType);
-            request.post('user/login/sms', params).then(res => {
-                if (res.status == 200) {
-                    this.showToast("登录成功");
-                    statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
-
-                    // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
-                    // fetch.fetch({
-                    //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
-                    // })
-                    console.log("成功返回：")
-                    console.log(res)
-                    if(res.data.isFirst){
-                        storage.set({
-                            key:'firstLogin',
-                            value:'true'
-                        })
-                        // 首次注册
-                        this.addChange('reg')
-                    }
-                    if(res.data.regIqy){
-                        storage.set({
-                            key:'regIqy',
-                            value:'true'
-                        })
-                    }
-                    storage.set({
-                        key:'_id',
-                        value:res.data._id
-                    })
-                    storage.set({
-                        key: 'sid',
-                        value: res.data.sessionId,
-                        success: function () {
-                            router.replace({
-                                uri: "/"
-                            })
-                            // router.back({
-                            //     path: '/Home'
-                            // })
-                        }
-                    })
-                    storage.set({
-                        key: 'mobile',
-                        value: res.data.mobile,
-                    })
-                } else {
-                    this.showToast(res.msg);
-                }
-
-            }).catch(err => {
-                this.showToast("网络错误");
+export default Custom_page({
+    public: {
+        external: '',
+    },
+    protected: {
+        tab_index: 0,
+        imgUrl: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
+        show_toast: false,
+        toast_text: '',
+        sms_phone: '15803486478',
+        sms_code: '8110',
+        showCaptcha: false,
+        tab: 'i0',
+        mobile: '',
+        password: '',
+        captcha: '',
+        captchaValue: '',
+        reg_pic: '',
+        loginAdsList: [],
+        vivoOpenid: "",
+        sourceType: "1",
+        sourceName: "",
+    },
+    private: {
+        detail: null,
+        tq: [],
+        codeText: "获取验证码",
+        clickable: true,
+        timer: ''
+    },
+    onInit() {
+        console.log("当前来源是：" + this.external);
+        if (this.external == "unted") {
+            statis.statis('ted_ask_num', {}, this);
+        }
+        if (this.external) {
+            storage.set({
+                key: 'external',
+                value: this.external
             })
         }
-    })
-    </script>
+        storage.get({
+            key: 'reg_pic',
+            success: (data) => {
+                if (data) {
+                    this.reg_pic = data
+                }
+            }
+        })
+        storage.get({
+            key: 'activeSwitch',
+            success: (res) => {
+                if (res == 'open') {
+                    this.getResource()
+                }
+            }
+        })
+    },
+    // 获取资源位
+    getResource() {
+        request.get('jiaofei/get-resource-img').then(res => {
+            if (res.status == 200) {
+                const data = res.data.pic_conf;
+                this.loginAdsList = data.login_ads.data
+            }
+        })
+    },
+    goUrl(item, source) {
+        if (source) {
+            statis.statis('banner_click', { source: source }, this)
+        }
+        if (item.url) {
+            if (item.url.indexOf('http') != -1) {
+                webview.loadUrl({
+                    url: item.url,
+                    allowthirdpartycookies: true
+                })
+            } else {
+                router.push({
+                    uri: item.url
+                })
+            }
+        }
+    },
+    changeCaptcha(response) {
+        this.captchaValue = response ? response.value : this.captchaValue;
+    },
+    closeCaptcha() {
+        this.showCaptcha = false;
+    },
+    showCaptchaFn(captchaImg) {
+        this.showCaptcha = true;
+        // this.captcha = captchaImg;
+        this.captcha = request.api + "login/cap?" + new Date().getTime() + "&mobile=" + this.sms_phone;
+    },
+    // 监听密码输入
+    changePassword(response) {
+        this.password = response ? response.value : this.password;
+    },
+    onReady() {
+        // request.get('user/captcha').then(res => {
+        //     this.captcha = res.data
+        //     console.log(this.captcha)
+        // })
+    },
+    selectTab(index) {
+        this.inputFocus();
+        this.tab_index = index;
+    },
+    // 监听手机号输入
+    changeMobile(response) {
+        this.mobile = response ? response.value : this.mobile;
+    },
+    onDestroy() {
+        clearInterval(this.timer);
+    },
+    reTab(tab) {
+        let me = this;
+        me.tab = 'i' + tab.index;
+    },
+    smsPhone(response) {
+        this.sms_phone = response ? response.value : this.sms_phone;
+    },
+    smsCode(response) {
+        this.sms_code = response ? response.value : this.sms_code;
+    },
+    // 显示toast
+    showToast(text) {
+        this.toast_text = text;
+        this.show_toast = true;
+        setTimeout(() => {
+            this.show_toast = false;
+        }, 1500)
+    },
+    // 登录
+    login() {
+        if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
+            this.showToast("手机号码有误，请重填");
+            return false;
+        }
+        if (!this.password) {
+            this.showToast("请输入密码");
+            return false;
+        }
+        const params = {
+            mobile: this.mobile,
+            password: this.password
+        }
+        statis.statis('login_click', { mobile: this.mobile }, this)
+
+        request.post('user/login', params).then(res => {
+            console.log(res)
+            if (res.status == 200) {
+                statis.statis('login_click_success', { mobile: this.mobile }, this)
+                this.showToast("登录成功");
+                storage.set({
+                    key: 'sid',
+                    value: res.data.sessionId,
+                })
+                storage.set({
+                    key: '_id',
+                    value: res.data._id,
+                })
+                storage.set({
+                    key: 'mobile',
+                    value: res.data.mobile,
+                })
+                router.replace({
+                    uri: "/"
+                })
+            } else {
+                this.showToast(`${res.msg},请尝试短信登录`);
+            }
+
+        }).catch(err => {
+            this.showToast("网络错误");
+        })
+    },
+    inputFocus() {
+        if (this.tab_index == 0) {
+            this.$element('sms_code').focus({ focus: false })
+            this.$element('sms_phone').focus({ focus: false })
+        } else {
+            this.$element('mobile').focus({ focus: false })
+            this.$element('password').focus({ focus: false })
+        }
+    },
+    stopEvent() {
+        console.log(2)
+    },
+    // 请增加抽奖次数
+    addChange(type) {
+        storage.get({
+            key: '_id',
+            success: (res) => {
+                if (res) {
+                    request.post('lottery/addChance', { type, sid: res }).then(res => {
+                        if (res.status == 0) {
+                            this.showActiveModel = true;
+                        }
+                    })
+                }
+            },
+        })
+    },
+    // 短信登录
+    smsLogin() {
+        let that = this;
+        statis.statis('sms_login_click', { mobile: this.sms_phone }, this)
+        if (!(/^1[3456789]\d{9}$/.test(this.sms_phone))) {
+            this.showToast("手机号码有误，请重填");
+            return false;
+        }
+        if (this.sms_code.length != 4) {
+            this.showToast("请输入四位验证码");
+            return false;
+        }
+        // that.brand();
+        device.getInfo({
+            success: function (ret) {
+                console.log(ret);
+                that.sourceName = ret.brand;
+                if (that.sourceName == "HUAWEI") {
+                    that.sourceType = "1"
+                } else if (that.sourceName == "vivo") {
+                    that.sourceType = "2"
+                } else if (that.sourceName == "Xiaomi") {
+                    that.sourceType = "3"
+                } else {
+                    that.sourceType = "999"
+                }
+                console.log("当前手机型号:" + that.sourceName, "当前手机传参：" + that.sourceType);
+                if (that.external == "vivoNegative") {
+                    account.authorize({
+                        type: 'code',
+                        redirectUri: 'https://t.ubaycn.com/',
+                        success: function (data) {
+                            // console.log(`handling success: ${data.code}`)
+                            let postCode = data.code
+                            console.log(postCode);
+                            fetch.fetch({
+                                url: 'https://t.ubaycn.com/ub/api/vivo/getAccessToken?code=' + postCode,
+                                success: function (response) {
+                                    // console.log(`the status code of the response:`+response)
+                                    const strToObj = JSON.parse(response.data)
+                                    console.log(response);
+                                    let postToken = strToObj.data.accessToken
+                                    console.log(postToken);
+                                    account.getProfile({
+                                        token: postToken,
+                                        success: function (data) {
+                                            console.log(data)
+                                            that.vivoOpenid = data.openid;
+                                            that.Loginmsg();
+                                            statis.statis('vivo_login_click', {}, this);
+                                        },
+                                        fail: function (data, code) {
+                                            console.log(`handling fail, code = ${code}`)
+                                        }
+                                    })
+                                },
+                                fail: function (data, code) {
+                                    console.log(`handling fail, errMsg = ${data}`)
+                                    console.log(`handling fail, errCode = ${code}`)
+                                }
+                            })
+                        },
+                        fail: function (data, code) {
+                            console.log(`handling fail, code = ${code}`)
+                        }
+                    })
+                } else if (that.external == "unted") {
+                    that.Loginmsg();
+                    statis.statis('unted_login_click', {}, this);
+                } else if (that.external == "Huawei") {
+                    that.Loginmsg();
+                    statis.statis('Huawei_login_click', {}, this);
+                } else {
+                    that.Loginmsg();
+                }
+            }
+        })
+
+    },
+    // 正则手机号并发送验证码
+    verifyPhone() {
+        statis.statis('sms_code_click', { mobile: this.sms_phone }, this)
+        if (!(/^1[3456789]\d{9}$/.test(this.sms_phone))) {
+            this.showToast("手机号码有误，请重填");
+            return false;
+        } else {
+            var params = {
+                mobile: this.sms_phone,
+                // name: "云缴费"// \b bug
+                name: '云缴费'
+            };
+            params = this.captchaValue ? Object.assign({ captcha: this.captchaValue }, params) : params;
+            /*
+            request.post('login/sms', {
+                mobile: this.sms_phone,
+                // name: "云缴费"// \b bug
+                name: '云缴费'
+            }).then((res) => {
+            /**/
+            request.post('login/sms', params).then((res) => {
+                console.log(res)
+                if (res.status == 200) {
+                    this.closeCaptcha()
+                    this.showToast("验证码发送成功！");
+                    statis.statis('sms_code_click_success', { mobile: this.sms_phone }, this)
+                } else if (res.status == 400) {
+                    this.showToast(res.msg);
+                    this.showCaptchaFn(res.data.data);
+                    clearInterval(this.timer);
+                    this.clickable = true;
+                    this.codeText = "再次发送"
+                } else {
+                    this.showToast("网络错误");
+                    clearInterval(this.timer);
+                    this.clickable = true;
+                    this.codeText = "再次发送"
+                }
+
+            }).catch(err => {
+                this.showToast("网络错误");
+            })
+            return true;
+        }
+    },
+    // 验证码倒计时
+    countdown() {
+        const smsType = this.verifyPhone()
+        if (smsType) {
+            this.clickable = false;
+            if (this.codeText.indexOf("获取") != -1 || this.codeText.indexOf("发送") != -1) {
+                this.codeText = "60s"
+                // this.$element('sms_phone').focus({focus:false})
+                this.inputFocus()
+            }
+            this.timer = setInterval(() => {
+                let code = Number(this.codeText.substring(0, 2));
+                if (code <= 1) {
+                    clearInterval(this.timer);
+                    this.clickable = true;
+                    this.codeText = "再次发送"
+                } else {
+                    const sec = code - 1
+                    this.codeText = (sec < 10 ? '0' + sec : sec) + "s"
+                }
+            }, 1000)
+
+        }
+    },
+    // 跳转toDetail
+    toDetail(path) {
+        router.push({
+            uri: path
+        })
+    },
+    // login
+    Loginmsg() {
+        const params = {
+            mobile: this.sms_phone,
+            code: this.sms_code,
+            shortcut: false,
+            openId: this.vivoOpenid,
+            sourceType: this.sourceType,
+            environment: "test",
+        }
+        shortcut.hasInstalled({
+            success: (ret) => {
+                if (ret) {
+                    params.shortcut = true;
+                }
+            }
+        })
+        console.log("传参：");
+        console.log(params);
+        console.log("当前手机型号:" + this.sourceName, "当前手机传参：" + this.sourceType);
+        request.post('user/login/sms', params).then(res => {
+            if (res.status == 200) {
+                this.showToast("登录成功");
+                statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
+
+                // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
+                // fetch.fetch({
+                //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
+                // })
+                console.log("成功返回：")
+                console.log(res)
+                if (res.data.isFirst) {
+                    storage.set({
+                        key: 'firstLogin',
+                        value: 'true'
+                    })
+                    // 首次注册
+                    this.addChange('reg')
+                }
+                if (res.data.regIqy) {
+                    storage.set({
+                        key: 'regIqy',
+                        value: 'true'
+                    })
+                }
+                if (res.data.regGiving) {
+                    storage.set({
+                        key: 'regGiving',
+                        value: res.data.regGiving
+                    })
+                }
+                storage.set({
+                    key: '_id',
+                    value: res.data._id
+                })
+                storage.set({
+                    key: 'sid',
+                    value: res.data.sessionId,
+                    success: function () {
+                        router.replace({
+                            uri: "/"
+                        })
+                        // router.back({
+                        //     path: '/Home'
+                        // })
+                    }
+                })
+                storage.set({
+                    key: 'mobile',
+                    value: res.data.mobile,
+                })
+            } else {
+                this.showToast(res.msg);
+            }
+
+        }).catch(err => {
+            this.showToast("网络错误");
+        })
+    }
+})
+</script>

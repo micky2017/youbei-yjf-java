@@ -1,8 +1,8 @@
 {
   "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.5.0",
-  "versionCode": "34",
+  "versionName": "1.5.1",
+  "versionCode": "36",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [

@@ -6,9 +6,9 @@
 			<!-- <div if="showGuide" class="guide-page_btn" >
 				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
 			</div> -->
-			<div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
+			<!-- <div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
 				<text onclick="skip()">立即体验</text>
-			</div>
+			</div> -->
 			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.pic}}" alt="">
 			</swiper>
@@ -174,10 +174,10 @@
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
-					<div if="false" @click="closeActiveModel" class="activity-model-body iqiyi-model">
-					<!-- <div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
+					<!-- <div if="" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
+					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model">
 						
-						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_bg.png"></image>
+						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
@@ -466,12 +466,17 @@ export default Custom_page({
 		// })
 		this.activeSwitch = 'close';
 		storage.get({
-			key:'regIqy',
+			key:'regGiving',
 			success:(data) => {
-				if(data == 'true'){
+				if(data == 'iqy'){
 					this.showIqiyiActiveModel = true;
 					storage.delete({
-						key:'regIqy'
+						key:'regGiving'
+					})
+				}else if(data == 'jde'){
+					this.showJDEActiveModel = true;
+					storage.delete({
+						key:'regGiving'
 					})
 				}
 			}
@@ -484,7 +489,7 @@ export default Custom_page({
 		})
 		// banner
 		// this.getBanner();
-		this.getNotification();
+		// this.getNotification();
 		// weather
 		this.getWeather();
 		// 是否提示用户添加到桌面
@@ -510,9 +515,9 @@ export default Custom_page({
 
 	},
 	getActiveImage(source){
-		request.post('jiaofei/get-active-img',{source}).then(res => {
+		request.post('payment/get-active-img',{source}).then(res => {
 			if(res.status == 200){
-				const data = res.data.pic_conf;
+				const data = res.data.data.pic_conf;
 				this.guideList = data.guide_pic.data//引导页
 				this.homeBannerList = data.home_banner.data//banner
 				console.log(this.homeBannerList)
@@ -622,7 +627,7 @@ export default Custom_page({
 	},
 	// 获取资源位
 	getResource(){
-		request.get('jiaofei/get-resource-img').then(res => {
+		request.get('payment/get-resource-img').then(res => {
 			if(res.status == 200){
 				const data = res.data.pic_conf;
 				this.guideList = data.guide_pic.data//引导页
@@ -689,16 +694,27 @@ export default Custom_page({
 	},
 	// 天气
 	getWeather(){
-		request.get(`user/get-weather?city=${this.cityName}`).then(res => {
-			console.log(res.data)
-			if(res.data.forecast){
-					const weather = res.data.forecast[0].type;
-					const wendu = res.data.wendu;
+		console.log("获取天气成功：");
+		request.get(`user/get-weather?city=北京市`).then(res => {
+			console.log("111",res);
+			if(res.data.data.forecast){
+					const weather = res.data.data.forecast[0].type;
+					const wendu = res.data.data.wendu;
 					this.weather = `${wendu}℃ ${weather}`
 				}
 		}).catch(err => {
+			console.log(222)
 			console.log(err)
 		})
+		// fetch.fetch({
+		// 	url:"http://192.168.1.109:8090/ub/user/get-weather?city=北京市&environment=test",
+		// 	success:function(res){
+		// 		console.log(123,res);
+		// 	},
+		// 	fail:function(err){
+		// 		console.log(err);
+		// 	}
+		// })
 	},
 	goUrl(item,source){
 		if(source){
@@ -756,7 +772,7 @@ export default Custom_page({
 					message: '已创建桌面图标'
 				})
 				this.showShortcut = false;	
-				this.showJDEActiveModel = true;
+				// this.showJDEActiveModel = true;
 				this.addChange('add');
 			} else {
 				shortcut.install({
@@ -767,7 +783,7 @@ export default Custom_page({
 						})
 						this.addChange('add');
 						this.showShortcut = false;	
-						this.showJDEActiveModel = true;				
+						// this.showJDEActiveModel = true;				
 					},
 					fail: function (errmsg, errcode) {
 						// prompt.showToast({
@@ -811,7 +827,8 @@ export default Custom_page({
 		// 缴费记录
 		request.post('order/payment-records', {
 			pageSize: 10,
-			currentPage: 1
+			currentPage: 1,
+			environment: "test"
 		}).then(res => {
 			setTimeout(() => {
 				this.refreshing = false
@@ -921,13 +938,13 @@ export default Custom_page({
 			success: (data) => {
 				if(data && data != ''){
 					this.external = data;
-					this.getActiveImage(this.external)
+					// this.getActiveImage(this.external)
 				}else{
 					storage.set({
 						key:'external',
 						value:this.external
 					})
-					this.getActiveImage(this.external)
+					// this.getActiveImage(this.external)
 				}
 			},
 			fail: (err) => {
@@ -939,10 +956,10 @@ export default Custom_page({
 		})
 		
 		// 缴费类别
-		request.post('jiaofei/pay-type-lst', { cityName: '北京市' }).then(res => {
+		request.post('payment/pay-type-lst', { cityName: '北京市',environment:"test" }).then(res => {
 			// console.log(res)
 			if (res.status == 200) {
-				this.cebPaymentCategoriesList = res.data;
+				this.cebPaymentCategoriesList = res.data.data;
 			}
 		}).catch(err => {
 			this.netWork = false
@@ -961,7 +978,8 @@ export default Custom_page({
 					// 缴费记录
 					request.post('order/payment-records', {
 						pageSize: 10,
-						currentPage: 1
+						currentPage: 1,
+						environment: "test"
 					}).then(res => {
 
 						if (res.status == 200) {
@@ -1010,10 +1028,10 @@ export default Custom_page({
 				if (data && data != "" && data != null) {
 					this.cityName = data;
 					// 缴费类别
-					request.post('jiaofei/pay-type-lst', { cityName: this.cityName }).then(res => {
+					request.post('payment/pay-type-lst', { cityName: this.cityName,environment:"test" }).then(res => {
 						// console.log(res)
 						if (res.status == 200) {
-							this.cebPaymentCategoriesList = res.data;
+							this.cebPaymentCategoriesList = res.data.data;
 						}
 					}).catch(err => {
 						this.netWork = false
@@ -1076,10 +1094,10 @@ export default Custom_page({
 						const city = res.data.result.addressComponent.city || '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+						request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
-								that.cebPaymentCategoriesList = res.data;
+								that.cebPaymentCategoriesList = res.data.data;
 							}else{
 								this.showToast(res.msg)
 							}
@@ -1095,10 +1113,10 @@ export default Custom_page({
 						const city = '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+						request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
-								that.cebPaymentCategoriesList = res.data;
+								that.cebPaymentCategoriesList = res.data.data;
 							}
 						}).catch(err => {
 							that.netWork = false
@@ -1114,10 +1132,10 @@ export default Custom_page({
 				const city = '北京市'
 				that.cityName = city;
 				// 缴费类别
-				request.post('jiaofei/pay-type-lst', { cityName: city }).then(res => {
+				request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
 					// console.log(res)
 					if (res.status == 200) {
-						that.cebPaymentCategoriesList = res.data;
+						that.cebPaymentCategoriesList = res.data.data;
 					}
 				}).catch(err => {
 					that.netWork = false
@@ -1155,6 +1173,7 @@ export default Custom_page({
 			request.post('order/payment-records', {
 				pageSize: this.pageSize,
 				currentPage: this.currentPage,
+						environment: "test"
 			}).then(res => {
 				if (res.status == 200) {
 					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo

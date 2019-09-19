@@ -13,6 +13,7 @@
     import router from '@system.router'
     import storage from"@system.storage";
     import request from '../../utils/request'
+    import statis from '../../utils/statistics.js'
 
     export default Custom_page ({
         public: {
@@ -32,6 +33,12 @@
                 this.type = "1"
             }
             this.toRechange()
+            console.log(this.external);
+            if(this.external == "vivoNegative"){
+                statis.statis('vivo_ask_num',{},this)
+            }else if(this.external == "Huawei"){
+                statis.statis('huawei_ask_num',{},this)
+            }
         },
         toRechange(){
             //1  电费// 2  水费// 3  燃气费// 4  手机充值
@@ -133,17 +140,16 @@
 							}
 						})
 					}else{
-						console.log(obj.params.name)
 						// 账单详情
 						router.push({
 							uri:'Home/Recharge',
 							params:{
 								payName:'1',
-								title: obj.params.title,
-								type:obj.params.type,
-								icon:obj.params.icon,
+								title: decodeURI(this.type),
+								type,
+								icon:this.icon,
 								external:this.external,
-								cityName:this.cityName,
+                                cityName:this.cityName,
 								paymentItemModelList:item.paymentItemModelList,//项目信息
 							}
 						})

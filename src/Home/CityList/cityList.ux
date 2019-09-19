@@ -94,7 +94,7 @@
                     }
                 }
             })
-            request.get("jiaofei/get-city-list",{}).then(res => {
+            request.get("payment/get-city-list",{}).then(res => {
                 if(res.status == 200){ 
                     // cityRenCategoryModelList  最近常用城市
                     // cityHotCategoryModelList  热门城市
