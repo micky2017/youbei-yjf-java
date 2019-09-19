@@ -197,7 +197,7 @@
             }
         },
         getPayType(cityName){
-            request.post('jiaofei/pay-type-lst', { cityName: cityName }).then(res => {
+            request.post('payment/pay-type-lst', { cityName: cityName }).then(res => {
                 if (res.status == 200) {
                     const data = res.data;
                     let havePayType = true
@@ -251,7 +251,7 @@
                 router.push(obj)
             }else{	
                 // 缴费项目信息
-                request.post('jiaofei/pay-type-detail', {
+                request.post('payment/pay-type-detail', {
                     cityName: this.cityName,
                     type: obj.params.type,
                 }).then(res => {

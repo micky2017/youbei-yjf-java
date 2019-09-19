@@ -40,7 +40,7 @@
                 router.replace(obj)
             }else{	
                 // 缴费项目信息
-                request.post('jiaofei/pay-type-detail', {
+                request.post('payment/pay-type-detail', {
                     cityName: this.cityName,
                     type: obj.params.type,
                 }).then(res => {

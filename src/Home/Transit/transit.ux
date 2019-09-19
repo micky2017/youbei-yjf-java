@@ -54,7 +54,7 @@
 					if(data){
                         // 缴费类别
                         console.log('transit'+this.cityName)
-						request.post('jiaofei/pay-type-lst',{cityName:decodeURI(this.cityName)}).then(res => {
+						request.post('payment/pay-type-lst',{cityName:decodeURI(this.cityName)}).then(res => {
 							console.log(res)
 							console.log('transit'+this.type)
 							if(res.status == 200){
@@ -116,9 +116,9 @@
             
         },
         toRecharge(type){
-            console.log(222)
+            // console.log(222)
             // 缴费项目信息
-			request.post('jiaofei/pay-type-detail', {
+			request.post('payment/pay-type-detail', {
 				cityName: decodeURI(this.cityName),
 				type,
 			}).then(res => {

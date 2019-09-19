@@ -695,7 +695,8 @@ export default Custom_page({
 	// 天气
 	getWeather() {
 		console.log("获取天气成功：");
-		request.get(`user/get-weather?city=北京市`).then(res => {
+		request.get("user/get-weather", { city: "北京市" }).then(res => {
+			// request.get(`user/get-weather?city=北京市`).then(res => {
 			console.log("111", res);
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
@@ -1277,7 +1278,7 @@ export default Custom_page({
 	goRechargeDetail(groupName, billitem) {
 		this.showLoading = true;
 		// 缴费项目信息
-		request.post('jiaofei/pay-type-detail', {
+		request.post('payment/pay-type-detail', {
 			cityName: billitem.cityName,
 			type: billitem.type,
 		}).then(res => {
@@ -1344,7 +1345,7 @@ export default Custom_page({
 			router.push(obj)
 		} else {
 			// 缴费项目信息
-			request.post('jiaofei/pay-type-detail', {
+			request.post('payment/pay-type-detail', {
 				cityName: this.cityName,
 				type: obj.params.type,
 			}).then(res => {

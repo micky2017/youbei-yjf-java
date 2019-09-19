@@ -246,7 +246,7 @@ export default Custom_page({
     goRecharge(groupName,billitem){
             this.showLoading = true;
 			// 缴费项目信息
-			request.post('jiaofei/pay-type-detail', {
+			request.post('payment/pay-type-detail', {
 				cityName: billitem.cityName,
 				type: billitem.type,
 			}).then(res => {
