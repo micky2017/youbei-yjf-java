@@ -18,7 +18,7 @@
 
 		</div>
 		<tabs index="{{tabIndex}}" @change="reTab">
-		<!-- 主页 -->
+			<!-- 主页 -->
 			<tab-content class="tab-content">
 				<div class="tab-content-section">
 					<div class="title-bar" if="tabIndex == 0">
@@ -27,7 +27,7 @@
 								<text class="city-name">{{cityName}}</text>
 								<text>▼</text>
 							</div>
-							
+
 							<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
 								<div class="inner">
 									<div class="text right-btn">
@@ -36,94 +36,94 @@
 								</div>
 							</div>
 							<div class="login" style="width:80px;" if="{{isLogin}}">
-								
+
 							</div>
 						</div>
 					</div>
 					<list>
-					<list-item>
-					<!-- 常用缴费 -->
-					<div class="common-body">
-						
-						<div class="common-swiper_content">
-							<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true" loop="true">
-								<image @click="goUrl($item,'HomeBannerList')"  src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
-							</swiper>
-							<swiper if="homeBannerList.length <= 0" class="common-swiper"  autoplay="true" loop="true" indicator-selected-color="#9A70C2" >
-								<image @click="goUrl(item)" src="{{item.pic}}"  for="item in bannerList" alt=""></image>
-							</swiper>
-						</div>
-						
-						<div class="weather" >
-							<text if="{{isLogin}}">{{weather}}</text>
-							<text if="{{!isLogin}}"></text>
-						</div>
-						<!-- <div if="{{!isLogin}}" class="weather no-login" >
+						<list-item>
+							<!-- 常用缴费 -->
+							<div class="common-body">
+
+								<div class="common-swiper_content">
+									<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true" loop="true">
+										<image @click="goUrl($item,'HomeBannerList')" src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
+									</swiper>
+									<swiper if="homeBannerList.length <= 0" class="common-swiper" autoplay="true" loop="true" indicator-selected-color="#9A70C2">
+										<image @click="goUrl(item)" src="{{item.pic}}" for="item in bannerList" alt=""></image>
+									</swiper>
+								</div>
+
+								<div class="weather">
+									<text if="{{isLogin}}">{{weather}}</text>
+									<text if="{{!isLogin}}"></text>
+								</div>
+								<!-- <div if="{{!isLogin}}" class="weather no-login" >
 						</div> -->
-						<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
-						<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
-						<div if="!isGroup" class="common-content">
-							<text class="common-content_title">常用缴费</text>
-							<div class="common-content_body">
-								<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
-									<div class="icon">
-										<image resize-mode="contain" src="{{$item.icon}}"></image>
-									</div>
-									<div class="text">
-										<text>{{$item.typeName}}</text>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- 分组管理 -->
-						<div if="isGroup" class="common-content group-content">
-							<div if="$item.children.length>0" class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
-								<div class="group-item_title">
-									<text>{{$item.groupName}}</text>
-									<div if="$idx == 0" @click="toDetail('User/GroupManage')" >
-										<image width="26" height="26" resize-mode="contain" src="../images/groupImg/add_group_icon.png"></image>
-										<text>分组管理</text>									
-									</div>
-								</div>
-								<div @click="goRechargeDetail($item.groupName,item)" class="group-item_cell" for="item in $item.children">
-									<div class="group-cell_head">
-										<div class="group-head_left">
-										    <image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
-										    <text>{{item.typeName}}</text>
+								<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
+								<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
+								<div if="!isGroup" class="common-content">
+									<text class="common-content_title">常用缴费</text>
+									<div class="common-content_body">
+										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
+											<div class="icon">
+												<image resize-mode="contain" src="{{$item.icon}}"></image>
+											</div>
+											<div class="text">
+												<text>{{$item.typeName}}</text>
+											</div>
 										</div>
-										<!-- <text>▼</text> -->
-										<text>{{item.bill}}</text>
 									</div>
-									<!-- <div class="group-cell_content">
+								</div>
+								<!-- 分组管理 -->
+								<div if="isGroup" class="common-content group-content">
+									<div if="$item.children.length>0" class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
+										<div class="group-item_title">
+											<text>{{$item.groupName}}</text>
+											<div if="$idx == 0" @click="toDetail('User/GroupManage')">
+												<image width="26" height="26" resize-mode="contain" src="../images/groupImg/add_group_icon.png"></image>
+												<text>分组管理</text>
+											</div>
+										</div>
+										<div @click="goRechargeDetail($item.groupName,item)" class="group-item_cell" for="item in $item.children">
+											<div class="group-cell_head">
+												<div class="group-head_left">
+													<image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
+													<text>{{item.typeName}}</text>
+												</div>
+												<!-- <text>▼</text> -->
+												<text>{{item.bill}}</text>
+											</div>
+											<!-- <div class="group-cell_content">
 										<div class="group-cell_item">
 											<text>{{item.bill}}</text> -->
 											<!--<text>*秀儿</text> -->
-										<!-- </div>
+											<!-- </div>
 									</div> -->
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<!-- <div if="activeSwitch == 'open'" class="notification">
+							<!-- <div if="activeSwitch == 'open'" class="notification">
 					
 					</div> -->
-					
-					<!-- 首页广告位 -->
-					<div if="homeAdsList.length > 0" class="notification-body">
-						<div if="notificationList.length > 0" class="notification-content">
-							<image resize-mode="contain" src="./images/notification_icon.png"></image>
-							<swiper vertical="true" loop="true" autoplay="true" indicator="false">
-								<text lines="1" for="notificationList">{{$item}}</text>
-							</swiper>
-						</div>
-						<div  class="activity-entry-banner">
-							<swiper autoplay="true" loop="true" indicator="true" class="common-swiper" indicator-selected-color="#9A70C2" >
-								<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in homeAdsList" alt=""></image>
-							</swiper>
-						</div>
-					</div>
-					</list-item>
-					<!-- 缴费类别 -->
+
+							<!-- 首页广告位 -->
+							<div if="homeAdsList.length > 0" class="notification-body">
+								<div if="notificationList.length > 0" class="notification-content">
+									<image resize-mode="contain" src="./images/notification_icon.png"></image>
+									<swiper vertical="true" loop="true" autoplay="true" indicator="false">
+										<text lines="1" for="notificationList">{{$item}}</text>
+									</swiper>
+								</div>
+								<div class="activity-entry-banner">
+									<swiper autoplay="true" loop="true" indicator="true" class="common-swiper" indicator-selected-color="#9A70C2">
+										<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in homeAdsList" alt=""></image>
+									</swiper>
+								</div>
+							</div>
+						</list-item>
+						<!-- 缴费类别 -->
 						<list-item>
 							<div class="fast-title">
 								<text class="fast-title_text">便捷缴费</text>
@@ -143,7 +143,7 @@
 								</div>
 							</div>
 						</list-item>
-						
+
 					</list>
 					<div class="add-icon" if="showShortcut && tabIndex == 0">
 						<div>
@@ -153,7 +153,7 @@
 						<div>
 							<image @click="createShortcut()" height="50px" src="./images/add_icon_btn.png"></image>
 						</div>
-						
+
 						<image height="50px" src="./images/add_icon_source.png"></image>
 					</div>
 					<!-- <div class="add-icon" if="showShortcut && tabIndex == 0 && !isLogin">
@@ -161,26 +161,26 @@
 					</div> -->
 					<div if="showActiveModel" @click="closeActiveModel" class="activity-model-body">
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 						<image class="activity-model_img" width="693" height="717" src="./images/activityImg/model_content_img.png"></image>
 						<image @click="toActive" class="activity-model_btn" width="340" height="90" src="./images/activityImg/model_content_btn.png"></image>
 					</div>
 					<div if="showIqiyiActiveModel" @click="closeActiveModel" class="activity-model-body iqiyi-model">
-						
+
 						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/iqiyi_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
 					<!-- <div if="" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
 					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model">
-						
+
 						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height = "60" src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
 				</div>
@@ -191,8 +191,8 @@
 							<div class="title"><text>缴费记录</text></div>
 						</div>
 						<div class="records-banner">
-							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in jiluAdsList" alt=""></image>
+							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
+								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in jiluAdsList" alt=""></image>
 							</swiper>
 							<!-- <image src="./images/home-banner.jpg"></image> -->
 						</div>
@@ -224,7 +224,7 @@
 							</div> -->
 						</div>
 						<!-- 缴费记录列表 -->
-						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color	= "#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
+						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color="#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
 							<list if="orderPagingH5Model.recordsModel.length > 0" style="height:100%" onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
 								<list-item>
 									<div class="list">
@@ -262,7 +262,7 @@
 							</div>
 						</div>
 						<div class="login" if="{{!isLogin}}" @click="toDetail('User/SmsLogin')">
-							<image object-fit="contain" resize-mode="contain"  width="120" src="images/header_icon.png"></image>
+							<image object-fit="contain" resize-mode="contain" width="120" src="images/header_icon.png"></image>
 							<text>登录/注册&nbsp;&nbsp;&nbsp;»</text>
 						</div>
 						<div class="login" if="{{isLogin}}">
@@ -273,12 +273,12 @@
 					<list>
 						<list-item>
 							<div class="records-banner">
-								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2" >
-									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.pic}}"  for="item in myAdsList" alt=""></image>
+								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
+									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in myAdsList" alt=""></image>
 								</swiper>
 							</div>
 							<div class="list">
-								<div class="item" if="isLogin"  @click="toPrize('Home/MyPrize')">
+								<div class="item" if="isLogin" @click="toPrize('Home/MyPrize')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/prize_icon.png"></image>
 										<text>我的奖品</text>
@@ -323,8 +323,8 @@
 										<image height="30" src="./images/helpcenter.png"></image>
 										<text>帮助中心</text>
 									</div>
-								</div>	
-								<div class="item" if="isLogin"  @click="toPrize('Home/Suggest')">
+								</div>
+								<div class="item" if="isLogin" @click="toPrize('Home/Suggest')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/suggest_icon.png"></image>
 										<text>建议反馈</text>
@@ -344,7 +344,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</list-item>
 					</list>
 
@@ -385,7 +385,7 @@
 </template>
 
 <style lang="less">
-@import "./index.less";
+@import './index.less';
 </style>
 
 <script>
@@ -408,23 +408,23 @@ const device = require('@system.device');
 
 export default Custom_page({
 	public: {
-		external:'master'
+		external: 'master'
 	},
 	protected: {
 		isLogin: false,
 		showGuide: false,
-		showShortcut:false,
+		showShortcut: false,
 		sid: '',
-		showIqiyiActiveModel:false,
-		showHomeBanner:false,
-		activeSwitch:'close',
+		showIqiyiActiveModel: false,
+		showHomeBanner: false,
+		activeSwitch: 'close',
 		tabIndex: 0,
-		weather:'',
+		weather: '',
 		guidePageList: [],
 		guideSecond: 3,
-		showJDEActiveModel:false,
+		showJDEActiveModel: false,
 		mobile: '',
-		imgUrl:'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
+		imgUrl: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
 		refreshing: false,
 		tab: 'i0',
 		pageSize: 10,
@@ -435,17 +435,17 @@ export default Custom_page({
 		netWork: true,
 		timer: '',
 		swIndex: 0,
-		notificationList:[],
-		brand:'',
-		showActiveModel:false,
-		guideList:[{pic:''}],
-		homeBannerList:[],
-		isGroup:false,
-		groupList:[],
-		homeAdsList:[],
-		jiluAdsList:[],
-		myAdsList:[],
-		bannerList:[{pic:'./images/home-banner.jpg',url:''}],
+		notificationList: [],
+		brand: '',
+		showActiveModel: false,
+		guideList: [{ pic: '' }],
+		homeBannerList: [],
+		isGroup: false,
+		groupList: [],
+		homeAdsList: [],
+		jiluAdsList: [],
+		myAdsList: [],
+		bannerList: [{ pic: './images/home-banner.jpg', url: '' }],
 		cebPaymentCategoriesList: [],
 		orderPagingH5Model: {
 			pageInfo: {},
@@ -458,25 +458,25 @@ export default Custom_page({
 	},
 	onInit() {
 		storage.set({
-			key:"activeSwitch",
-			value:'close'
+			key: "activeSwitch",
+			value: 'close'
 		})
 		// router.push({
 		// 	uri:'Home/Transit'
 		// })
 		this.activeSwitch = 'close';
 		storage.get({
-			key:'regGiving',
-			success:(data) => {
-				if(data == 'iqy'){
+			key: 'regGiving',
+			success: (data) => {
+				if (data == 'iqy') {
 					this.showIqiyiActiveModel = true;
 					storage.delete({
-						key:'regGiving'
+						key: 'regGiving'
 					})
-				}else if(data == 'jde'){
+				} else if (data == 'jde') {
 					this.showJDEActiveModel = true;
 					storage.delete({
-						key:'regGiving'
+						key: 'regGiving'
 					})
 				}
 			}
@@ -496,128 +496,128 @@ export default Custom_page({
 		this.showProptShortcut();
 		// 引导页
 		storage.get({
-			key:'showGuide',
-			success:(data) => {
-				if(data){
+			key: 'showGuide',
+			success: (data) => {
+				if (data) {
 					this.skip()
-				}else{
+				} else {
 					this.getGuidePage()
 					this.showGuide = true;
 					this.createShortcut()
 					// util.createShortcut();
 					storage.set({
-						key:'showGuide',
-						value:'true'
+						key: 'showGuide',
+						value: 'true'
 					})
 				}
 			}
 		})
 
 	},
-	getActiveImage(source){
-		request.post('payment/get-active-img',{source}).then(res => {
-			if(res.status == 200){
+	getActiveImage(source) {
+		request.post('payment/get-active-img', { source }).then(res => {
+			if (res.status == 200) {
 				const data = res.data.data.pic_conf;
 				this.guideList = data.guide_pic.data//引导页
 				this.homeBannerList = data.home_banner.data//banner
 				console.log(this.homeBannerList)
-				if(this.homeBannerList.length >0){
+				if (this.homeBannerList.length > 0) {
 					this.showHomeBanner = true;
 				}
 				this.homeAdsList = data.home_ads.data//首页资源位
-			}	    
+			}
 		})
 	},
-	getNotification(){
+	getNotification() {
 		request.post('lottery/inform').then(res => {
-			if(res.status == 0){
+			if (res.status == 0) {
 				this.notificationList = res.data
 			}
 		})
 	},
-	getActiveSwitch(brand){
+	getActiveSwitch(brand) {
 		// brand = 'oppo'
 		storage.get({
-			key:'external',
-			success:(data) => {
+			key: 'external',
+			success: (data) => {
 				request.get(`jiaofei/channel-switch?channel=${data}&brand=${brand}`).then(res => {
-					if(res.status == 200){
-						if(res.data.isOpen == 'open'){
+					if (res.status == 200) {
+						if (res.data.isOpen == 'open') {
 							this.getResource()
 							this.activeSwitch = 'open'
 							// 首次登录
 							this.onDayFirstLogin()
-						}else{
+						} else {
 							this.activeSwitch = 'close'
 							this.guideList = []
 						}
-						if(res.data.reg_pic){
+						if (res.data.reg_pic) {
 							storage.set({
-								key:'reg_pic',
-								value:res.data.reg_pic
+								key: 'reg_pic',
+								value: res.data.reg_pic
 							})
-						}else{
+						} else {
 							storage.delete({
-								key:'reg_pic'
+								key: 'reg_pic'
 							})
 						}
 						storage.set({
-							key:'activeSwitch',
-							value:this.activeSwitch
+							key: 'activeSwitch',
+							value: this.activeSwitch
 						})
 						storage.set({
-							key:'activeUrl',
-							value:res.data.url
+							key: 'activeUrl',
+							value: res.data.url
 						})
 					}
 				})
 			},
-			fail:() => {
+			fail: () => {
 
 			}
 		})
-		
+
 		// request.get(`jiaofei/active-switch?brand=${brand}`).then(res => {
 		// 	if(res.status == 200){
-				// if(res.data == 'open'){
-				// 	this.getResource()
-				// 	this.activeSwitch = 'open'
-				// 	// 首次登录
-				// 	this.onDayFirstLogin()
-				// }else{
-				// 	this.activeSwitch = 'close'
-				// 	this.guideList = []
-				// }
-				// storage.set({
-				// 	key:'activeSwitch',
-				// 	value:this.activeSwitch
-				// })
+		// if(res.data == 'open'){
+		// 	this.getResource()
+		// 	this.activeSwitch = 'open'
+		// 	// 首次登录
+		// 	this.onDayFirstLogin()
+		// }else{
+		// 	this.activeSwitch = 'close'
+		// 	this.guideList = []
+		// }
+		// storage.set({
+		// 	key:'activeSwitch',
+		// 	value:this.activeSwitch
+		// })
 		// 	}
 		// })
 	},
-	onDayFirstLogin(){
+	onDayFirstLogin() {
 		this.addChange('log')
 	},
-	toGroupManage(){
-		if(this.isLogin){
+	toGroupManage() {
+		if (this.isLogin) {
 			router.push({
-				uri:'User/GroupManage'
+				uri: 'User/GroupManage'
 			})
-		}else{
+		} else {
 			router.push({
-				uri:'User/SmsLogin'
+				uri: 'User/SmsLogin'
 			})
 		}
-		
+
 	},
 	// 请增加抽奖次数
-	addChange(type){
+	addChange(type) {
 		storage.get({
-			key:'_id',
+			key: '_id',
 			success: (res) => {
-				if(res){
-					request.post('lottery/addChance',{type,sid:res}).then(res => {
-						if(res.status == 0 && type == 'log'){
+				if (res) {
+					request.post('lottery/addChance', { type, sid: res }).then(res => {
+						if (res.status == 0 && type == 'log') {
 							this.showActiveModel = true;
 						}
 					})
@@ -626,13 +626,13 @@ export default Custom_page({
 		})
 	},
 	// 获取资源位
-	getResource(){
+	getResource() {
 		request.get('payment/get-resource-img').then(res => {
-			if(res.status == 200){
+			if (res.status == 200) {
 				const data = res.data.pic_conf;
 				this.guideList = data.guide_pic.data//引导页
 				this.homeBannerList = data.home_banner.data//banner
-				if(this.homeBannerList.length >0){
+				if (this.homeBannerList.length > 0) {
 					this.showHomeBanner = true;
 				}
 				this.homeAdsList = data.home_ads.data//首页资源位
@@ -641,27 +641,27 @@ export default Custom_page({
 			}
 		})
 	},
-	toActive(){
+	toActive() {
 		router.push({
-			uri:'Home/Active'
+			uri: 'Home/Active'
 		})
 	},
-	showActiveModelFn(){
+	showActiveModelFn() {
 		this.showActiveModel = true;
 	},
-	closeActiveModel(){
+	closeActiveModel() {
 		this.showActiveModel = false;
 		this.showIqiyiActiveModel = false;
 		this.showJDEActiveModel = false;
 	},
-	showProptShortcut(){
+	showProptShortcut() {
 		const that = this;
 		shortcut.hasInstalled({
-			success:  (ret) => {
+			success: (ret) => {
 				if (ret) {
 					that.addChange('add');
 					that.showShortcut = false;
-					statis.statis('hasInstalled_success',{},this)
+					statis.statis('hasInstalled_success', {}, this)
 				} else {
 					that.showShortcut = true;
 				}
@@ -673,35 +673,35 @@ export default Custom_page({
 			clearInterval(this.timer)
 		}
 	},
-	toHelpcenter(){
+	toHelpcenter() {
 		router.push({
-			uri:'User/Helpcenter'
+			uri: 'User/Helpcenter'
 		})
 	},
-	toPrize(url){
-		statis.statis('my_prize_click',{external:this.external},this)
+	toPrize(url) {
+		statis.statis('my_prize_click', { external: this.external }, this)
 		this.showIqiyiActiveModel = false;
 		this.showJDEActiveModel = false;
-		if(this.isLogin){
+		if (this.isLogin) {
 			router.push({
-				uri:url
+				uri: url
 			})
-		}else{
+		} else {
 			router.push({
-				uri:'User/SmsLogin'
+				uri: 'User/SmsLogin'
 			})
 		}
 	},
 	// 天气
-	getWeather(){
+	getWeather() {
 		console.log("获取天气成功：");
 		request.get(`user/get-weather?city=北京市`).then(res => {
-			console.log("111",res);
-			if(res.data.data.forecast){
-					const weather = res.data.data.forecast[0].type;
-					const wendu = res.data.data.wendu;
-					this.weather = `${wendu}℃ ${weather}`
-				}
+			console.log("111", res);
+			if (res.data.data.forecast) {
+				const weather = res.data.data.forecast[0].type;
+				const wendu = res.data.data.wendu;
+				this.weather = `${wendu}℃ ${weather}`
+			}
 		}).catch(err => {
 			console.log(222)
 			console.log(err)
@@ -716,93 +716,93 @@ export default Custom_page({
 		// 	}
 		// })
 	},
-	goUrl(item,source){
-		if(source){
-			statis.statis('banner_click',{source: source,external:this.external},this)
+	goUrl(item, source) {
+		if (source) {
+			statis.statis('banner_click', { source: source, external: this.external }, this)
 		}
-		if(this.isLogin){
-			if(item.url){
-				if(item.url.indexOf('http') != -1){
+		if (this.isLogin) {
+			if (item.url) {
+				if (item.url.indexOf('http') != -1) {
 					// webview.loadUrl({
 					// 	url: item.url,
 					// 	allowthirdpartycookies: true
 					// })
 					storage.set({
-						key:'activeUrl',
-						value:item.url,
+						key: 'activeUrl',
+						value: item.url,
 						// value:'http://192.168.1.101:8020/jumpToYjf/index.html',
 						// value:'https://test-life.ubaycn.com',
-						success:() => {
+						success: () => {
 							router.push({
-								uri:'Home/Active',
-								params:{
-									title:item.desc
+								uri: 'Home/Active',
+								params: {
+									title: item.desc
 								}
 							})
 						}
 					})
-				}else{
-					if(item.url != '-'){
+				} else {
+					if (item.url != '-') {
 						router.push({
-							uri:item.url
+							uri: item.url
 						})
 					}
-					
+
 				}
 			}
-		}else{
-			if(item.url){
-				if(item.url == '/' || item.url =='/Home'){
+		} else {
+			if (item.url) {
+				if (item.url == '/' || item.url == '/Home') {
 					this.skip()
-				}else{
+				} else {
 					router.push({
-						uri:'User/SmsLogin'
+						uri: 'User/SmsLogin'
 					})
 				}
 			}
 		}
-		
+
 	},
 	// 创建桌面快捷方式
-	createShortcut(){
+	createShortcut() {
 		shortcut.hasInstalled({
-			success:  (ret) => {
-			if (ret) {
-				prompt.showToast({
-					message: '已创建桌面图标'
-				})
-				this.showShortcut = false;	
-				// this.showJDEActiveModel = true;
-				this.addChange('add');
-			} else {
-				shortcut.install({
-					success:  () => {
-						statis.statis('hasInstalled_success',{},this)
-						prompt.showToast({
-							message: '成功创建桌面图标'
-						})
-						this.addChange('add');
-						this.showShortcut = false;	
-						// this.showJDEActiveModel = true;				
-					},
-					fail: function (errmsg, errcode) {
-						// prompt.showToast({
-						//   message: `${errcode}: ${errmsg}`
-						// })
-					}
-				})
-			}
+			success: (ret) => {
+				if (ret) {
+					prompt.showToast({
+						message: '已创建桌面图标'
+					})
+					this.showShortcut = false;
+					// this.showJDEActiveModel = true;
+					this.addChange('add');
+				} else {
+					shortcut.install({
+						success: () => {
+							statis.statis('hasInstalled_success', {}, this)
+							prompt.showToast({
+								message: '成功创建桌面图标'
+							})
+							this.addChange('add');
+							this.showShortcut = false;
+							// this.showJDEActiveModel = true;				
+						},
+						fail: function (errmsg, errcode) {
+							// prompt.showToast({
+							//   message: `${errcode}: ${errmsg}`
+							// })
+						}
+					})
+				}
 			}
 		})
 	},
 	// banner
-	getBanner(){
+	getBanner() {
 		request.post('jiaofei/get-banner-list').then(res => {
 			if (res.status == 200) {
 				if (res.data.bannerList.length > 0) {
 					this.bannerList = res.data.bannerList;
 				}
-			} 
+			}
 		})
 	},
 	// 引导页切换
@@ -851,11 +851,11 @@ export default Custom_page({
 	onShow() {
 		// 获取分组
 		storage.get({
-			key:'_id',
-			success:(data) => {
-				if(data){
-					request.post('user/get-group',{sid:data,isHome:true}).then(res =>{
-						if(res.status == 200){
+			key: '_id',
+			success: (data) => {
+				if (data) {
+					request.post('user/get-group', { sid: data, isHome: true }).then(res => {
+						if (res.status == 200) {
 							this.isGroup = res.data.isGroup
 							this.groupList = res.data.group
 						}
@@ -910,7 +910,7 @@ export default Custom_page({
 		me.tab = 'i' + tab.index;
 		this.tabIndex = tab.index;
 		// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
-		statis.statis('tab_change_click',{tabName: arr[tab.index],external:this.external},this)
+		statis.statis('tab_change_click', { tabName: arr[tab.index], external: this.external }, this)
 	},
 	tip() {
 		prompt.showToast({
@@ -932,31 +932,31 @@ export default Custom_page({
 		})
 	},
 	onReady() {
-		
+
 		storage.get({
-			key:'external',
+			key: 'external',
 			success: (data) => {
-				if(data && data != ''){
+				if (data && data != '') {
 					this.external = data;
 					// this.getActiveImage(this.external)
-				}else{
+				} else {
 					storage.set({
-						key:'external',
-						value:this.external
+						key: 'external',
+						value: this.external
 					})
 					// this.getActiveImage(this.external)
 				}
 			},
 			fail: (err) => {
 				storage.set({
-					key:'external',
-					value:this.external
+					key: 'external',
+					value: this.external
 				})
 			}
 		})
-		
+
 		// 缴费类别
-		request.post('payment/pay-type-lst', { cityName: '北京市',environment:"test" }).then(res => {
+		request.post('payment/pay-type-lst', { cityName: '北京市', environment: "test" }).then(res => {
 			// console.log(res)
 			if (res.status == 200) {
 				this.cebPaymentCategoriesList = res.data.data;
@@ -985,11 +985,11 @@ export default Custom_page({
 						if (res.status == 200) {
 							this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
 							const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-							if(recordsModel.length > 0){
+							if (recordsModel.length > 0) {
 								const paymentDate = recordsModel[0].paymentDate
 								const date = this.format(Date.parse(new Date()))
-								console.log(date,paymentDate.split(' ')[0])
-								if(paymentDate.split(' ')[0] == date){
+								console.log(date, paymentDate.split(' ')[0])
+								if (paymentDate.split(' ')[0] == date) {
 									this.addChange('pay')
 								}
 							}
@@ -1028,7 +1028,7 @@ export default Custom_page({
 				if (data && data != "" && data != null) {
 					this.cityName = data;
 					// 缴费类别
-					request.post('payment/pay-type-lst', { cityName: this.cityName,environment:"test" }).then(res => {
+					request.post('payment/pay-type-lst', { cityName: this.cityName, environment: "test" }).then(res => {
 						// console.log(res)
 						if (res.status == 200) {
 							this.cebPaymentCategoriesList = res.data.data;
@@ -1058,7 +1058,7 @@ export default Custom_page({
 				console.log(`handling fail, code = ${code}`)
 			}
 		})
-		
+
 		getUserInfo((data) => {
 			// prompt.showToast({
 			// 	message: data.sid
@@ -1068,17 +1068,17 @@ export default Custom_page({
 	},
 	add0(m) { return m < 10 ? '0' + m : m },
 	format(shijianchuo) {
-			//shijianchuo是整数，否则要parseInt转换
-			var time = new Date(shijianchuo);
-			var y = time.getFullYear();
-			var m = time.getMonth() + 1;
-			var d = time.getDate();
-			var h = time.getHours();
-			var mm = time.getMinutes();
-			var s = time.getSeconds();
-			// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
-			return y + '-' + this.add0(m) + '-' + this.add0(d) ;
-		},
+		//shijianchuo是整数，否则要parseInt转换
+		var time = new Date(shijianchuo);
+		var y = time.getFullYear();
+		var m = time.getMonth() + 1;
+		var d = time.getDate();
+		var h = time.getHours();
+		var mm = time.getMinutes();
+		var s = time.getSeconds();
+		// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+		return y + '-' + this.add0(m) + '-' + this.add0(d);
+	},
 	// 获取定位
 	getLocation() {
 		const that = this;
@@ -1089,16 +1089,16 @@ export default Custom_page({
 				fetch.fetch({
 					url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
 					responseType: 'json',
-					method:'GET',
+					method: 'GET',
 					success: (res) => {
 						const city = res.data.result.addressComponent.city || '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
+						request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
 								that.cebPaymentCategoriesList = res.data.data;
-							}else{
+							} else {
 								this.showToast(res.msg)
 							}
 						}).catch(err => {
@@ -1113,7 +1113,7 @@ export default Custom_page({
 						const city = '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
+						request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
 								that.cebPaymentCategoriesList = res.data.data;
@@ -1132,7 +1132,7 @@ export default Custom_page({
 				const city = '北京市'
 				that.cityName = city;
 				// 缴费类别
-				request.post('payment/pay-type-lst', { cityName: city,environment:"test" }).then(res => {
+				request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
 					// console.log(res)
 					if (res.status == 200) {
 						that.cebPaymentCategoriesList = res.data.data;
@@ -1149,7 +1149,7 @@ export default Custom_page({
 	},
 	// 复制微信号
 	copyWx() {
-		statis.statis('copy_wx',{external:this.external},this)		
+		statis.statis('copy_wx', { external: this.external }, this)
 		clipboard.set({
 			text: 'ubaycn',
 			success: () => {
@@ -1173,7 +1173,7 @@ export default Custom_page({
 			request.post('order/payment-records', {
 				pageSize: this.pageSize,
 				currentPage: this.currentPage,
-						environment: "test"
+				environment: "test"
 			}).then(res => {
 				if (res.status == 200) {
 					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
@@ -1206,7 +1206,7 @@ export default Custom_page({
 	toDetail(url, name) {
 		console.log(this.external)
 		console.log(this.external == 'testShare')
-		if(this.external == 'testShare'){
+		if (this.external == 'testShare') {
 			share.share({
 				shareType: 0,
 				title: '测试标题',
@@ -1214,15 +1214,15 @@ export default Custom_page({
 				imagePath: '/images/icon/power.png',
 				// imagePath: 'https://cdn.ubaycn.com/upload/images/2019-06-04/c6e8b88b88810cc3a6ee2b5e48d588c5.png',
 				targetUrl: 'http://www.quickapp.cn',
-				success: function(data) {
+				success: function (data) {
 					console.log('handling success')
 				},
-				fail: function(data, code) {
+				fail: function (data, code) {
 					console.log(`handling fail, code = ${code}`)
 					console.log(`data=${data}`)
 				}
 			})
-		}else{
+		} else {
 			let obj
 			if (name) {
 				obj = {
@@ -1238,27 +1238,27 @@ export default Custom_page({
 			}
 			router.push(obj)
 		}
-		
+
 	},
 	// 缴费类别点击事件
-	toJFDetail(url, name, type,icon,jfType) {
-		if(jfType == 'common'){
+	toJFDetail(url, name, type, icon, jfType) {
+		if (jfType == 'common') {
 			// 常用缴费
-			statis.statis('class_type_common_click',{ typeName: name ,cityName:this.cityName,external:this.external},this)
-		}else if(jfType == 'fast'){
+			statis.statis('class_type_common_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
+		} else if (jfType == 'fast') {
 			// 快速缴费
-			statis.statis('class_type_fast_click',{ typeName: name, cityName:this.cityName,external:this.external },this)
-		}else{
+			statis.statis('class_type_fast_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
+		} else {
 			// 首页缴费
-			statis.statis('class_type_click',{ typeName: name,cityName:this.cityName,external:this.external },this)
+			statis.statis('class_type_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
 		}
-		
+
 		const obj = {
 			uri: url,
 			params: {
 				title: name,
 				type,
-				external:this.external,
+				external: this.external,
 				icon,
 			}
 		}
@@ -1270,11 +1270,11 @@ export default Custom_page({
 			this.getJfTypeDetail(obj)
 		} else {
 			router.push({
-				uri:'User/SmsLogin'
+				uri: 'User/SmsLogin'
 			})
 		}
 	},
-	goRechargeDetail(groupName,billitem){
+	goRechargeDetail(groupName, billitem) {
 		this.showLoading = true;
 		// 缴费项目信息
 		request.post('jiaofei/pay-type-detail', {
@@ -1286,45 +1286,45 @@ export default Custom_page({
 			if (res.status == 200) {
 				const item = res.data.paymentItemPagingModel;
 				this.paymentItemList = res.data.paymentItemList;
-				if(this.paymentItemList.length > 1){
+				if (this.paymentItemList.length > 1) {
 					const paymentItemModelList = item.paymentItemModelList;
 					let paymentList = []
-					for(let i = 0;i<paymentItemModelList.length;i++){
+					for (let i = 0; i < paymentItemModelList.length; i++) {
 						const element = paymentItemModelList[i]
 						console.log(billitem)
-						console.log(element.paymentItemId,billitem.paymentItemId)
-						if(element.paymentItemId == billitem.paymentItemId){
+						console.log(element.paymentItemId, billitem.paymentItemId)
+						if (element.paymentItemId == billitem.paymentItemId) {
 							paymentList.push(element)
 						}
 					}
 					router.push({
-						uri:'Home/Recharge',
-						params:{
-							payName:'1',
+						uri: 'Home/Recharge',
+						params: {
+							payName: '1',
 							title: billitem.typeName,
-							type:billitem.type,
-							icon:billitem.imagUrl,
-							cityName:billitem.cityName,
-							paymentItemModelList:paymentList,//项目信息
+							type: billitem.type,
+							icon: billitem.imagUrl,
+							cityName: billitem.cityName,
+							paymentItemModelList: paymentList,//项目信息
 							groupName,
-							oldGroupName:groupName,
-							oldBill:billitem.bill
+							oldGroupName: groupName,
+							oldBill: billitem.bill
 						}
 					})
-				}else{
+				} else {
 					// 账单详情
 					router.push({
-						uri:'Home/Recharge',
-						params:{
-							payName:'1',
+						uri: 'Home/Recharge',
+						params: {
+							payName: '1',
 							title: billitem.typeName,
-							type:billitem.type,
-							icon:billitem.imagUrl,
-							cityName:billitem.cityName,
-							paymentItemModelList:item.paymentItemModelList,//项目信息
+							type: billitem.type,
+							icon: billitem.imagUrl,
+							cityName: billitem.cityName,
+							paymentItemModelList: item.paymentItemModelList,//项目信息
 							groupName,
-							oldGroupName:groupName,
-							oldBill:billitem.bill
+							oldGroupName: groupName,
+							oldBill: billitem.bill
 						}
 					})
 				}
@@ -1338,11 +1338,11 @@ export default Custom_page({
 		})
 	},
 	// 查询缴费项目
-	getJfTypeDetail(obj){
-		if(obj.params.title.indexOf("手机") != -1) {
+	getJfTypeDetail(obj) {
+		if (obj.params.title.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
 			router.push(obj)
-		}else{	
+		} else {
 			// 缴费项目信息
 			request.post('jiaofei/pay-type-detail', {
 				cityName: this.cityName,
@@ -1351,33 +1351,33 @@ export default Custom_page({
 				if (res.status == 200) {
 					const item = res.data.paymentItemPagingModel;
 					this.paymentItemList = res.data.paymentItemList;
-					if(this.paymentItemList.length > 1){
+					if (this.paymentItemList.length > 1) {
 						// 列表选择
 						router.push({
-							uri:'Home/ProjectList',
-							params:{
+							uri: 'Home/ProjectList',
+							params: {
 								title: obj.params.title,
-								type:obj.params.type,
-								icon:obj.params.icon,
-								cityName:this.cityName,
-								external:this.external,
-								paymentItemList:this.paymentItemList,//选择列表
-								paymentItemModelList:item.paymentItemModelList,//项目信息
+								type: obj.params.type,
+								icon: obj.params.icon,
+								cityName: this.cityName,
+								external: this.external,
+								paymentItemList: this.paymentItemList,//选择列表
+								paymentItemModelList: item.paymentItemModelList,//项目信息
 							}
 						})
-					}else{
+					} else {
 						console.log(obj.params.name)
 						// 账单详情
 						router.push({
-							uri:'Home/Recharge',
-							params:{
-								payName:'1',
+							uri: 'Home/Recharge',
+							params: {
+								payName: '1',
 								title: obj.params.title,
-								type:obj.params.type,
-								icon:obj.params.icon,
-								external:this.external,
-								cityName:this.cityName,
-								paymentItemModelList:item.paymentItemModelList,//项目信息
+								type: obj.params.type,
+								icon: obj.params.icon,
+								external: this.external,
+								cityName: this.cityName,
+								paymentItemModelList: item.paymentItemModelList,//项目信息
 							}
 						})
 					}
@@ -1395,7 +1395,7 @@ export default Custom_page({
 	},
 	// 退出登录
 	logout() {
-		statis.statis('logout_click',{mobile:this.mobile},this)
+		statis.statis('logout_click', { mobile: this.mobile }, this)
 		const that = this;
 		storage.delete({
 			key: 'sid',
