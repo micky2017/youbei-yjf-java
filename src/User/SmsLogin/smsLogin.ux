@@ -154,7 +154,7 @@ export default Custom_page({
         timer: ''
     },
     onInit() {
-        console.log("当前来源是：" + this.external);
+        console.log("当前来源是：", this.external);
         if (this.external == "unted") {
             statis.statis('ted_ask_num', {}, this);
         }
@@ -183,7 +183,7 @@ export default Custom_page({
     },
     // 获取资源位
     getResource() {
-        request.get('jiaofei/get-resource-img').then(res => {
+        request.get('payment/get-resource-img').then(res => {
             if (res.status == 200) {
                 const data = res.data.pic_conf;
                 this.loginAdsList = data.login_ads.data
@@ -274,7 +274,7 @@ export default Custom_page({
         statis.statis('login_click', { mobile: this.mobile }, this)
 
         request.post('user/login', params).then(res => {
-            console.log(res)
+            console.info("user/login", res)
             if (res.status == 200) {
                 statis.statis('login_click_success', { mobile: this.mobile }, this)
                 this.showToast("登录成功");
@@ -505,6 +505,8 @@ export default Custom_page({
         request.post('user/login/sms', params).then(res => {
             if (res.status == 200) {
                 this.showToast("登录成功");
+                console.clear();
+                console.log("user/login/sms", res);
                 statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
 
                 // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
@@ -535,7 +537,7 @@ export default Custom_page({
                 }
                 storage.set({
                     key: '_id',
-                    value: res.data._id
+                    value: res.data.sessionId
                 })
                 storage.set({
                     key: 'sid',

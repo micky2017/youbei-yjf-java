@@ -125,7 +125,7 @@
         },
         // 获取资源位
         getResource(){
-            request.get('jiaofei/get-resource-img').then(res => {
+            request.get('payment/get-resource-img').then(res => {
                 if(res.status == 200){
                     const data = res.data.pic_conf;
                     this.detailAdsList = data.detail_ads.data

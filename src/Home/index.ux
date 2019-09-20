@@ -398,14 +398,11 @@ import util from '../util.js';
 import storage from "@system.storage";
 import webview from '@system.webview'
 import clipboard from '@system.clipboard'
-
 import share from '@service.share';
-
 const fetch = require('@system.fetch');
 const prompt = require('@system.prompt');
 const shortcut = require('@system.shortcut')
 const device = require('@system.device');
-
 export default Custom_page({
 	public: {
 		external: 'master'
@@ -512,15 +509,15 @@ export default Custom_page({
 				}
 			}
 		})
-
 	},
 	getActiveImage(source) {
 		request.post('payment/get-active-img', { source }).then(res => {
+			console.log("payment/get-active-img", res);
 			if (res.status == 200) {
 				const data = res.data.data.pic_conf;
 				this.guideList = data.guide_pic.data//引导页
 				this.homeBannerList = data.home_banner.data//banner
-				console.log(this.homeBannerList)
+				console.log("homeBannerList", this.homeBannerList)
 				if (this.homeBannerList.length > 0) {
 					this.showHomeBanner = true;
 				}
@@ -540,7 +537,7 @@ export default Custom_page({
 		storage.get({
 			key: 'external',
 			success: (data) => {
-				request.get(`jiaofei/channel-switch?channel=${data}&brand=${brand}`).then(res => {
+				request.get(`payment/channel-switch?channel=${data}&brand=${brand}`).then(res => {
 					if (res.status == 200) {
 						if (res.data.isOpen == 'open') {
 							this.getResource()
@@ -576,7 +573,6 @@ export default Custom_page({
 
 			}
 		})
-
 		// request.get(`jiaofei/active-switch?brand=${brand}`).then(res => {
 		// 	if(res.status == 200){
 		// if(res.data == 'open'){
@@ -608,7 +604,6 @@ export default Custom_page({
 				uri: 'User/SmsLogin'
 			})
 		}
-
 	},
 	// 请增加抽奖次数
 	addChange(type) {
@@ -694,34 +689,26 @@ export default Custom_page({
 	},
 	// 天气
 	getWeather() {
-		console.log("获取天气成功：");
+		// console.log("获取天气成功：");
 		request.get("user/get-weather", { city: this.cityName }).then(res => {
 			// console.log(res);
-			if(typeof res.data == "string"){
+			if (typeof res.data == "string") {
 				res.data = JSON.parse(res.data);
 			}
-			console.log(res.data);
+			// console.log(res.data);
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
-				this.weather = "${wendu}℃ ${weather}";
+				// this.weather = "${wendu}℃ ${weather}";
+				this.weather = wendu + "℃ " + weather;
 			}
 		}).catch(err => {
 			console.log(err)
 		})
-		// fetch.fetch({
-		// 	url:"http://192.168.1.109:8090/ub/user/get-weather?city=北京市&environment=test",
-		// 	success:function(res){
-		// 		console.log(123,res);
-		// 	},
-		// 	fail:function(err){
-		// 		console.log(err);
-		// 	}
-		// })
 	},
 	goUrl(item, source) {
 		if (source) {
-			statis.statis('banner_click', { source: source, external: this.external }, this)
+			statis.statis("banner_click", { source: source, external: this.external }, this)
 		}
 		if (this.isLogin) {
 			if (item.url) {
@@ -764,7 +751,6 @@ export default Custom_page({
 				}
 			}
 		}
-
 	},
 	// 创建桌面快捷方式
 	createShortcut() {
@@ -800,7 +786,7 @@ export default Custom_page({
 	},
 	// banner
 	getBanner() {
-		request.post('jiaofei/get-banner-list').then(res => {
+		request.post('payment/get-banner-list').then(res => {
 			if (res.status == 200) {
 				if (res.data.bannerList.length > 0) {
 					this.bannerList = res.data.bannerList;
@@ -856,11 +842,17 @@ export default Custom_page({
 		storage.get({
 			key: '_id',
 			success: (data) => {
+				// console.clear();
+				console.log("_id", "[" + data + "]");
 				if (data) {
-					request.post('user/get-group', { sid: data, isHome: true }).then(res => {
+					request.post('user/get-group', { sessionId: data, isHome: true }).then(res => {
+						console.log("user/get-group", res)
 						if (res.status == 200) {
-							this.isGroup = res.data.isGroup
-							this.groupList = res.data.group
+							// this.isGroup = res.data.isGroup
+							// this.groupList = res.data.group
+							// this.isGroup = res.data.length;
+							this.isGroup = false;
+							this.groupList = res.data
 						}
 					})
 				}
@@ -922,7 +914,7 @@ export default Custom_page({
 	},
 	// 获取引导页
 	getGuidePage() {
-		request.post('jiaofei/get-guide-page').then(res => {
+		request.post('payment/get-guide-page').then(res => {
 			if (res.status == 200) {
 				if (res.data.guidePageList.length > 0) {
 					this.guidePageList = res.data.guidePageList;
@@ -935,19 +927,20 @@ export default Custom_page({
 		})
 	},
 	onReady() {
-
 		storage.get({
 			key: 'external',
 			success: (data) => {
+				// console.clear();
+				console.log(data);
 				if (data && data != '') {
 					this.external = data;
-					// this.getActiveImage(this.external)
+					this.getActiveImage(this.external)
 				} else {
 					storage.set({
 						key: 'external',
 						value: this.external
 					})
-					// this.getActiveImage(this.external)
+					this.getActiveImage(this.external)
 				}
 			},
 			fail: (err) => {
@@ -957,7 +950,6 @@ export default Custom_page({
 				})
 			}
 		})
-
 		// 缴费类别
 		request.post('payment/pay-type-lst', { cityName: '北京市', environment: "test" }).then(res => {
 			// console.log(res)
@@ -968,16 +960,13 @@ export default Custom_page({
 			this.netWork = false
 		})
 		// 数据获取 sessionId
-
 		storage.get({
 			key: "sid",
 			success: (data) => {
 				console.log('sid' + data)
 				this.sid = data;
-
 				if (this.sid) {
 					this.isLogin = true;
-
 					// 缴费记录
 					request.post('order/payment-records', {
 						pageSize: 10,
@@ -1061,7 +1050,6 @@ export default Custom_page({
 				console.log(`handling fail, code = ${code}`)
 			}
 		})
-
 		getUserInfo((data) => {
 			// prompt.showToast({
 			// 	message: data.sid
@@ -1085,7 +1073,6 @@ export default Custom_page({
 	// 获取定位
 	getLocation() {
 		const that = this;
-
 		// 定位
 		geolocation.getLocation({
 			success: function (data) {
@@ -1241,7 +1228,6 @@ export default Custom_page({
 			}
 			router.push(obj)
 		}
-
 	},
 	// 缴费类别点击事件
 	toJFDetail(url, name, type, icon, jfType) {
@@ -1430,7 +1416,6 @@ export default Custom_page({
 			key: '_id',
 		})
 	},
-
 	pagefinish() {
 		this.$page.setTitleBar({ text: this.name });
 	}
