@@ -56,13 +56,14 @@
 
 								<div class="weather">
 									<text if="{{isLogin}}">{{weather}}</text>
-									<text if="{{!isLogin}}"></text>
+									<text else></text>
 								</div>
 								<!-- <div if="{{!isLogin}}" class="weather no-login" >
 						</div> -->
 								<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 								<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
-								<div if="!isGroup" class="common-content">
+								<!-- <div if="!isGroup" class="common-content"> -->
+								<div class="common-content">
 									<text class="common-content_title">常用缴费</text>
 									<div class="common-content_body">
 										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
@@ -76,8 +77,9 @@
 									</div>
 								</div>
 								<!-- 分组管理 -->
-								<div if="isGroup" class="common-content group-content">
-									<div if="$item.children.length>0" class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
+								<!-- <div if="isGroup" class="common-content group-content"> -->
+								<div class="common-content group-content">
+									<div class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
 										<div class="group-item_title">
 											<text>{{$item.groupName}}</text>
 											<div if="$idx == 0" @click="toDetail('User/GroupManage')">
@@ -92,7 +94,7 @@
 													<text>{{item.typeName}}</text>
 												</div>
 												<!-- <text>▼</text> -->
-												<text>{{item.bill}}</text>
+												<text>{{item.houseNumber}}</text>
 											</div>
 											<!-- <div class="group-cell_content">
 										<div class="group-cell_item">
@@ -437,7 +439,7 @@ export default Custom_page({
 		showActiveModel: false,
 		guideList: [{ pic: '' }],
 		homeBannerList: [],
-		isGroup: false,
+		// isGroup: false,
 		groupList: [],
 		homeAdsList: [],
 		jiluAdsList: [],
@@ -608,7 +610,7 @@ export default Custom_page({
 	// 请增加抽奖次数
 	addChange(type) {
 		storage.get({
-			key: '_id',
+			key: 'sessionId',
 			success: (res) => {
 				if (res) {
 					request.post('lottery/addChance', { type, sid: res }).then(res => {
@@ -840,7 +842,7 @@ export default Custom_page({
 	onShow() {
 		// 获取分组
 		storage.get({
-			key: '_id',
+			key: 'sessionId',
 			success: (data) => {
 				// console.clear();
 				console.log("_id", "[" + data + "]");
@@ -851,7 +853,7 @@ export default Custom_page({
 							// this.isGroup = res.data.isGroup
 							// this.groupList = res.data.group
 							// this.isGroup = res.data.length;
-							this.isGroup = false;
+							// this.isGroup = false;
 							this.groupList = res.data
 						}
 					})
@@ -961,7 +963,7 @@ export default Custom_page({
 		})
 		// 数据获取 sessionId
 		storage.get({
-			key: "sid",
+			key: "sessionId",
 			success: (data) => {
 				console.log('sid' + data)
 				this.sid = data;
@@ -1094,6 +1096,7 @@ export default Custom_page({
 						}).catch(err => {
 							that.netWork = false
 						})
+						console.log("cityName", city);
 						storage.set({
 							key: "cityName",
 							value: city,
@@ -1111,6 +1114,7 @@ export default Custom_page({
 						}).catch(err => {
 							that.netWork = false
 						})
+						console.log("cityName", city);
 						storage.set({
 							key: "cityName",
 							value: city,
@@ -1130,6 +1134,7 @@ export default Custom_page({
 				}).catch(err => {
 					that.netWork = false
 				})
+				console.log("cityName", city);
 				storage.set({
 					key: "cityName",
 					value: city,
@@ -1266,65 +1271,77 @@ export default Custom_page({
 	goRechargeDetail(groupName, billitem) {
 		this.showLoading = true;
 		// 缴费项目信息
-		request.post('payment/pay-type-detail', {
-			cityName: billitem.cityName,
-			type: billitem.type,
-		}).then(res => {
-			console.log(res)
-			this.showLoading = false;
-			if (res.status == 200) {
-				const item = res.data.paymentItemPagingModel;
-				this.paymentItemList = res.data.paymentItemList;
-				if (this.paymentItemList.length > 1) {
-					const paymentItemModelList = item.paymentItemModelList;
-					let paymentList = []
-					for (let i = 0; i < paymentItemModelList.length; i++) {
-						const element = paymentItemModelList[i]
-						console.log(billitem)
-						console.log(element.paymentItemId, billitem.paymentItemId)
-						if (element.paymentItemId == billitem.paymentItemId) {
-							paymentList.push(element)
-						}
+		storage.get({
+			key: "sessionId",
+			success: function (data) {
+				request.post('payment/pay-type-detail', {
+					sessionId: data,
+					cityName: billitem.cityName,
+					type: billitem.type,
+				}).then(res => {
+					console.log("payment/pay-type-detail", res)
+					if (typeof res.data == "string") {
+						res.data = JSON.parse(res.data);
 					}
-					router.push({
-						uri: 'Home/Recharge',
-						params: {
-							payName: '1',
-							title: billitem.typeName,
-							type: billitem.type,
-							icon: billitem.imagUrl,
-							cityName: billitem.cityName,
-							paymentItemModelList: paymentList,//项目信息
-							groupName,
-							oldGroupName: groupName,
-							oldBill: billitem.bill
+					console.log("payment/pay-type-detail", "formatted", res)
+					this.showLoading = false;
+					if (res.status == 200) {
+						const item = res.data.paymentItemPagingModel;
+						this.paymentItemList = res.data.paymentItemList;
+						if (this.paymentItemList.length > 1) {
+							const paymentItemModelList = item.paymentItemModelList;
+							let paymentList = []
+							console.log("paymentItemModelList", paymentItemModelList);
+							for (let i = 0; i < paymentItemModelList.length; i++) {
+								const element = paymentItemModelList[i]
+								console.log("billitem", billitem)
+								console.log(element.paymentItemId, billitem.paymentItemId)
+								if (element.paymentItemId == billitem.paymentItemId) {
+									paymentList.push(element)
+								}
+							}
+							console.log("paymentList", paymentList);
+							router.push({
+								uri: 'Home/Recharge',
+								params: {
+									payName: '1',
+									title: billitem.typeName,
+									type: billitem.type,
+									icon: billitem.imagUrl,
+									cityName: billitem.cityName,
+									paymentItemModelList: paymentList,//项目信息
+									groupName,
+									oldGroupName: groupName,
+									oldBill: billitem.bill
+								}
+							})
+						} else {
+							// 账单详情
+							router.push({
+								uri: 'Home/Recharge',
+								params: {
+									payName: '1',
+									title: billitem.typeName,
+									type: billitem.type,
+									icon: billitem.imagUrl,
+									cityName: billitem.cityName,
+									paymentItemModelList: item.paymentItemModelList,//项目信息
+									groupName,
+									oldGroupName: groupName,
+									oldBill: billitem.bill
+								}
+							})
 						}
-					})
-				} else {
-					// 账单详情
-					router.push({
-						uri: 'Home/Recharge',
-						params: {
-							payName: '1',
-							title: billitem.typeName,
-							type: billitem.type,
-							icon: billitem.imagUrl,
-							cityName: billitem.cityName,
-							paymentItemModelList: item.paymentItemModelList,//项目信息
-							groupName,
-							oldGroupName: groupName,
-							oldBill: billitem.bill
-						}
-					})
-				}
-			} else {
-				this.showToast(res.msg);
+					} else {
+						this.showToast(res.msg);
+					}
+				}).catch(err => {
+					console.log(err)
+					this.showLoading = false;
+					this.showToast('网络错误');
+				})
 			}
-		}).catch(err => {
-			console.log(err)
-			this.showLoading = false;
-			this.showToast('网络错误');
-		})
+		});
 	},
 	// 查询缴费项目
 	getJfTypeDetail(obj) {
