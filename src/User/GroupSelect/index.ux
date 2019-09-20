@@ -44,7 +44,7 @@
     </div>
 </template>
 <style lang="less">
- @import './index.less';
+@import './index.less';
 </style>
 <script>
 import storage from '@system.storage';
@@ -53,78 +53,78 @@ import router from '@system.router';
 export default Custom_page({
     private: {
         groupList: [],
-        showModification:false,
-        groupNameValue:'',
-        _id:'',
-        groupIconList:['../../images/groupImg/group_home_icon','../../images/groupImg/group_parent_icon','../../images/groupImg/group_fd_icon','../../images/groupImg/group_friend_icon']
+        showModification: false,
+        groupNameValue: '',
+        _id: '',
+        groupIconList: ['../../images/groupImg/group_home_icon', '../../images/groupImg/group_parent_icon', '../../images/groupImg/group_fd_icon', '../../images/groupImg/group_friend_icon']
 
     },
     protected: {
-        groupName:'' 
+        groupName: ''
     },
     onReady() {
         this.getGroup()
     },
-    getGroup(){
+    getGroup() {
         storage.get({
-            key:'_id',
-            success:(data) => {
+            key: '_id',
+            success: (data) => {
                 this._id = data;
-                request.post('user/get-group',{sessionId: data}).then(res => {
-                    if(res.status == 200){
+                request.post('user/get-group', { sessionId: data }).then(res => {
+                    if (res.status == 200) {
                         this.groupList = res.data.group
                     }
                 })
             }
         })
     },
-    voidFn(){
+    voidFn() {
         return false;
     },
     inputFocus() {
-        if(this.$element('groupValue')){
+        if (this.$element('groupValue')) {
             this.$element('groupValue').focus({ focus: false })
         }
     },
-    changeGroupName(response){
-            this.groupNameValue = response ? response.value : this.groupNameValue;
+    changeGroupName(response) {
+        this.groupNameValue = response ? response.value : this.groupNameValue;
     },
-    saveGroupInfo(){
-        if(this.groupNameValue == ''){
+    saveGroupInfo() {
+        if (this.groupNameValue == '') {
             this.showToast('请填写分组名称')
             return false;
         }
         this.inputFocus()
         //新增
-        request.post('user/add-group',{
-            sid:this._id,
-            groupName:this.groupNameValue
+        request.post('user/add-group', {
+            sid: this._id,
+            groupName: this.groupNameValue
         }).then(res => {
             this.closeWindow();
             this.item = {}
             this.groupNameValue = ''
-            if(res.status == 200){
+            if (res.status == 200) {
                 // this.showToast('新增分组成功');
                 this.getGroup();
-            }else{
+            } else {
                 // this.showToast('新增分组失败');
             }
-        }).catch(err =>{
-                // this.showToast('网络错误');
+        }).catch(err => {
+            // this.showToast('网络错误');
         })
     },
-    showModificationFn(){
+    showModificationFn() {
         this.showModification = true;
     },
-    closeWindow(){
+    closeWindow() {
         this.showModification = false;
     },
-    selectGroup(groupName){
+    selectGroup(groupName) {
         this.groupName = groupName;
         storage.set({
-            key:'groupName',
-            value:groupName,
-            success:(res) => {
+            key: 'groupName',
+            value: groupName,
+            success: (res) => {
                 router.back()
             }
         })
