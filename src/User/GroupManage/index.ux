@@ -131,7 +131,7 @@ export default Custom_page({
     },
     // 获取分组信息
     getGroup(){
-        request.post('user/get-group',{sid:this._id}).then(res =>{
+        request.post('user/get-group',{sessionId: this._id}).then(res =>{
                 if(res.status == 200){
                     this.groupList = res.data.group
                 }

@@ -70,7 +70,7 @@ export default Custom_page({
             key:'_id',
             success:(data) => {
                 this._id = data;
-                request.post('user/get-group',{sid:data}).then(res => {
+                request.post('user/get-group',{sessionId: data}).then(res => {
                     if(res.status == 200){
                         this.groupList = res.data.group
                     }
