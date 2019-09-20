@@ -27,7 +27,7 @@ export default Custom_page({
     },
     onReady() {
         storage.get({
-			key: "sid",
+			key: "sessionId",
 			success: (data) => {
 				if (data) {
                     this.isLogin = true;
@@ -48,7 +48,7 @@ export default Custom_page({
 		statis.statis('logout_click',{mobile:this.mobile},this)
 		const that = this;
 		storage.delete({
-			key: 'sid',
+			key: 'sessionId',
 			success: function (data) {
 				// // console.log('handling success')
 				// that.pageSize = 10;

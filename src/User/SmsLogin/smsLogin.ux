@@ -536,11 +536,7 @@ export default Custom_page({
                     })
                 }
                 storage.set({
-                    key: '_id',
-                    value: res.data.sessionId
-                })
-                storage.set({
-                    key: 'sid',
+                    key: 'sessionId',
                     value: res.data.sessionId,
                     success: function () {
                         router.replace({
