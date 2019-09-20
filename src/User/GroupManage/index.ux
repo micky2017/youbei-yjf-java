@@ -30,11 +30,11 @@
                 </div>
             </list-item>
             <list-item class="group-body" onclick="showModificationFn('add',{})">
-            <div class="add-group">
+                <div class="add-group">
                     <!-- <text>➕</text> -->
                     <image resize-mode="contain" src="../../images/groupImg/add_group_icon.png"></image>
                     <text>新增分组</text>
-            </div>
+                </div>
             </list-item>
         </list>
         <div if='showModification' @click="closeWindow" class="modification-body">
@@ -83,7 +83,7 @@
     </div>
 </template>
 <style lang="less">
- @import './index.less';
+@import './index.less';
 </style>
 <script>
 import storage from '@system.storage';
@@ -91,24 +91,24 @@ import request from '../../utils/request'
 import router from '@system.router';
 export default Custom_page({
     private: {
-        showModification:false,
-        showDelete:false,
-        showDeleteBill:false,
-        groupList:[],
-        groupNameValue:"",
-        groupType:'',
-        groupName:'',
-        item:{},
-        billItem:{},
-        toast_text:'',
-        show_toast:false,
-        showLoading:false
+        showModification: false,
+        showDelete: false,
+        showDeleteBill: false,
+        groupList: [],
+        groupNameValue: "",
+        groupType: '',
+        groupName: '',
+        item: {},
+        billItem: {},
+        toast_text: '',
+        show_toast: false,
+        showLoading: false
     },
     onShow() {
         storage.get({
-            key:'_id',
-            success:(data) => {
-                if(data){
+            key: '_id',
+            success: (data) => {
+                if (data) {
                     this._id = data;
                     this.getGroup()
                 }
@@ -123,83 +123,83 @@ export default Custom_page({
             this.show_toast = false;
         }, 1500)
     },
-    voidFn(){
+    voidFn() {
         return;
     },
-    changeGroupName(response){
-            this.groupNameValue = response ? response.value : this.groupNameValue;
+    changeGroupName(response) {
+        this.groupNameValue = response ? response.value : this.groupNameValue;
     },
     // 获取分组信息
-    getGroup(){
-        request.post('user/get-group',{sessionId: this._id}).then(res =>{
-                if(res.status == 200){
-                    this.groupList = res.data.group
-                }
-            })
+    getGroup() {
+        request.post('user/get-group', { sessionId: this._id }).then(res => {
+            if (res.status == 200) {
+                this.groupList = res.data.group
+            }
+        })
     },
     inputFocus() {
-        if(this.$element('groupValue')){
+        if (this.$element('groupValue')) {
             this.$element('groupValue').focus({ focus: false })
         }
     },
     // 保存分组信息
-    saveGroupInfo(){
-        if(this.groupNameValue == ''){
+    saveGroupInfo() {
+        if (this.groupNameValue == '') {
             this.showToast('请填写分组名称')
             return false;
         }
         this.inputFocus()
-        if(this.groupType == 'add'){
+        if (this.groupType == 'add') {
             //新增
-            request.post('user/add-group',{
-                sid:this._id,
-                groupName:this.groupNameValue
+            request.post('user/add-group', {
+                sid: this._id,
+                groupName: this.groupNameValue
             }).then(res => {
                 this.closeWindow();
                 this.item = {}
                 this.groupNameValue = ''
-                if(res.status == 200){
+                if (res.status == 200) {
                     this.showToast('新增分组成功');
                     this.getGroup();
-                }else{
+                } else {
                     this.showToast('新增分组失败');
                 }
-            }).catch(err =>{
-                    this.showToast('网络错误');
+            }).catch(err => {
+                this.showToast('网络错误');
             })
-        }else{
+        } else {
             //修改
-            request.post('user/reset-group',{
-                sid:this._id,
-                oldGroupName:this.item.groupName,
-                groupName:this.groupNameValue
+            request.post('user/reset-group', {
+                sid: this._id,
+                oldGroupName: this.item.groupName,
+                groupName: this.groupNameValue
             }).then(res => {
                 this.closeWindow();
                 this.groupNameValue = ''
                 this.item = {}
-                if(res.status == 200){
+                if (res.status == 200) {
                     this.showToast('修改成功');
                     this.getGroup();
-                }else{
+                } else {
                     this.showToast('修改失败');
                 }
-            }).catch(err =>{
-                    this.showToast('网络错误');
+            }).catch(err => {
+                this.showToast('网络错误');
             })
         }
     },
     // 删除分组
-    deleteGroup(){
-        request.post('user/delete-group',{
-            sid:this._id,
-            groupName:this.item.groupName
+    deleteGroup() {
+        request.post('user/delete-group', {
+            sid: this._id,
+            groupName: this.item.groupName
         }).then(res => {
             this.item = {}
             this.closeWindow()
-            if(res.status == 200){
+            if (res.status == 200) {
                 this.showToast('删除成功');
                 this.getGroup()
-            }else{
+            } else {
                 this.showToast('删除失败');
             }
 
@@ -208,103 +208,103 @@ export default Custom_page({
         })
     },
     // 删除户号
-    deleteBill(){
+    deleteBill() {
         console.log(this.item)
         console.log(this.item.groupName)
-        request.post('user/delete-bill',{
-            sid:this._id,
-            groupName:this.groupName,
-            bill:this.billItem.bill
+        request.post('user/delete-bill', {
+            sid: this._id,
+            groupName: this.groupName,
+            bill: this.billItem.bill
         }).then(res => {
-             this.groupName = '';
+            this.groupName = '';
             this.billItem = {};
             this.closeWindow();
-            if(res.status == 200){
+            if (res.status == 200) {
                 this.showToast('删除成功');
                 this.getGroup();
-            }else{
+            } else {
                 this.showToast('删除失败');
             }
         }).catch(err => {
-                this.showToast('网络错误');
+            this.showToast('网络错误');
         })
     },
-    showModificationFn(type,item){
+    showModificationFn(type, item) {
         this.showModification = true;
         this.groupType = type;
         this.item = item;
     },
-    showDeleteFn(item){
+    showDeleteFn(item) {
         this.showDelete = true;
         this.item = item;
     },
-    showDeleteBillFn(groupName,billItem){
+    showDeleteBillFn(groupName, billItem) {
         this.groupName = groupName;
         this.billItem = billItem;
         this.showDeleteBill = true;
     },
-    goRecharge(groupName,billitem){
-            this.showLoading = true;
-			// 缴费项目信息
-			request.post('payment/pay-type-detail', {
-				cityName: billitem.cityName,
-				type: billitem.type,
-			}).then(res => {
-                console.log(res)
-                this.showLoading = false;
-				if (res.status == 200) {
-					const item = res.data.paymentItemPagingModel;
-					this.paymentItemList = res.data.paymentItemList;
-					if(this.paymentItemList.length > 1){
-                        const paymentItemModelList = item.paymentItemModelList;
-                        let paymentList = []
-                        for(let i = 0;i<paymentItemModelList.length;i++){
-                            const element = paymentItemModelList[i]
-                            if(element.paymentItemId == billitem.paymentItemId){
-                                paymentList.push(element)
-                            }
+    goRecharge(groupName, billitem) {
+        this.showLoading = true;
+        // 缴费项目信息
+        request.post('payment/pay-type-detail', {
+            cityName: billitem.cityName,
+            type: billitem.type,
+        }).then(res => {
+            console.log(res)
+            this.showLoading = false;
+            if (res.status == 200) {
+                const item = res.data.paymentItemPagingModel;
+                this.paymentItemList = res.data.paymentItemList;
+                if (this.paymentItemList.length > 1) {
+                    const paymentItemModelList = item.paymentItemModelList;
+                    let paymentList = []
+                    for (let i = 0; i < paymentItemModelList.length; i++) {
+                        const element = paymentItemModelList[i]
+                        if (element.paymentItemId == billitem.paymentItemId) {
+                            paymentList.push(element)
                         }
-                        router.push({
-							uri:'User/Recharge',
-							params:{
-								payName:'1',
-								title: billitem.typeName,
-								type:billitem.type,
-								icon:billitem.imagUrl,
-								cityName:billitem.cityName,
-                                paymentItemModelList:paymentList,//项目信息
-                                groupName,
-                                oldGroupName:groupName,
-                                oldBill:billitem.bill
-							}
-						})
-					}else{
-						// 账单详情
-						router.push({
-							uri:'User/Recharge',
-							params:{
-								payName:'1',
-								title: billitem.typeName,
-								type:billitem.type,
-								icon:billitem.imagUrl,
-								cityName:billitem.cityName,
-                                paymentItemModelList:item.paymentItemModelList,//项目信息
-                                groupName,
-                                oldGroupName:groupName,
-                                oldBill:billitem.bill
-							}
-						})
-					}
-				} else {
-					this.showToast(res.msg);
-				}
-			}).catch(err => {
-                console.log(err)
-                this.showLoading = false;
-				this.showToast('网络错误');
-			})
+                    }
+                    router.push({
+                        uri: 'User/Recharge',
+                        params: {
+                            payName: '1',
+                            title: billitem.typeName,
+                            type: billitem.type,
+                            icon: billitem.imagUrl,
+                            cityName: billitem.cityName,
+                            paymentItemModelList: paymentList,//项目信息
+                            groupName,
+                            oldGroupName: groupName,
+                            oldBill: billitem.bill
+                        }
+                    })
+                } else {
+                    // 账单详情
+                    router.push({
+                        uri: 'User/Recharge',
+                        params: {
+                            payName: '1',
+                            title: billitem.typeName,
+                            type: billitem.type,
+                            icon: billitem.imagUrl,
+                            cityName: billitem.cityName,
+                            paymentItemModelList: item.paymentItemModelList,//项目信息
+                            groupName,
+                            oldGroupName: groupName,
+                            oldBill: billitem.bill
+                        }
+                    })
+                }
+            } else {
+                this.showToast(res.msg);
+            }
+        }).catch(err => {
+            console.log(err)
+            this.showLoading = false;
+            this.showToast('网络错误');
+        })
     },
-    closeWindow(){
+    closeWindow() {
         this.inputFocus()
         this.showModification = false;
         this.showDelete = false;
