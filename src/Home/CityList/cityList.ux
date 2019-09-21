@@ -96,10 +96,6 @@ export default Custom_page({
         })
         request.get("payment/get-city-list").then(res => {
             console.log("payment/get-city-list", res);
-            if (typeof res.data == "string") {
-                res.data = JSON.parse(res.data);
-            }
-            console.log("payment/get-city-list.format", res);
             if (res.status == 200) {
                 // cityRenCategoryModelList  最近常用城市
                 // cityHotCategoryModelList  热门城市

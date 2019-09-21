@@ -49,12 +49,9 @@ export default Custom_page({
         // console.log("searchList", this.searchList);
         // console.log("paymentItemModelList", this.paymentItemModelList);
         console.log("paymentItemModelList", JSON.parse("{\"data\": " + this.paymentItemModelList + "}").data);
-        // alert(123);
-        // console.log("paymentItemModelList", "{\"data\": " + this.paymentItemModelList + "}");
         this.paymentItemList = JSON.parse(this.paymentItemList)
         this.searchList = this.paymentItemList;
         this.paymentItemModelList = JSON.parse("{\"data\": " + this.paymentItemModelList + "}").data;
-        // alert(12);
     },
     onReady() {
         console.log(this.paymentItemList)
