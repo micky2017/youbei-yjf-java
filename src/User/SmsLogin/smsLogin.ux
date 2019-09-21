@@ -505,7 +505,7 @@ export default Custom_page({
         request.post('user/login/sms', params).then(res => {
             if (res.status == 200) {
                 this.showToast("登录成功");
-                console.clear();
+                // console.clear();
                 console.log("user/login/sms", res);
                 statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
 

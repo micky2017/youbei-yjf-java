@@ -9,10 +9,10 @@
             </div>
             <list @click='inputFocus'>
                 <list-item @click="affirmItem($item)" type="{{$item}}" for="searchList">
-                    <div if="$item != searchList[searchList.length - 1]" class="jf-list_item" >
+                    <div if="$item != searchList[searchList.length - 1]" class="jf-list_item">
                         <text>{{$item}}</text>
                     </div>
-                    <div if="$item == searchList[searchList.length - 1]" class="jf-list_item no-border_bottom" >
+                    <div if="$item == searchList[searchList.length - 1]" class="jf-list_item no-border_bottom">
                         <text>{{$item}}</text>
                     </div>
                 </list-item>
@@ -22,80 +22,87 @@
 </template>
 
 <style lang="less">
-	@import './index.less';
+@import './index.less';
 </style>
 
 <script>
-    import router from '@system.router'
-    import storage from '@system.storage'
-    // import request from '../../utils/request'
+import router from '@system.router'
+import storage from '@system.storage'
+// import request from '../../utils/request'
 
-	export default Custom_page ({
-        public: {
-            title:'',
-            type:'',
-            external:'',
-            paymentItemList:[],
-            paymentItemModelList:[],
-            cityName:'',
-            icon:'',
-        },
-		protected: {
-            searchList:[],
-            itemValue:'',
-		},
-		onInit() {
-            this.paymentItemList = JSON.parse(this.paymentItemList)
-            this.searchList = this.paymentItemList;
-            this.paymentItemModelList = JSON.parse(this.paymentItemModelList)
-        },
-        onReady() {
-            console.log(this.paymentItemList)
-            storage.get({
-                key:'external',
-                success: (data) => {
-                    if(data && data != ''){
-                        storage.set({
-                            key:'external',
-                            value:this.external
-                        })
-                    }
-                },
-                fail: (err) => {
+export default Custom_page({
+    public: {
+        title: '',
+        type: '',
+        external: '',
+        paymentItemList: [],
+        paymentItemModelList: [],
+        cityName: '',
+        icon: '',
+    },
+    protected: {
+        searchList: [],
+        itemValue: '',
+    },
+    onInit() {
+        // console.log("paymentItemList", this.paymentItemList);
+        // console.log("searchList", this.searchList);
+        // console.log("paymentItemModelList", this.paymentItemModelList);
+        console.log("paymentItemModelList", JSON.parse("{\"data\": " + this.paymentItemModelList + "}").data);
+        // alert(123);
+        // console.log("paymentItemModelList", "{\"data\": " + this.paymentItemModelList + "}");
+        this.paymentItemList = JSON.parse(this.paymentItemList)
+        this.searchList = this.paymentItemList;
+        this.paymentItemModelList = JSON.parse("{\"data\": " + this.paymentItemModelList + "}").data;
+        // alert(12);
+    },
+    onReady() {
+        console.log(this.paymentItemList)
+        storage.get({
+            key: 'external',
+            success: (data) => {
+                if (data && data != '') {
                     storage.set({
-                        key:'external',
-                        value:this.external
+                        key: 'external',
+                        value: this.external
                     })
                 }
-            })
-        },
-        inputFocus(){
-                this.$element('search').focus({ focus: false })
-        },
-        affirmItem(item){
-            const index = this.paymentItemList.indexOf(item);
-            const paymentItemModel = this.paymentItemModelList[index];
-            router.push({
-                uri:'Home/Recharge',
-                params:{
-                    payName:'2',
-                    title:this.title,
-                    type:this.type,
-                    cityName:this.cityName,
-                    external:this.external,
-                    icon:this.icon,
-                    paymentItemModelList:[paymentItemModel],
-                }
-            })
-        },
-        searchValue(response){
-            this.itemValue = response ? response.value : this.itemValue;
-            this.searchList = [];
-            for(let i = 0;i<this.paymentItemList.length;i++){
-                if(this.paymentItemList[i].indexOf(this.itemValue) != -1){
-                    this.searchList.push(this.paymentItemList[i])
-                }
+            },
+            fail: (err) => {
+                storage.set({
+                    key: 'external',
+                    value: this.external
+                })
+            }
+        })
+    },
+    inputFocus() {
+        this.$element('search').focus({ focus: false })
+    },
+    affirmItem(item) {
+        const index = this.paymentItemList.indexOf(item);
+        const paymentItemModel = this.paymentItemModelList[index];
+        router.push({
+            uri: 'Home/Recharge',
+            params: {
+                payName: '2',
+                title: this.title,
+                type: this.type,
+                cityName: this.cityName,
+                external: this.external,
+                icon: this.icon,
+                paymentItemModelList: [paymentItemModel],
+            }
+        })
+    },
+    searchValue(response) {
+        this.itemValue = response ? response.value : this.itemValue;
+        this.searchList = [];
+        for (let i = 0; i < this.paymentItemList.length; i++) {
+            if (this.paymentItemList[i].indexOf(this.itemValue) != -1) {
+                this.searchList.push(this.paymentItemList[i])
             }
         }
-	})
+    }
+})
 </script>

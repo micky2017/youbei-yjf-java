@@ -7,7 +7,7 @@
         <div class="search-city">
             <!-- <text>🔍</text> -->
             <image width="40" height="40" resize-mode="contain" src="../images/search_city_icon.png"></image>
-            <input id="search-city" type="text" value="{{search_value}}"  @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
+            <input id="search-city" type="text" value="{{search_value}}" @change="searchCity" @blur="showList()" placeholder="请输入城市名称"></input>
             <text show="{{show_close}}" @click="clearCityValue">❎</text>
         </div>
         <div class="location" @click="hideInput">
@@ -16,13 +16,13 @@
             <text> &nbsp;{{city_name}}</text>
         </div>
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
-       
+
         <list show="{{!showSearch}}" id="list-body" class="city-list">
             <list-item type="hot_city" class="hot-city">
                 <text>热门城市</text>
                 <div class="hot-city_items">
-                    <div class="city-item" @click="selectCity(item.cityName,item.cityId)"  for="item in cityHotCategoryModelList">
-                        <text>{{item.cityName}}</text> 
+                    <div class="city-item" @click="selectCity(item.cityName,item.cityId)" for="item in cityHotCategoryModelList">
+                        <text>{{item.cityName}}</text>
                     </div>
                 </div>
             </list-item>
@@ -35,7 +35,7 @@
                 </div>
             </list-item>
         </list>
-        <div  show="{{!showSearch}}"  class="navigation-right" @touchmove="selectCityGroup()">
+        <div show="{{!showSearch}}" class="navigation-right" @touchmove="selectCityGroup()">
             <div @click="changeCityGroup(item.cityFlag)" for="item in cityModelList">
                 <text>{{item.cityFlag}}</text>
             </div>
@@ -54,264 +54,269 @@
 </template>
 
 <style lang="less">
-    @import "./cityList.less";
+@import './cityList.less';
 </style>
 
 <script>
-    const router = require('@system.router');
-    import request from '../../utils/request';
-	import storage from"@system.storage";
-    export default Custom_page ({
-        protected: {
-            show_toast:false,
-            type:'',
-            toast_text:'',
-            showSearch:false,
-            show_close:false,
-            search_value:"",
-            tabIndex:0,
-            external:'',
-            cityFlag:'A',
-            showPropt:false,
-            city_name:"北京市",
-            cityName:'',
-            cityId:"101701",
-            cityHotCategoryModelList:[],
-            section: [],
-            cityModelList: [],
-            cityRenCategoryModelList:[]
-        },
+const router = require('@system.router');
+import request from '../../utils/request';
+import storage from "@system.storage";
+export default Custom_page({
+    protected: {
+        show_toast: false,
+        type: '',
+        toast_text: '',
+        showSearch: false,
+        show_close: false,
+        search_value: "",
+        tabIndex: 0,
+        external: '',
+        cityFlag: 'A',
+        showPropt: false,
+        city_name: "北京市",
+        cityName: '',
+        cityId: "101701",
+        cityHotCategoryModelList: [],
+        section: [],
+        cityModelList: [],
+        cityRenCategoryModelList: []
+    },
 
-        onReady(){
-            storage.get({
-				key:"cityName",
-				success: (data) => {
-					console.log('cityName ===== '+data)
-					
-					// alert('cityName ===== '+data)
-					if(data && data != "" && data != null){
-                        this.city_name = data;
-                    }
-                }
-            })
-            request.get("payment/get-city-list",{}).then(res => {
-                if(res.status == 200){ 
-                    // cityRenCategoryModelList  最近常用城市
-                    // cityHotCategoryModelList  热门城市
-                    // cityCategoryModelList  城市列表
-                        // this.section = res.data.section;
-                        this.cityHotCategoryModelList = res.data.cityHotCategoryModelList;
-                        this.cityModelList = res.data.cityCategoryModelList;
-                        this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
-                        this.cacheRenList = res.data.cityRenCategoryModelList;
-                }
-            }).catch(err => {
-                this.showToast("网络错误",'back');
-                // setTimeout(() => {
-                //     router.push({
-                //         uri:"/"
-                //     })
-                // },1500)
-            })
-        },
-        showProptFn(cityFlag,time){
-            this.cityFlag = cityFlag;
-            this.showPropt = true;
-            setTimeout(() => {
-                this.showPropt = false;
-            },time || 500)
-        },
-        changeCityGroup(cityFlag){
-            let index = 0;
-            for(let i = 0;i<this.cityModelList.length;i++){
-                const item = this.cityModelList[i];
-                if(item.cityFlag == cityFlag){
-                    index = i+1;
+    onReady() {
+        storage.get({
+            key: "cityName",
+            success: (data) => {
+                console.log('cityName ===== ' + data)
+
+                // alert('cityName ===== '+data)
+                if (data && data != "" && data != null) {
+                    this.city_name = data;
                 }
             }
-            this.showProptFn(cityFlag)
-            const list = this.$element('list-body');
-            list.scrollTo({index:index});
-        },
-        // 选择分组
-        selectCityGroup(event){
-            let y =event.changedTouches[0].pageY;
-            let index = parseInt((y - 400) / 40);
-            index = index > 0 ? (index > this.cityModelList.length ? this.cityModelList.length : index+1) : 1;
-            // const initial = this.city_list[index-1].initial;
-            this.showProptFn(this.cityModelList[index-1].cityFlag)
-            const list = this.$element('list-body');
-            list.scrollTo({index:index});
-        },
-        hideInput(){
-            this.$element('search-city').focus({focus:false})
-        },
-        // 选择城市
-        selectCity(cityName,cityId){
-            this.city_name = cityName;
-            this.cityName = cityName;
-            this.cityId = cityId;
-            storage.set({
-                key: 'cityName',
-                value: cityName,
-            })
-            storage.set({
-                key: 'cityId',
-                value: cityId,
-            })
-            if(this.type){
-                this.getPayType(cityName)
-            }else{
-                router.push({
-                    uri:"Home",
-                    params:{
-                        tabIndex:this.tabIndex
-                    }
-                })
+        })
+        request.get("payment/get-city-list").then(res => {
+            console.log("payment/get-city-list", res);
+            if (typeof res.data == "string") {
+                res.data = JSON.parse(res.data);
             }
+            console.log("payment/get-city-list.format", res);
+            if (res.status == 200) {
+                // cityRenCategoryModelList  最近常用城市
+                // cityHotCategoryModelList  热门城市
+                // cityCategoryModelList  城市列表
+                // this.section = res.data.section;
+                this.cityHotCategoryModelList = res.data.cityHotCategoryModelList;
+                this.cityModelList = res.data.cityCategoryModelList;
+                this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
+                this.cacheRenList = res.data.cityRenCategoryModelList;
+            }
+        }).catch(err => {
+            this.showToast("网络错误", 'back');
+            // setTimeout(() => {
+            //     router.push({
+            //         uri:"/"
+            //     })
+            // },1500)
+        })
+    },
+    showProptFn(cityFlag, time) {
+        this.cityFlag = cityFlag;
+        this.showPropt = true;
+        setTimeout(() => {
+            this.showPropt = false;
+        }, time || 500)
+    },
+    changeCityGroup(cityFlag) {
+        let index = 0;
+        for (let i = 0; i < this.cityModelList.length; i++) {
+            const item = this.cityModelList[i];
+            if (item.cityFlag == cityFlag) {
+                index = i + 1;
+            }
+        }
+        this.showProptFn(cityFlag)
+        const list = this.$element('list-body');
+        list.scrollTo({ index: index });
+    },
+    // 选择分组
+    selectCityGroup(event) {
+        let y = event.changedTouches[0].pageY;
+        let index = parseInt((y - 400) / 40);
+        index = index > 0 ? (index > this.cityModelList.length ? this.cityModelList.length : index + 1) : 1;
+        // const initial = this.city_list[index-1].initial;
+        this.showProptFn(this.cityModelList[index - 1].cityFlag)
+        const list = this.$element('list-body');
+        list.scrollTo({ index: index });
+    },
+    hideInput() {
+        this.$element('search-city').focus({ focus: false })
+    },
+    // 选择城市
+    selectCity(cityName, cityId) {
+        this.city_name = cityName;
+        this.cityName = cityName;
+        this.cityId = cityId;
+        storage.set({
+            key: 'cityName',
+            value: cityName,
+        })
+        storage.set({
+            key: 'cityId',
+            value: cityId,
+        })
+        if (this.type) {
+            this.getPayType(cityName)
+        } else {
+            router.push({
+                uri: "Home",
+                params: {
+                    tabIndex: this.tabIndex
+                }
+            })
+        }
+        this.showSearch = false;
+        this.search_value = "";
+        this.hideInput()
+    },
+    // 搜索城市
+    searchCity(response) {
+        this.search_value = response ? response.value : this.search_value;
+        let cityRenCategoryModelList = [];
+        for (let i = 0; i < this.cityModelList.length; i++) {
+            cityRenCategoryModelList = cityRenCategoryModelList.concat(this.cityModelList[i].children)
+        }
+        if (response.value != "") {
+            this.show_close = true;
+            this.showSearch = true;
+            let newRenList = []
+            for (let i = 0; i < cityRenCategoryModelList.length; i++) {
+                if (cityRenCategoryModelList[i].cityName.indexOf(response.value) != -1) {
+                    newRenList.push(cityRenCategoryModelList[i])
+                }
+            }
+            this.cityRenCategoryModelList = newRenList
+        } else {
+            this.cityRenCategoryModelList = this.cacheRenList;
+            this.show_close = false;
             this.showSearch = false;
-            this.search_value = "";
-            this.hideInput()
-        },
-        // 搜索城市
-        searchCity(response){
-            this.search_value = response ? response.value : this.search_value;
-            let cityRenCategoryModelList = [];
-            for(let i = 0;i<this.cityModelList.length;i++){
-                cityRenCategoryModelList = cityRenCategoryModelList.concat(this.cityModelList[i].children)
-            }
-            if(response.value != ""){
-                this.show_close = true;
-                this.showSearch = true;
-                let newRenList = []
-                for(let i = 0;i<cityRenCategoryModelList.length;i++){
-                    if(cityRenCategoryModelList[i].cityName.indexOf(response.value) != -1){
-                        newRenList.push(cityRenCategoryModelList[i])
-                    }
-                }
-                this.cityRenCategoryModelList = newRenList
-            }else{
-                this.cityRenCategoryModelList = this.cacheRenList;
-                this.show_close = false;
-                this.showSearch = false;
-            }
-        },
-        getPayType(cityName){
-            request.post('payment/pay-type-lst', { cityName: cityName }).then(res => {
-                if (res.status == 200) {
-                    const data = res.data;
-                    let havePayType = true
-                    for(let i = 0;i<data.length;i++){
+        }
+    },
+    getPayType(cityName) {
+        request.post('payment/pay-type-lst', { cityName: cityName }).then(res => {
+            if (res.status == 200) {
+                const data = res.data;
+                let havePayType = true
+                for (let i = 0; i < data.length; i++) {
 
-                        if(data[i].type == this.type){
-                            havePayType = false;
-                            const element = data[i];
-                            const obj = {
-                                uri: 'Home/Recharge',
-                                params: {
-                                    title: element.typeName,
-                                    type:element.type,
-                                    external:'',
-                                    icon:element.icon,
-                                }
+                    if (data[i].type == this.type) {
+                        havePayType = false;
+                        const element = data[i];
+                        const obj = {
+                            uri: 'Home/Recharge',
+                            params: {
+                                title: element.typeName,
+                                type: element.type,
+                                external: '',
+                                icon: element.icon,
                             }
-                            console.log(data[i])
-                            storage.get({
-                                key: "sid",
-                                success: (data) => {
-                                    if(data){
-                                        this.getJfTypeDetail(obj)
-                                    }else{
-                                        router.push({
-                                            uri:'User/SmsLogin'
-                                        })
-                                    }
-                                },
-                                fail:() => {
+                        }
+                        console.log(data[i])
+                        storage.get({
+                            key: "sid",
+                            success: (data) => {
+                                if (data) {
+                                    this.getJfTypeDetail(obj)
+                                } else {
                                     router.push({
-                                        uri:'User/SmsLogin'
+                                        uri: 'User/SmsLogin'
                                     })
                                 }
-                            })
-                        }
-                    }
-                    if(havePayType){
-                        this.showToast('该城市暂无此缴费类别')
+                            },
+                            fail: () => {
+                                router.push({
+                                    uri: 'User/SmsLogin'
+                                })
+                            }
+                        })
                     }
                 }
-            }).catch(err => {
-                this.netWork = false
-            })
-        },
-        // 查询缴费项目
-        getJfTypeDetail(obj){
-            console.log(obj)
-            if(obj.params.title.indexOf("手机") != -1) {
-                obj.uri = "Home/Mobile"
-                router.push(obj)
-            }else{	
-                // 缴费项目信息
-                request.post('payment/pay-type-detail', {
-                    cityName: this.cityName,
-                    type: obj.params.type,
-                }).then(res => {
-                    if (res.status == 200) {
-                        const item = res.data.paymentItemPagingModel;
-                        this.paymentItemList = res.data.paymentItemList;
-                        if(this.paymentItemList.length > 1){
-                            // 列表选择
-                            router.push({
-                                uri:'Home/ProjectList',
-                                params:{
-                                    title: obj.params.title,
-                                    type:obj.params.type,
-                                    icon:obj.params.icon,
-                                    cityName:this.cityName,
-                                    external:this.external || 'card',
-                                    paymentItemList:this.paymentItemList,//选择列表
-                                    paymentItemModelList:item.paymentItemModelList,//项目信息
-                                }
-                            })
-                        }else{
-                            console.log(obj.params.name)
-                            // 账单详情
-                            router.push({
-                                uri:'Home/Recharge',
-                                params:{
-                                    payName:'1',
-                                    title: obj.params.title,
-                                    type:obj.params.type,
-                                    icon:obj.params.icon,
-                                    external:this.external || 'card',
-                                    cityName:this.cityName,
-                                    paymentItemModelList:item.paymentItemModelList,//项目信息
-                                }
-                            })
-                        }
-                    } else {
-                        this.showToast(res.msg, "back")
-                    }
-                })
+                if (havePayType) {
+                    this.showToast('该城市暂无此缴费类别')
+                }
             }
-        },
-        // 显示toast
-        showToast(text,back){
-            this.toast_text = text;
-            this.show_toast = true;
-            setTimeout(() => {
-                this.show_toast = false;
-                if(back){
-                    router.back()
+        }).catch(err => {
+            this.netWork = false
+        })
+    },
+    // 查询缴费项目
+    getJfTypeDetail(obj) {
+        console.log(obj)
+        if (obj.params.title.indexOf("手机") != -1) {
+            obj.uri = "Home/Mobile"
+            router.push(obj)
+        } else {
+            // 缴费项目信息
+            request.post('payment/pay-type-detail', {
+                cityName: this.cityName,
+                type: obj.params.type,
+            }).then(res => {
+                if (res.status == 200) {
+                    const item = res.data.paymentItemPagingModel;
+                    this.paymentItemList = res.data.paymentItemList;
+                    if (this.paymentItemList.length > 1) {
+                        // 列表选择
+                        router.push({
+                            uri: 'Home/ProjectList',
+                            params: {
+                                title: obj.params.title,
+                                type: obj.params.type,
+                                icon: obj.params.icon,
+                                cityName: this.cityName,
+                                external: this.external || 'card',
+                                paymentItemList: this.paymentItemList,//选择列表
+                                paymentItemModelList: item.paymentItemModelList,//项目信息
+                            }
+                        })
+                    } else {
+                        console.log(obj.params.name)
+                        // 账单详情
+                        router.push({
+                            uri: 'Home/Recharge',
+                            params: {
+                                payName: '1',
+                                title: obj.params.title,
+                                type: obj.params.type,
+                                icon: obj.params.icon,
+                                external: this.external || 'card',
+                                cityName: this.cityName,
+                                paymentItemModelList: item.paymentItemModelList,//项目信息
+                            }
+                        })
+                    }
+                } else {
+                    this.showToast(res.msg, "back")
                 }
-            },1500)
-        },
-        // 清除输入框
-        clearCityValue(){
-            this.search_value = "";
-            this.hideInput()
-        },
-        showList(){
-            // this.showSearch = false;
+            })
         }
-    })
+    },
+    // 显示toast
+    showToast(text, back) {
+        this.toast_text = text;
+        this.show_toast = true;
+        setTimeout(() => {
+            this.show_toast = false;
+            if (back) {
+                router.back()
+            }
+        }, 1500)
+    },
+    // 清除输入框
+    clearCityValue() {
+        this.search_value = "";
+        this.hideInput()
+    },
+    showList() {
+        // this.showSearch = false;
+    }
+})
 </script>
