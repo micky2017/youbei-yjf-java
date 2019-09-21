@@ -9,7 +9,7 @@
         <div class="payment-content_bg"></div>
         <div class="payment-content">
             <div class="payment-icon">
-                <image width="58" height="58"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <image width="58" height="58" resize-mode="contain" src="{{iconUrl}}"></image>
                 <text>{{title}}</text>
             </div>
             <div class="payment-item_info">
@@ -50,7 +50,7 @@
                     </div>
                     <div class="payment-item_content">
                         <div>
-                            <input  id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                            <input id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
@@ -144,7 +144,7 @@
 </template>
 
 <style lang="less">
-@import "./recharge.less";
+@import './recharge.less';
 </style>
 
 <script>
@@ -154,14 +154,14 @@ import statis from '../../utils/statistics'
 import storage from "@system.storage";
 export default Custom_page({
     public: {
-            external:'',
-            cityName:"",
-            title:"",
-            type:"",
-            paymentItemModelList: [],
-            icon:'',
-            payName:'',
-        },
+        external: '',
+        cityName: "",
+        title: "",
+        type: "",
+        paymentItemModelList: [],
+        icon: '',
+        payName: '',
+    },
     protected: {
         showLoading: false,
         // external: '',
@@ -172,12 +172,12 @@ export default Custom_page({
         itemName: '',
         selectMoney: '',
         billItem: null,
-        iconUrl:'',
+        iconUrl: '',
         // title: "",
         // type: "",
         // cityName: "",
         payTimeTips: '',
-        paymentItemModel:{},
+        paymentItemModel: {},
         listPageModelList: [],
         paymentItemList: [],
         cityModel: {},
@@ -188,12 +188,12 @@ export default Custom_page({
         rangeDataValue: [],
         itemValue: '',
         filedName: '',
-        billkeys:[],
-        historyBillkey:'',
-        oldGroupName:'我家',
-        oldBill:'',
-        billKey:'',
-        groupName:'我家',
+        billkeys: [],
+        historyBillkey: '',
+        oldGroupName: '我家',
+        oldBill: '',
+        billKey: '',
+        groupName: '我家',
         reqData: {
 
         },
@@ -203,6 +203,8 @@ export default Custom_page({
     },
     inputFocus() {
         const list = this.paymentItem.queryPaymentBillParamModelList
+        console.log("queryPaymentBillParamModelList", list);
+        alert(90);
         for (let i = 0; i < list.length; i++) {
             if (this.$element(list[i].nameType)) {
                 this.$element(list[i].nameType).focus({ focus: false })
@@ -210,11 +212,11 @@ export default Custom_page({
         }
 
     },
-    pushSelect(){
+    pushSelect() {
         router.push({
-            uri:'User/GroupSelect',
-            params:{
-                groupName:this.groupName,
+            uri: 'User/GroupSelect',
+            params: {
+                groupName: this.groupName,
             }
         })
     },
@@ -261,43 +263,43 @@ export default Custom_page({
         }
         this.picker = false;
     },
-    backProjectList(){
+    backProjectList() {
         router.back()
     },
     // 选择框切换
     changeMoney(value) {
         this.selectMoney = value;
     },
-    ifLogin(){
+    ifLogin() {
         storage.get({
-            key:"sid",
+            key: "sid",
             success: (data) => {
-                if(data){
+                if (data) {
                     this.getDetail()
-                }else{
+                } else {
                     router.replace({
-                        uri:'User/SmsLogin',
-                        params:{
-                            external:this.external,
+                        uri: 'User/SmsLogin',
+                        params: {
+                            external: this.external,
                         }
                     })
                 }
             },
             fail: (res) => {
                 router.replace({
-                    uri:'User/SmsLogin',
-                    params:{
-                        external:this.external,
+                    uri: 'User/SmsLogin',
+                    params: {
+                        external: this.external,
                     }
                 })
             }
         })
     },
-    getDetail(){
-        
-        if(this.cityName){
+    getDetail() {
+
+        if (this.cityName) {
             this.getTypeDetail()
-        }else{
+        } else {
             storage.get({
                 key: "cityName",
                 success: (data) => {
@@ -312,79 +314,79 @@ export default Custom_page({
             })
         }
     },
-    goCityList(){
+    goCityList() {
         console.log(this.type)
         router.push({
-            uri:'Home/CityList',
-            params:{
-                type:this.type,
+            uri: 'Home/CityList',
+            params: {
+                type: this.type,
             }
         })
     },
     onShow() {
         storage.get({
-            key:'groupName',
-            success:(data) => {
-                if(data){
+            key: 'groupName',
+            success: (data) => {
+                if (data) {
                     this.groupName = data;
                     storage.delete({
-                        key:'groupName'
+                        key: 'groupName'
                     })
                 }
             }
         })
     },
     onReady() {
-        
+
         storage.get({
-			key:'external',
-			success: (data) => {
-				if(data && data != ''){
-					storage.set({
-						key:'external',
-						value:this.external
-					})
-				}
-			},
-			fail: (err) => {
-				storage.set({
-					key:'external',
-					value:this.external
-				})
-			}
+            key: 'external',
+            success: (data) => {
+                if (data && data != '') {
+                    storage.set({
+                        key: 'external',
+                        value: this.external
+                    })
+                }
+            },
+            fail: (err) => {
+                storage.set({
+                    key: 'external',
+                    value: this.external
+                })
+            }
         })
-        if(this.payName){
+        if (this.payName) {
             this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
             this.paymentItem = this.paymentItemModelList[0];
             console.log(this.paymentItem)
             this.getIcon()
             this.getHistoryBillkey();
-        }else{
+        } else {
             this.ifLogin()
         }
-        
+
     },
     // 输入框监听
     changeItem(item, response) {
         this.reqData[item.nameType] = response ? response.value : this.itemValue;
-        if(item.name == '客户编号'){
+        if (item.name == '客户编号') {
             this.billKey = response ? response.value : this.itemValue;
             const str = this.deleteSpace(this.billKey)
-            if(this.billkeys.indexOf(str) != -1){
+            if (this.billkeys.indexOf(str) != -1) {
                 this.changeBillkey(str)
-            }else{
-                if(this.historyBillkey != str){
+            } else {
+                if (this.historyBillkey != str) {
                     this.historyBillkey = ""
                 }
             }
-            
+
         }
-        
+
         this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
     },
     // 去空格操作
-    deleteSpace(str){
-        str = str.replace(/^\s*|\s*$/g,"");
+    deleteSpace(str) {
+        str = str.replace(/^\s*|\s*$/g, "");
         return str;
     },
     // 缴费项目弹出选择框
@@ -431,7 +433,7 @@ export default Custom_page({
         this.billKey = this.oldBill;
         this.groupName = this.oldGroupName;
     },
-    getIcon(){
+    getIcon() {
         const iconList = [
             {
                 icon: '/Home/images/icon/water.png',
@@ -521,33 +523,33 @@ export default Custom_page({
                 id: ''
             }
         ];
-        for(let i = 0;i<iconList.length;i++){
-            if(this.title.indexOf(iconList[i].typeName) != -1){
+        for (let i = 0; i < iconList.length; i++) {
+            if (this.title.indexOf(iconList[i].typeName) != -1) {
                 this.iconUrl = `${iconList[i].icon}`
             }
         }
     },
     // 获取历史记录
-    getHistoryBillkey(){
+    getHistoryBillkey() {
         storage.get({
             key: 'billkey',
             success: (data) => {
-                if(data){
-                    if(data.indexOf(this.paymentItem.paymentItemName) != -1){
+                if (data) {
+                    if (data.indexOf(this.paymentItem.paymentItemName) != -1) {
                         data = JSON.parse(data);
-                        for(let i = 0;i<data.length;i++){
-                            if(data[i].name == this.paymentItem.paymentItemName){
+                        for (let i = 0; i < data.length; i++) {
+                            if (data[i].name == this.paymentItem.paymentItemName) {
                                 this.billkeys = data[i].billkey
                             }
                         }
                     }
-                    
+
                 }
             }
         })
     },
-    changeBillkey(billkey){
-        this.historyBillkey =  billkey;
+    changeBillkey(billkey) {
+        this.historyBillkey = billkey;
         this.billKey = billkey;
     },
     // 缓存账户号
@@ -561,12 +563,12 @@ export default Custom_page({
                         for (let i = 0; i < data.length; i++) {
                             if (data[i].name == this.paymentItem.paymentItemName) {
                                 const billKey = this.deleteSpace(this.billKey)
-                                if(!(data[i].billkey.indexOf(billKey) != -1)){
+                                if (!(data[i].billkey.indexOf(billKey) != -1)) {
                                     // data[i].billkey.push(this.itemValue.split(':')[1])
-                                    if(data[i].billkey.length >= 3){
+                                    if (data[i].billkey.length >= 3) {
                                         data[i].billkey.shift()
                                         data[i].billkey.push(billKey)
-                                    }else{
+                                    } else {
                                         data[i].billkey.push(billKey)
                                     }
                                 }
@@ -596,17 +598,17 @@ export default Custom_page({
             }
         })
     },
-    saveGroup(params){
+    saveGroup(params) {
         storage.get({
-            key:'_id',
-            success:(data) => {
-                request.post('user/save-group',{
-                    sid:data,
-                    paymentItemId:this.paymentItem.paymentItemId,
-                    groupName:this.groupName,
-                    cityName:this.cityName,
-                    type:this.type,
-                    bill:params.billKey
+            key: '_id',
+            success: (data) => {
+                request.post('user/save-group', {
+                    sid: data,
+                    paymentItemId: this.paymentItem.paymentItemId,
+                    groupName: this.groupName,
+                    cityName: this.cityName,
+                    type: this.type,
+                    bill: params.billKey
                 }).then(res => {
                     console.log(res)
                 }).catch(err => {
@@ -620,7 +622,7 @@ export default Custom_page({
         console.log(this.reqData)
         // this.reqData['billkey'] = this.billkey;
         this.inputFocus()
-        statis.statis('search_bill_click', {external:this.external}, this)
+        statis.statis('search_bill_click', { external: this.external }, this)
         const list = this.paymentItem.queryPaymentBillParamModelList
         for (let i = 0; i < list.length; i++) {
             if (list[i].isNull == 0) {
@@ -660,20 +662,20 @@ export default Custom_page({
                     // 账单打点
                     const statisParams = {
                         paymentName: this.paymentItem.paymentItemName,
-                        external:this.external
+                        external: this.external
                     }
-                    Object.assign(statisParams,this.reqData)
+                    Object.assign(statisParams, this.reqData)
                     statis.statis('search_bill', statisParams, this)
                     this.setBillkey();
                     const billQueryList = res.data.billQueryResultModel.billQueryResultDataModelList.map(item => {
                         return item.beginDate
                     })
-                    if(billQueryList.length > 1){
+                    if (billQueryList.length > 1) {
                         // 多账单
                         router.push({
-                            uri:'Home/MoreBill',
+                            uri: 'Home/MoreBill',
                             params: {
-                                title:this.title,
+                                title: this.title,
                                 paymentItem: this.paymentItem,
                                 itemValue: this.deleteSpace(this.itemValue),
                                 reqData: this.reqData,
@@ -682,11 +684,11 @@ export default Custom_page({
                                 billQueryList,
                             }
                         })
-                    }else{
+                    } else {
                         router.push({
                             uri: "Home/Inspect",
                             params: {
-                                title:this.title,
+                                title: this.title,
                                 paymentItem: this.paymentItem,
                                 itemValue: this.deleteSpace(this.itemValue),
                                 reqData: this.reqData,
@@ -696,7 +698,7 @@ export default Custom_page({
                             }
                         })
                     }
-                    
+
                 } else {
                     this.showToast(res.data.msg)
                 }
