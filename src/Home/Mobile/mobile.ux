@@ -218,7 +218,7 @@
             }else{
                 this.showMobileError = false;
                 // 缴费项目信息
-            request.post('jiaofei/mobile-pay',{
+            request.post('payment/mobile-pay',{
                 mobile:this.itemValue,
             }).then(res => {
                 console.log(res)

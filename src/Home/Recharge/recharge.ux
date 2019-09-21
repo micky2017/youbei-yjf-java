@@ -204,7 +204,6 @@ export default Custom_page({
     inputFocus() {
         const list = this.paymentItem.queryPaymentBillParamModelList
         console.log("queryPaymentBillParamModelList", list);
-        alert(90);
         for (let i = 0; i < list.length; i++) {
             if (this.$element(list[i].nameType)) {
                 this.$element(list[i].nameType).focus({ focus: false })
