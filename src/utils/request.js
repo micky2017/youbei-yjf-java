@@ -17,7 +17,7 @@ const requestHandle = (params) => {
     return false;
     /**/
     storage.get({
-      key: "sid",
+      key: "sessionId",
     }).then(res => {
       console.log("request success");
       return fetch.fetch({
@@ -29,8 +29,10 @@ const requestHandle = (params) => {
         data: params.data || {},
         responseType: 'json',
       }).then(response => {
-        const result = response.data
-        const content = result.data
+        const content = response.data.data
+        if (typeof content.data != "object") {
+          content.data = JSON.parse(content.data);
+        }
         return resolve(content)
       }).catch((error, code) => {
         console.log(`🐛 request fail, code = ${code}`)
