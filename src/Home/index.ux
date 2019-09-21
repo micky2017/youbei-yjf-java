@@ -953,10 +953,14 @@ export default Custom_page({
 			}
 		})
 		// 缴费类别
-		request.post('payment/pay-type-lst', { cityName: '北京市', environment: "test" }).then(res => {
-			// console.log(res)
+		request.post('payment/pay-type-lst', { cityName: '北京市' }).then(res => {
+			console.log("payment/pay-type-lst", res)
+			if (typeof res.data == "string") {
+				res.data = JSON.parse(res.data);
+				console.log("payment/pay-type-lst.format", res)
+			}
 			if (res.status == 200) {
-				this.cebPaymentCategoriesList = res.data.data;
+				this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 			}
 		}).catch(err => {
 			this.netWork = false
@@ -1345,57 +1349,66 @@ export default Custom_page({
 	},
 	// 查询缴费项目
 	getJfTypeDetail(obj) {
+		var that = this;
+		// console.log("cityName", this.cityName);
 		if (obj.params.title.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
 			router.push(obj)
 		} else {
 			// 缴费项目信息
-			request.post('payment/pay-type-detail', {
-				cityName: this.cityName,
-				type: obj.params.type,
-			}).then(res => {
-				if (res.status == 200) {
-					const item = res.data.paymentItemPagingModel;
-					this.paymentItemList = res.data.paymentItemList;
-					if (this.paymentItemList.length > 1) {
-						// 列表选择
-						router.push({
-							uri: 'Home/ProjectList',
-							params: {
-								title: obj.params.title,
-								type: obj.params.type,
-								icon: obj.params.icon,
-								cityName: this.cityName,
-								external: this.external,
-								paymentItemList: this.paymentItemList,//选择列表
-								paymentItemModelList: item.paymentItemModelList,//项目信息
+			storage.get({
+				key: "sessionId",
+				success: function (data) {
+					console.log("cityName of ptd", that.cityName);
+					request.post('payment/pay-type-detail', {
+						sessionId: data,
+						cityName: that.cityName,
+						type: obj.params.type,
+					}).then(res => {
+						if (res.status == 200) {
+							const item = res.data.paymentItemPagingModel;
+							this.paymentItemList = res.data.paymentItemList;
+							if (this.paymentItemList.length > 1) {
+								// 列表选择
+								router.push({
+									uri: 'Home/ProjectList',
+									params: {
+										title: obj.params.title,
+										type: obj.params.type,
+										icon: obj.params.icon,
+										cityName: this.cityName,
+										external: this.external,
+										paymentItemList: this.paymentItemList,//选择列表
+										paymentItemModelList: item.paymentItemModelList,//项目信息
+									}
+								})
+							} else {
+								console.log(obj.params.name)
+								// 账单详情
+								router.push({
+									uri: 'Home/Recharge',
+									params: {
+										payName: '1',
+										title: obj.params.title,
+										type: obj.params.type,
+										icon: obj.params.icon,
+										external: this.external,
+										cityName: this.cityName,
+										paymentItemModelList: item.paymentItemModelList,//项目信息
+									}
+								})
 							}
-						})
-					} else {
-						console.log(obj.params.name)
-						// 账单详情
-						router.push({
-							uri: 'Home/Recharge',
-							params: {
-								payName: '1',
-								title: obj.params.title,
-								type: obj.params.type,
-								icon: obj.params.icon,
-								external: this.external,
-								cityName: this.cityName,
-								paymentItemModelList: item.paymentItemModelList,//项目信息
-							}
-						})
-					}
-				} else {
-					prompt.showToast({
-						message: res.msg
-					});
+						} else {
+							prompt.showToast({
+								message: res.msg
+							});
+						}
+					}).catch(err => {
+						prompt.showToast({
+							message: '网络错误'
+						});
+					})
 				}
-			}).catch(err => {
-				prompt.showToast({
-					message: '网络错误'
-				});
 			})
 		}
 	},
