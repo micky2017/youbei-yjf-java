@@ -134,7 +134,7 @@
         },
         ifLogin(){
             storage.get({
-                key:"sid",
+                key:"sessionId",
                 success: (data) => {
                     if(data){
                         
