@@ -241,7 +241,6 @@
 												<text class="money">{{item.payAmount}} 元</text>
 											</div>
 										</div>
-
 									</div>
 								</list-item>
 								<list-item type="loadStatus" class="load-status">
@@ -694,10 +693,6 @@ export default Custom_page({
 		// console.log("获取天气成功：");
 		request.get("user/get-weather", { city: this.cityName }).then(res => {
 			// console.log(res);
-			if (typeof res.data == "string") {
-				res.data = JSON.parse(res.data);
-			}
-			// console.log(res.data);
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
@@ -955,10 +950,6 @@ export default Custom_page({
 		// 缴费类别
 		request.post('payment/pay-type-lst', { cityName: '北京市' }).then(res => {
 			console.log("payment/pay-type-lst", res)
-			if (typeof res.data == "string") {
-				res.data = JSON.parse(res.data);
-				console.log("payment/pay-type-lst.format", res)
-			}
 			if (res.status == 200) {
 				this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 			}
@@ -969,7 +960,7 @@ export default Custom_page({
 		storage.get({
 			key: "sessionId",
 			success: (data) => {
-				console.log('sid' + data)
+				// console.log('sid' + data)
 				this.sid = data;
 				if (this.sid) {
 					this.isLogin = true;
@@ -979,7 +970,7 @@ export default Custom_page({
 						currentPage: 1,
 						environment: "test"
 					}).then(res => {
-
+						console.log("order/payment-records". res);
 						if (res.status == 200) {
 							this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
 							const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
@@ -1284,10 +1275,6 @@ export default Custom_page({
 					type: billitem.type,
 				}).then(res => {
 					console.log("payment/pay-type-detail", res)
-					if (typeof res.data == "string") {
-						res.data = JSON.parse(res.data);
-					}
-					console.log("payment/pay-type-detail", "formatted", res)
 					this.showLoading = false;
 					if (res.status == 200) {
 						const item = res.data.paymentItemPagingModel;
