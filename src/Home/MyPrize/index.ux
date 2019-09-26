@@ -5,28 +5,28 @@
         <!-- 奖品列表 -->
         <list if="!noPrizeList">
             <list-item class="prize-item" for="prizeList" type="{{$item}}">
-            <!--  -->
-                <div if="{{!($item.isExpire) && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}"  class="prize-item_body">
+                <!--  -->
+                <div if="{{!($item.isExpire) && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}" class="prize-item_body">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
                             <image width="30" height="30" src='../images/activityImg/prize_item_icon.png'></image>
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time">
-                            <text>有效期至: {{$item.expire_time}}</text>
+                            <text>有效期至: {{$item.expireTime}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>领取时间: {{$item.acquire_time}}</text>
+                            <text>领取时间: {{$item.acquireTime}}</text>
                             <div class="prize-content_btn" @click="lookRule($item)">
                                 <text>使用规则</text>
                             </div>
                         </div>
                     </div>
-                    <div  class="prize-item_price">
+                    <div class="prize-item_price">
                         <div class="prize-item_price--body">
                             <!-- <image src="../images/activityImg/money_icon.png"></image> -->
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn" @click="exchange($item)">
                             <text>立即兑换</text>
@@ -34,18 +34,18 @@
                     </div>
                 </div>
                 <!--  -->
-                <div if="{{$item.isExpire && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}"  class="prize-item_body prize-item_past">
-                <!-- <div if="false" class="prize-item_body prize-item_past"> -->
+                <div if="{{$item.isExpire && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}" class="prize-item_body prize-item_past">
+                    <!-- <div if="false" class="prize-item_body prize-item_past"> -->
                     <div class="prize-item_content">
                         <div class="prize-item_name">
                             <image width="30" height="30" src='../images/activityImg/prize_item_icon_default.png'></image>
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time">
-                            <text>有效期至: {{$item.expire_time}}</text>
+                            <text>有效期至: {{$item.expireTime}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>领取时间: {{$item.acquire_time}}</text>
+                            <text>领取时间: {{$item.acquireTime}}</text>
                             <div class="prize-content_btn">
                                 <text>使用规则</text>
                             </div>
@@ -55,7 +55,7 @@
                         <div class="prize-item_price--body">
                             <!-- <image src="../images/activityImg/money_icon.png"></image> -->
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn">
                             <text>立即兑换</text>
@@ -65,20 +65,20 @@
                 <div if="$item.code == 'iqiyicode' && !($item.isExpire)" class="prize-item_body iqy-item_body">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>领取时间: {{$item.acquire_time}}</text>
-                            <!-- <text>领取时间: {{$item.expire_time}}</text> -->
+                            <text>领取时间: {{$item.acquireTime}}</text>
+                            <!-- <text>领取时间: {{$item.expireTime}}</text> -->
                             <div class="prize-content_btn" @click="showIqyPrizeRulesFn($item)">
                                 <text>使用规则</text>
                             </div>
                         </div>
                     </div>
-                    <div if="!$item.passwd"  class="prize-item_price">
+                    <div if="!$item.passwd" class="prize-item_price">
                         <div class="prize-item_price--body">
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn" @click="toIqiyi()">
                             <text>去使用</text>
@@ -88,7 +88,7 @@
                         <div class="prize-item_price--body">
                             <!-- <text class="price-identify">1234treefsddsvdsssdf</text> -->
                             <text class="price-identify">{{$item.passwd}}</text>
-                            <!-- <text class="price-value">{{$item.prize_num}}</text> -->
+                            <!-- <text class="price-value">{{$item.prizeNum}}</text> -->
                         </div>
                         <div class="prize-item_btn" @click="copyValue($item.passwd)">
                             <text>复制</text>
@@ -98,19 +98,19 @@
                 <div if="$item.code == 'iqiyicode' && $item.isExpire" class="prize-item_body iqy-item_body prize-item_past">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>有效期至: {{$item.expire_time}}</text>
+                            <text>有效期至: {{$item.expireTime}}</text>
                             <div class="prize-content_btn">
                                 <text>使用规则</text>
                             </div>
                         </div>
                     </div>
-                    <div if="!$item.passwd"  class="prize-item_price">
+                    <div if="!$item.passwd" class="prize-item_price">
                         <div class="prize-item_price--body">
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn">
                             <text>去使用</text>
@@ -128,16 +128,16 @@
                 <div if="$item.code == 'storeCode' && !($item.isExpire)" class="prize-item_body store-item_body">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>有效期至: {{$item.expire_time}}</text>
+                            <text>有效期至: {{$item.expireTime}}</text>
                         </div>
                     </div>
                     <div class="prize-item_price">
                         <div class="prize-item_price--body">
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn" @click="toStore()">
                             <text>去使用</text>
@@ -147,16 +147,16 @@
                 <div if="$item.code == 'storeCode' && $item.isExpire" class="prize-item_body store-item_body prize-item_past">
                     <div class="prize-item_content">
                         <div class="prize-item_name">
-                            <text>{{$item.prize_name}}</text>
+                            <text>{{$item.prizeName}}</text>
                         </div>
                         <div class="prize-item_time rules">
-                            <text>有效期至: {{$item.expire_time}}</text>
+                            <text>有效期至: {{$item.expireTime}}</text>
                         </div>
                     </div>
-                    <div  class="prize-item_price">
+                    <div class="prize-item_price">
                         <div class="prize-item_price--body">
                             <text class="price-identify">￥</text>
-                            <text class="price-value">{{$item.prize_num}}</text>
+                            <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
                         <div class="prize-item_btn">
                             <text>去使用</text>
@@ -262,169 +262,218 @@
 </template>
 
 <style lang="less">
-	@import './index.less';
+@import './index.less';
 </style>
 
 <script>
-	import router from '@system.router'
-	import clipboard from '@system.clipboard'
-	import prompt from '@system.prompt'
-	import storage from '@system.storage'
-    import request from '../../utils/request'
-    import statis from '../../utils/statistics.js'
+import router from '@system.router'
+import clipboard from '@system.clipboard'
+import prompt from '@system.prompt'
+import storage from '@system.storage'
+import fetch from '@system.fetch';
+import request from '../../utils/request'
+import statis from '../../utils/statistics.js'
 
-	export default Custom_page ({
-        public: {
-            pay:'', 
-        },
-        protected: {
-            img: '',
-            prizeList:[],
-            showPrizeDetail:false,
-            showPrizeRules:false,
-            noPrizeList:false,
-            showIqyPrizeRules:false,
-            code:'',
-            passwd:''
-        },
-        onShow() {
-            this.getPrizeList()
-        },
-        toIqiyi(){
-            storage.set({
-                key:'activeUrl',
-                // value:'http://192.168.1.101:7010/iqiyi',
-                value:'https://api.ubaycn.com/iqiyi',
-                success:() => {
-                    router.push({
-                        uri:'Home/Active',
-                        params:{
-                            title:'爱奇艺会员'
-                        }
-                    })
-                }
-            })
-        },
-        toStore(){
-            storage.set({
-                key:'activeUrl',
-                value:'https://life.ubaycn.com/wx',
-                success:() => {
-                    router.push({
-                        uri:'Home/Active',
-                        params:{
-                            title:'游贝商城'
-                        }
-                    })
-                }
-            })
-        },
-        getPrizeList(){
-            const that = this;
-            storage.get({
-                key:'_id',
-                success:(res) => {
-                    request.post('lottery/list',{sid:res}).then(res => {
-                        if(res.status == 0){
+export default Custom_page({
+    public: {
+        pay: '',
+    },
+    protected: {
+        img: '',
+        prizeList: [],
+        showPrizeDetail: false,
+        showPrizeRules: false,
+        noPrizeList: false,
+        showIqyPrizeRules: false,
+        code: '',
+        passwd: ''
+    },
+    onShow() {
+        this.getPrizeList()
+    },
+    toIqiyi() {
+        storage.set({
+            key: 'activeUrl',
+            // value:'http://192.168.1.101:7010/iqiyi',
+            // value: 'https://api.ubaycn.com/iqiyi',
+            // value: 'http://47.95.147.237/iqiyi',
+            value: "http://h5.ubaycn.com/iqiyi",
+            success: () => {
+                router.push({
+                    uri: 'Home/Active',
+                    params: {
+                        title: '爱奇艺会员'
+                    }
+                })
+            }
+        })
+    },
+    toStore() {
+        storage.set({
+            key: 'activeUrl',
+            value: 'https://life.ubaycn.com/wx',
+            success: () => {
+                router.push({
+                    uri: 'Home/Active',
+                    params: {
+                        title: '游贝商城'
+                    }
+                })
+            }
+        })
+    },
+    getPrizeList() {
+        const that = this;
+        storage.get({
+            key: "uid",
+            success: function (uid) {
+                // console.log("uid", res);
+                fetch.fetch({
+                    url: "http://hello.ngrok2.xiaomiqiu.cn/lottery/queryLotteryList",
+                    method: "post",
+                    responseType: "json",
+                    data: {
+                        uid: uid
+                    },
+                    success: function (res) {
+                        res = res.data;
+                        console.log("/lottery/queryLotteryList", res);
+                        // res.data = JSON.parse(res.data);
+                        if (res.status == 200) {
                             const data = res.data;
-                            if(data.length != 0){
+                            console.log(data);
+                            if (data.length != 0) {
+                                console.log("Prize Found!!!");
                                 this.noPrizeList = false;
-                                for(let i = 0; i< data.length;i++){
+                                for (let i = 0; i < data.length; i++) {
                                     // data[i].acquire_time 获取时间
-                                    if(data[i].isExpire == 'false'){
+                                    if (data[i].isExpire == false) {
                                         data[i].isExpire = false
-                                    }else{
+                                    } else {
                                         data[i].isExpire = true
                                     }
-                                    data[i].acquire_time = that.format(Number(data[i].acquire_time))
-                                    data[i].expire_time = that.format(Date.parse(new Date(data[i].expire_time)))
+                                    // data[i].acquireTime = that.format(Number(data[i].acquireTime))
+                                    data[i].acquireTime = that.format(Date.parse(new Date(data[i].acquireTime)))
+                                    data[i].expireTime = that.format(Date.parse(new Date(data[i].expireTime)))
                                 }
-                            }else{
+                            } else {
                                 this.noPrizeList = true;
                             }
                             that.prizeList = data
-                        }else{
+                        } else {
                             this.noPrizeList = true;
                         }
                         console.log(that.prizeList)
-                    }).catch(res => {
+                    }
+                });
+            }
+        });
+        /*
+        storage.get({
+            key:'_id',
+            success:(res) => {
+                request.post('lottery/list',{sid:res}).then(res => {
+                    if(res.status == 0){
+                        const data = res.data;
+                        if(data.length != 0){
+                            this.noPrizeList = false;
+                            for(let i = 0; i< data.length;i++){
+                                // data[i].acquire_time 获取时间
+                                if(data[i].isExpire == 'false'){
+                                    data[i].isExpire = false
+                                }else{
+                                    data[i].isExpire = true
+                                }
+                                data[i].acquire_time = that.format(Number(data[i].acquire_time))
+                                data[i].expire_time = that.format(Date.parse(new Date(data[i].expire_time)))
+                            }
+                        }else{
+                            this.noPrizeList = true;
+                        }
+                        that.prizeList = data
+                    }else{
                         this.noPrizeList = true;
-                    })
-                }
-            })
-        },
-        add0(m) { return m < 10 ? '0' + m : m },
-        format(shijianchuo) {
-            if(shijianchuo){
-                //shijianchuo是整数，否则要parseInt转换
-                var time = new Date(shijianchuo);
-                var y = time.getFullYear();
-                var m = time.getMonth() + 1;
-                var d = time.getDate();
-                var h = time.getHours();
-                var mm = time.getMinutes();
-                var s = time.getSeconds();
-                // + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
-                return y + '-' + this.add0(m) + '-' + this.add0(d) ;
-            }else{
-                return ''
+                    }
+                    console.log(that.prizeList)
+                }).catch(res => {
+                    this.noPrizeList = true;
+                })
             }
-			
-		},
-        goHome(){
-            statis.statis('pay_cost',{},this)
-            router.replace({
-                uri:'/'
-            })
-        },
-        showPrizeDetailFn(){
-            this.showPrizeDetail = true;
-        },
-        closePrizeDetail(){
-            this.showPrizeDetail = false;
-        },
-        showPrizeRulesFn(){
-            this.showPrizeRules = true;
-        },
-        closePrizeRules(){
-            this.showPrizeRules = false;
-        },
-        showIqyPrizeRulesFn(){
-            this.showIqyPrizeRules = true;
-        },
-        closeIqyPrizeRules(){
-            this.showIqyPrizeRules = false;
-        },
-        lookRule(item){
-            this.showPrizeRulesFn()
-            statis.statis('use_rules_click',{},this)
-        },
-        exchange(item){
-            this.code = item.code
-            this.passwd = item.passwd;
-            this.showPrizeDetailFn()
-            statis.statis('immediately_change_click',{},this)
-
-        },
-        copyValue(value,source){
-            if(source == 'code'){
-                statis.statis('copy_code_click',{code:value},this)
-            }else{
-                statis.statis('copy_password_click',{passwd:value},this)
-            }
-            clipboard.set({
-                text: value,
-                success: () => {
-                    prompt.showToast({
-                        message: '复制成功'
-                    })
-                },
-                fail: () => {
-                    prompt.showToast({
-                        message: '复制失败'
-                    })
-                }
-            })
+        })
+        /**/
+    },
+    add0(m) { return m < 10 ? '0' + m : m },
+    format(shijianchuo) {
+        if (shijianchuo) {
+            //shijianchuo是整数，否则要parseInt转换
+            var time = new Date(shijianchuo);
+            var y = time.getFullYear();
+            var m = time.getMonth() + 1;
+            var d = time.getDate();
+            var h = time.getHours();
+            var mm = time.getMinutes();
+            var s = time.getSeconds();
+            // + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+            return y + '-' + this.add0(m) + '-' + this.add0(d);
+        } else {
+            return ''
         }
-    })
+
+    },
+    goHome() {
+        statis.statis('pay_cost', {}, this)
+        router.replace({
+            uri: '/'
+        })
+    },
+    showPrizeDetailFn() {
+        this.showPrizeDetail = true;
+    },
+    closePrizeDetail() {
+        this.showPrizeDetail = false;
+    },
+    showPrizeRulesFn() {
+        this.showPrizeRules = true;
+    },
+    closePrizeRules() {
+        this.showPrizeRules = false;
+    },
+    showIqyPrizeRulesFn() {
+        this.showIqyPrizeRules = true;
+    },
+    closeIqyPrizeRules() {
+        this.showIqyPrizeRules = false;
+    },
+    lookRule(item) {
+        this.showPrizeRulesFn()
+        statis.statis('use_rules_click', {}, this)
+    },
+    exchange(item) {
+        this.code = item.code
+        this.passwd = item.passwd;
+        this.showPrizeDetailFn()
+        statis.statis('immediately_change_click', {}, this)
+
+    },
+    copyValue(value, source) {
+        if (source == 'code') {
+            statis.statis('copy_code_click', { code: value }, this)
+        } else {
+            statis.statis('copy_password_click', { passwd: value }, this)
+        }
+        clipboard.set({
+            text: value,
+            success: () => {
+                prompt.showToast({
+                    message: '复制成功'
+                })
+            },
+            fail: () => {
+                prompt.showToast({
+                    message: '复制失败'
+                })
+            }
+        })
+    }
+})
 </script>
