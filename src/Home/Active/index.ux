@@ -6,18 +6,18 @@
     </div>
 </template>
 <style lang="less" scoped>
-    .web-body{
-        width: 100%;
-        height: 100vh;
-        flex-direction: column;
-        background-color: #f4f4f4;
-        padding-top: 100px;
-        align-items: center;
-        >web{
-            width: 100%;
-            height: 100vh;
-        }
-    }
+.web-body {
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #f4f4f4;
+  padding-top: 100px;
+  align-items: center;
+  > web {
+    width: 100%;
+    height: 100vh;
+  }
+}
 </style>
 <script>
 import storage from '@system.storage';
@@ -27,39 +27,40 @@ const prompt = require('@system.prompt');
 export default Custom_page({
     protected: {
         external: '',
-        mobile:'',
-        source:'',
-        title:'',
-        headTitle:'幸运抽奖'
+        mobile: '',
+        source: '',
+        title: '',
+        headTitle: '幸运抽奖'
     },
     private: {
-        webUrl:'',
+        webUrl: '',
         // trustedurl:['https://api.ubaycn.com/lottery'],
-        trustedurl:[],
+        trustedurl: [],
     },
     onInit() {
-        if(this.title != ''){
+        console.clear();
+        if (this.title != '') {
             this.headTitle = this.title
         }
         storage.get({
-            key:'mobile',
-            success:(mobile) => {
+            key: 'mobile',
+            success: (mobile) => {
                 this.mobile = mobile
             }
         })
         storage.get({
-            key:'external',
-            success:(data) => {
-                if(data && data != this.external && this.external != ''){
+            key: 'external',
+            success: (data) => {
+                if (data && data != this.external && this.external != '') {
                     this.source = this.external || 'master';
-                }else{
+                } else {
                     this.source = data;
                 }
             }
         })
 
         storage.get({
-            key:'activeUrl',
+            key: 'activeUrl',
             success: (activeUrl) => {
                 this.trustedurl.push(activeUrl)
                 this.trustedurl.push(`https://life.ubaycn.com/wx/#/product`)
@@ -68,49 +69,49 @@ export default Custom_page({
                 this.getWebUrl()
             }
         })
-        
+
     },
     getWebUrl() {
-         storage.get({
-            key:'_id',
-            success:(data) => {
+        storage.get({
+            key: 'uid',
+            success: (data) => {
                 console.log(data);
                 console.log(this.activeUrl);
-                if(data){
+                if (data) {
                     this.webUrl = `${this.activeUrl}?sid=${data}&external=${this.source}&mobile=${this.mobile}`
                     this.trustedurl.push(`${this.activeUrl}/?sid=${data}&external=${this.source}&mobile=${this.mobile}#/`)
-                }else{
+                } else {
                     this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
                     this.trustedurl.push(`${this.activeUrl}/?external=${this.source}&mobile=${this.mobile}#/`)
                 }
             },
-            fail:() => {
-                    this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
-                    this.trustedurl.push(`${this.activeUrl}/?external=${this.source}&mobile=${this.mobile}#/`)
+            fail: () => {
+                this.webUrl = `${this.activeUrl}?external=${this.source}&mobile=${this.mobile}`
+                this.trustedurl.push(`${this.activeUrl}/?external=${this.source}&mobile=${this.mobile}#/`)
 
             }
         })
     },
-    onMessageFn(info){
-         let message = info.message;
+    onMessageFn(info) {
+        let message = info.message;
         const url = info.url;
         message = JSON.parse(message)
-        if(message.type == 1){
-             this.trustedurl.push(`${this.activeUrl}${message.location}`)
-        }else{
+        if (message.type == 1) {
+            this.trustedurl.push(`${this.activeUrl}${message.location}`)
+        } else {
             share.share({
                 shareType: 0,
                 title: message.title,
                 summary: message.summary,
                 imagePath: message.imagePath,
                 targetUrl: message.targetUrl,
-                platforms: ['WEIXIN','WEIXIN_CIRCLE'],
-                success: function(data) {
+                platforms: ['WEIXIN', 'WEIXIN_CIRCLE'],
+                success: function (data) {
                     prompt.showToast({
                         message: '分享成功'
                     })
                 },
-                fail: function(data, code) {
+                fail: function (data, code) {
                     console.log(`handling fail, code = ${code}`)
                     console.log(`data=${data}`)
                     prompt.showToast({
