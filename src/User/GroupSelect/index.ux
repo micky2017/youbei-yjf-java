@@ -4,14 +4,14 @@
         <TitleBar title='分组选择' color="#fff"></TitleBar>
         <list>
             <list-item class="group-select_content">
-                <div @click="selectGroup($item.groupName)" class="group-select_item" style="{{$idx == (groupList.length - 1) ? 'border-bottom-width:0px': 'border-bottom-width:1px'}}" for="groupList">
+                <div @click="selectGroup($item.id,$item.groupName)" class="group-select_item" style="{{$idx == (groupList.length - 1) ? 'border-bottom-width:0px': 'border-bottom-width:1px'}}" for="groupList">
                     <div class="group-select_left">
                         <image width="50" height="50" resize-mode="contain" src="{{groupIconList[$idx%4]}}.png"></image>
                         <text>{{$item.groupName}}</text>
                     </div>
                     <div>
-                        <image if="groupName == $item.groupName" width="40" height="40" resize-mode="contain" src="../../images/groupImg/select_group_icon.png"></image>
-                        <image if="groupName != $item.groupName" width="40" height="40" resize-mode="contain" src="../../images/groupImg/noselect_group_icon.png"></image>
+                        <image if="groupId == $item.id" width="40" height="40" resize-mode="contain" src="../../images/groupImg/select_group_icon.png"></image>
+                        <image if="groupId != $item.id" width="40" height="40" resize-mode="contain" src="../../images/groupImg/noselect_group_icon.png"></image>
                     </div>
                 </div>
             </list-item>
@@ -33,7 +33,7 @@
                     <text>请输入新的分组名称</text>
                 </div>
                 <div class="modification-input">
-                    <input id="groupValue" value="{{groupNameValue}}" @change="changeGroupName" placeholder="请输入分组名称" type="text"></input>
+                    <input id="groupValue" value="{{groupIdValue}}" @change="changeGroupId" placeholder="请输入分组名称" type="text"></input>
                 </div>
                 <div class="modification-btn">
                     <text @click="closeWindow">取消</text>
@@ -54,29 +54,31 @@ export default Custom_page({
     private: {
         groupList: [],
         showModification: false,
-        groupNameValue: '',
+        groupIdValue: '',
         _id: '',
         groupIconList: ['../../images/groupImg/group_home_icon', '../../images/groupImg/group_parent_icon', '../../images/groupImg/group_fd_icon', '../../images/groupImg/group_friend_icon']
 
     },
     protected: {
-        groupName: ''
+        groupId: ''
     },
     onReady() {
         this.getGroup()
     },
     getGroup() {
-        storage.get({
-            key: '_id',
-            success: (data) => {
-                this._id = data;
-                request.post('user/get-group', { sessionId: data }).then(res => {
-                    if (res.status == 200) {
-                        this.groupList = res.data.group
-                    }
-                })
+        // storage.get({
+        //     key: 'session',
+        //     success: (data) => {
+        //         this._id = data;
+        request.post('user/get-group').then(res => {
+            // console.clear();
+            console.log("GS.user/get-group", res);
+            if (res.status == 200) {
+                this.groupList = res.data
             }
         })
+        //     }
+        // })
     },
     voidFn() {
         return false;
@@ -86,23 +88,23 @@ export default Custom_page({
             this.$element('groupValue').focus({ focus: false })
         }
     },
-    changeGroupName(response) {
-        this.groupNameValue = response ? response.value : this.groupNameValue;
+    changeGroupId(response) {
+        this.groupIdValue = response ? response.value : this.groupIdValue;
     },
     saveGroupInfo() {
-        if (this.groupNameValue == '') {
+        if (this.groupIdValue == '') {
             this.showToast('请填写分组名称')
             return false;
         }
         this.inputFocus()
         //新增
         request.post('user/add-group', {
-            sid: this._id,
-            groupName: this.groupNameValue
+            // sid: this._id,
+            groupId: this.groupIdValue
         }).then(res => {
             this.closeWindow();
             this.item = {}
-            this.groupNameValue = ''
+            this.groupIdValue = ''
             if (res.status == 200) {
                 // this.showToast('新增分组成功');
                 this.getGroup();
@@ -119,15 +121,27 @@ export default Custom_page({
     closeWindow() {
         this.showModification = false;
     },
-    selectGroup(groupName) {
-        this.groupName = groupName;
+    selectGroup(groupId, groupName) {
+        // console.log("id", "name", groupId, groupName)
+        alert(groupId);
+        alert(groupName);
+        this.groupId = groupId;
+        this.groudName = groupName;
         storage.set({
-            key: 'groupName',
-            value: groupName,
+            key: 'groupId',
+            value: groupId,
             success: (res) => {
-                router.back()
+                storage.set({
+                    key: 'groupName',
+                    value: groupName,
+                    success: (res) => {
+                        setTimeout(function(){
+                            router.back();
+                        }, 2000);
+                    }
+                });
             }
-        })
+        });
     }
 })
 </script>
