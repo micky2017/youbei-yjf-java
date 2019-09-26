@@ -18,7 +18,7 @@ export default {
     onReady() {
         device.getInfo({
 			success: (ret) => {
-				request.get(`jiaofei/channel-switch?channel=${this.external}&brand=${ret.brand}`).then(res => {
+				request.get(`payment/channel-switch?channel=${this.external}&brand=${ret.brand}`).then(res => {
                     console.log(res)
                     if(res.status == 200){
                         storage.set({
