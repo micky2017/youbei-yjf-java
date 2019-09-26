@@ -101,7 +101,7 @@ export default Custom_page({
                 // cityHotCategoryModelList  热门城市
                 // cityCategoryModelList  城市列表
                 // this.section = res.data.section;
-                this.cityHotCategoryModelList = res.data.cityHotCategoryModelList;
+                this.cityHotCategoryModelList = res.data.cityHotCategoryModelList[0].cityModelList;
                 this.cityModelList = res.data.cityCategoryModelList;
                 this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
                 this.cacheRenList = res.data.cityRenCategoryModelList;
@@ -200,7 +200,8 @@ export default Custom_page({
     getPayType(cityName) {
         request.post('payment/pay-type-lst', { cityName: cityName }).then(res => {
             if (res.status == 200) {
-                const data = res.data;
+                const data = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+                console.log("payment/pay-type-lst with cityName", data);
                 let havePayType = true
                 for (let i = 0; i < data.length; i++) {
 
@@ -218,7 +219,7 @@ export default Custom_page({
                         }
                         console.log(data[i])
                         storage.get({
-                            key: "sid",
+                            key: "sessionId",
                             success: (data) => {
                                 if (data) {
                                     this.getJfTypeDetail(obj)
