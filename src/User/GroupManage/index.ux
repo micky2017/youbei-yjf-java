@@ -105,15 +105,7 @@ export default Custom_page({
         showLoading: false
     },
     onShow() {
-        storage.get({
-            key: '_id',
-            success: (data) => {
-                if (data) {
-                    this._id = data;
-                    this.getGroup()
-                }
-            }
-        })
+        this.getGroup()
     },
     // 显示toast
     showToast(text) {
@@ -131,9 +123,13 @@ export default Custom_page({
     },
     // 获取分组信息
     getGroup() {
-        request.post('user/get-group', { sessionId: this._id }).then(res => {
+        var that = this;
+        request.post('user/get-group').then(res => {
+            // console.clear();
+            console.log("GM.user/get-group", res);
             if (res.status == 200) {
-                this.groupList = res.data.group
+                console.log("get-group.200");
+                that.groupList = res.data;
             }
         })
     },
@@ -152,7 +148,6 @@ export default Custom_page({
         if (this.groupType == 'add') {
             //新增
             request.post('user/add-group', {
-                sid: this._id,
                 groupName: this.groupNameValue
             }).then(res => {
                 this.closeWindow();
@@ -170,8 +165,8 @@ export default Custom_page({
         } else {
             //修改
             request.post('user/reset-group', {
-                sid: this._id,
-                oldGroupName: this.item.groupName,
+                // oldGroupName: this.item.groupName,
+                id: this.item.id,
                 groupName: this.groupNameValue
             }).then(res => {
                 this.closeWindow();
@@ -191,8 +186,7 @@ export default Custom_page({
     // 删除分组
     deleteGroup() {
         request.post('user/delete-group', {
-            sid: this._id,
-            groupName: this.item.groupName
+            id: this.item.id
         }).then(res => {
             this.item = {}
             this.closeWindow()
