@@ -80,7 +80,6 @@
                                 <div class="btn">
                                     <input @click="login" type="button" value="登录">
                                 </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -145,8 +144,8 @@
             reg_pic:'',
             loginAdsList:[],
             vivoOpenid:"",
-            sourceType:"1",
-            sourceName:"",
+            phoneType:"1",
+            phoneName:"",
         },
         private: {
             detail: null,
@@ -156,12 +155,20 @@
             timer: ''
         },
         onInit() {
-            if(this.external){
-                storage.set({
-                    key:'external',
-                    value:this.external
-                })
-            }
+            storage.get({
+                key:'external',
+                success:(data) => {
+					console.log("登录页面取到的external：",data)
+                    if(data){
+                        this.external = data
+					    console.log("登录页面传出去的external：",this.external)
+                        storage.set({
+                            key:'external',
+                            value:data
+                        })
+                    }
+                }
+            })
             storage.get({
                 key:'reg_pic',
                 success:(data) => {
@@ -224,6 +231,9 @@
             //     this.captcha = res.data
             //     console.log(this.captcha)
             // })
+        },
+        onShow() {
+            
         },
         selectTab(index){
             this.inputFocus();
@@ -337,62 +347,63 @@
                 this.showToast("请输入四位验证码");
                 return false;
             }
-            // that.brand();
+            this.Loginmsg()
             device.getInfo({
                 success: function(ret) {
                     console.log(ret);
-                    that.sourceName=ret.brand;
-                    if(that.sourceName == "HUAWEI"){
-                        that.sourceType = "1"
-                    }else if(that.sourceName == "vivo"){
-                        that.sourceType = "2"
-                    }else if(that.sourceName == "Xiaomi"){
-                        that.sourceType = "3"
+                    that.phoneName=ret.brand;
+                    if(that.phoneName == "HUAWEI"){
+                        that.phoneType = "1"
+                    }else if(that.phoneName == "vivo"){
+                        that.phoneType = "2"
+                    }else if(that.phoneName == "Xiaomi"){
+                        that.phoneType = "3"
                     }else{
-                        that.sourceType = "999"
+                        that.phoneType = "999"
                     }
-                    console.log("当前手机型号:"+that.sourceName,"当前手机传参："+that.sourceType);
-                    if(that.external == "vivoNegative"){
-                        account.authorize({
-                            type: 'code',
-                            redirectUri: 'https://t.ubaycn.com/',
-                            success: function(data) {
-                                // console.log(`handling success: ${data.code}`)
-                                let postCode = data.code
-                                console.log(postCode);
-                                fetch.fetch({
-                                    url: 'https://t.ubaycn.com/ub/api/vivo/getAccessToken?code='+postCode,
-                                    success: function (response) {
-                                        // console.log(`the status code of the response:`+response)
-                                        const strToObj = JSON.parse(response.data)
-                                        console.log(response);
-                                        let postToken = strToObj.data.accessToken
-                                        console.log(postToken);
-                                        account.getProfile({
-                                            token: postToken,
-                                            success: function(data) {
-                                                console.log(data)
-                                                that.vivoOpenid = data.openid;
-                                                that.Loginmsg();
-                                            },
-                                            fail: function(data, code) {
-                                                console.log(`handling fail, code = ${code}`)
-                                            }
-                                        })
-                                    },
-                                    fail: function (data, code) {
-                                        console.log(`handling fail, errMsg = ${data}`)
-                                        console.log(`handling fail, errCode = ${code}`)
-                                    }
-                                })
-                            },
-                            fail: function(data, code) {
-                                console.log(`handling fail, code = ${code}`)
-                            }
-                        })
-                    }else{
-                        that.Loginmsg();
-                    }
+                    console.log("当前手机型号:"+that.phoneName,"当前手机传参："+that.phoneType);
+                    // if(that.external == "vivoNegative"){
+                    //     account.authorize({
+                    //         type: 'code',
+                    //         redirectUri: 'https://t.ubaycn.com/',
+                    //         success: function(data) {
+                    //             console.log("第一步返回的data",data)
+                    //             let postCode = data.code
+                    //             console.log(postCode);
+                    //             fetch.fetch({
+                    //                 url: 'https://t.ubaycn.com/vivo/getAccessToken?code='+postCode,
+                    //                 // url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
+                    //                 success: function (response) {
+                    //                     console.log("第二步返回的data",response)
+                    //                     const strToObj = JSON.parse(response.data)
+                    //                     console.log(strToObj);
+                    //                     let postToken = strToObj.data.accessToken
+                    //                     console.log(postToken);
+                    //                     account.getProfile({
+                    //                         token: postToken,
+                    //                         success: function(data) {
+                    //                             console.log(data)
+                    //                             that.vivoOpenid = data.openid;
+                    //                             that.Loginmsg();
+                    //                         },
+                    //                         fail: function(data, code) {
+                    //                             console.log(`handling fail, code = ${code}`)
+                    //                         }
+                    //                     })
+                    //                 },
+                    //                 fail: function (data, code) {
+                    //                     console.log(`handling fail, errMsg = ${data}`)
+                    //                     console.log(`handling fail, errCode = ${code}`)
+                    //                 }
+                    //             })
+                    //         },
+                    //         fail: function(data, code) {
+                    //             console.log(`handling fail, code = ${code}`)
+                    //         }
+                    //     })
+                    // }else{
+                    //     that.Loginmsg();
+                    // }
                 }
             })
             
@@ -461,12 +472,14 @@
         },
         // login
         Loginmsg(){
+            let laiyuan = this.external;
+            console.log(laiyuan);
             const params = {
                 mobile: this.sms_phone,
                 code: this.sms_code,
                 shortcut:false,
                 openId:this.vivoOpenid,
-                sourceType:this.sourceType,
+                phoneType:this.phoneType,
             }
             shortcut.hasInstalled({
                 success:  (ret) => {
@@ -477,16 +490,32 @@
             })
             console.log("传参：");
             console.log(params);
-                    console.log("当前手机型号:"+this.sourceName,"当前手机传参："+this.sourceType);
+                    console.log("当前手机型号:"+this.phoneName,"当前手机传参："+this.phoneType);
             request.post('user/login/sms', params).then(res => {
                 if (res.status == 200) {
                     this.showToast("登录成功");
                     statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
-
                     // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
                     // fetch.fetch({
                     //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
                     // })
+                    console.log("成功返回200之后：",this.external)
+                    // 轻粒子打点
+                    if(this.external == "vivoNegative"){
+                        statis.statis('vivo_login_click',{},this);
+                    }else if(this.external == "unted"){
+                        statis.statis('unted_login_click',{},this);
+                    }else if(this.external == "Huawei"){
+                        statis.statis('Huawei_login_click',{},this);
+                    }
+                    // 于哥出品
+                    fetch.fetch({
+                        url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
+                        method:"GET",
+                        success:function(res){
+                            console.log("于哥出品"+res);
+                        }
+                    })
                     console.log("成功返回：")
                     console.log(res)
                     if(res.data.isFirst){
@@ -503,6 +532,12 @@
                             value:'true'
                         })
                     }
+                    if(res.data.regGiving){
+                        storage.set({
+                            key:'regGiving',
+                            value:res.data.regGiving
+                        })
+                    }
                     storage.set({
                         key:'_id',
                         value:res.data._id
@@ -511,7 +546,7 @@
                         key: 'sid',
                         value: res.data.sessionId,
                         success: function () {
-                            router.replace({
+                            router.back({
                                 uri: "/"
                             })
                             // router.back({

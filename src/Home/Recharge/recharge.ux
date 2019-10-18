@@ -335,11 +335,14 @@ export default Custom_page({
         })
     },
     onReady() {
-        
+        this.billKey = this.oldBill;
         storage.get({
 			key:'external',
 			success: (data) => {
+                console.log("输入缴费编号页面external"+data);
+                this.external = data;
 				if(data && data != ''){
+                console.log("当前页面的external"+this.external);
 					storage.set({
 						key:'external',
 						value:this.external
@@ -428,7 +431,7 @@ export default Custom_page({
         })
     },
     onInit() {
-        this.billKey = this.oldBill;
+        // this.billKey = this.oldBill;
         this.groupName = this.oldGroupName;
     },
     getIcon(){
@@ -597,9 +600,11 @@ export default Custom_page({
         })
     },
     saveGroup(params){
+        console.log("保存账单信息："+params)
         storage.get({
             key:'_id',
             success:(data) => {
+                console.log("获取成功之后："+data)
                 request.post('user/save-group',{
                     sid:data,
                     paymentItemId:this.paymentItem.paymentItemId,
@@ -608,7 +613,7 @@ export default Custom_page({
                     type:this.type,
                     bill:params.billKey
                 }).then(res => {
-                    console.log(res)
+                    console.log("保存成功之后："+res)
                 }).catch(err => {
 
                 })
@@ -651,7 +656,7 @@ export default Custom_page({
         Object.assign(params, this.reqData);
         // paymentItemId  cityName type bill payName groupName
         this.saveGroup(params)
-        console.log(params)
+        console.log("当前账单："+params)
         // 查缴
         request.post('jiaofei/generate-bill', params).then(res => {
             this.showLoading = false;

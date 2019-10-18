@@ -151,6 +151,7 @@
             this.city_name = cityName;
             this.cityName = cityName;
             this.cityId = cityId;
+            console.log(cityName,cityId);
             storage.set({
                 key: 'cityName',
                 value: cityName,

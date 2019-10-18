@@ -1,8 +1,8 @@
 {
   "package": "com.ubaycn.yjf",
   "name": "云缴费",
-  "versionName": "1.5.0",
-  "versionCode": "34",
+  "versionName": "1.5.3",
+  "versionCode": "44",
   "minPlatformVersion": "1020",
   "icon": "/icon.png",
   "features": [
@@ -23,7 +23,7 @@
     {
       "name": "service.share",
       "params": {
-        "appSign": "NjgyMTExQjVEQ0RGOTU2RkU0NTI5OTRDQTBCMzRFNjk=",
+        "appSign": "MIIDaDCCAlACCQC5n/umMnA2HTANBgkqhkiG9w0BAQsFADB2MQswCQYDVQQGEwJjbjELMAkGA1UECAwCQkoxCzAJBgNVBAcMAkJKMQswCQYDVQQKDAJZQjELMAkGA1UECwwCSlMxDDAKBgNVBAMMA3lqZjElMCMGCSqGSIb3DQEJARYWd2FuZ3ppbG9uZ25ld3NAMTYzLmNvbTAeFw0xOTA0MTkwNTI5NDBaFw0yOTA0MTYwNTI5NDBaMHYxCzAJBgNVBAYTAmNuMQswCQYDVQQIDAJCSjELMAkGA1UEBwwCQkoxCzAJBgNVBAoMAllCMQswCQYDVQQLDAJKUzEMMAoGA1UEAwwDeWpmMSUwIwYJKoZIhvcNAQkBFhZ3YW5nemlsb25nbmV3c0AxNjMuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwBPsDGDAgiIAUuXMqZ6igz+rv9K+IFHkZwlfpLr1DRHt+8X71DhTBhZ8miFEtWG16Az1wUnMnMhMSkZAB2+zGglfgh1Vo1gFRUxqgjn6a4RyX7IwXzsGbbr0CDqFxA69kZCZgeRW/MhUTQso70SFeWAUtX9pAjhojp4F7NyzpdqYNq04QgtDoUjEVlk8FKcapxk4qbaZ1S3vdMXiw1lT+3HzvXKHXGD4SaRMdewxRt7lCxxTyQZugJrI1FQ0uPhdKT/NYTeSGAgxBvUaYRdP73FswMNcYUaFanLFF5oBCOlaMPiezU477Rr+ZHb76P+iFfej93bzUbqtJB7FQAXVHQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCs1DQ66qnLblzg0IrYy6yH+jdkjYWpTnC0MnX0Y676MRI5T9L7NEinwLEZG2DUiNKk57w73PiWdQXtnRloEaGCX1L+cQirjr/BgoYHftoPgaP/yFV/TRdPld8bFbCDRfnSr6AR/C1MLowuTVMHsDWrkFUJ1WJbqiyPVw8f69gX1bzhQ2vZ6bKP7LsBuuTI9+rBlK9HQjfb4HpbLuK4cE3gyNYQrpMDZZg4bZym+GaMF6d4eYWf5rJtCQvl+DFuAlv8L0G7lmLtblpSfMGvIFNRHjatbaHzKvh5SbiThYs82VKYc4hy5r0jFmL8TbKAbbneyMUbYXdWfZBmTllMMuw7",
         "qqKey": "",
         "wxKey": "wx87367afe2137a7e0",
         "sinaKey": ""
@@ -155,8 +155,8 @@
   "display": {
     "titleBar": false,
     "titleBarText": "云缴费",
-    "titleBarBackgroundColor": "#9A70C2",
-    "titleBarTextColor": "#ffffff",
+    "titleBarBackgroundColor": "#ffffff",
+    "titleBarTextColor": "#9A70C2",
     "menu": true,
     "pages": {
       "Home": {

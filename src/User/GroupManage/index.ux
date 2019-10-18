@@ -89,7 +89,12 @@
 import storage from '@system.storage';
 import request from '../../utils/request'
 import router from '@system.router';
+import account from '@service.account'
+import fetch from '@system.fetch'
 export default Custom_page({
+    public: {
+        external:"",
+    },
     private: {
         showModification:false,
         showDelete:false,
@@ -102,18 +107,122 @@ export default Custom_page({
         billItem:{},
         toast_text:'',
         show_toast:false,
-        showLoading:false
+        showLoading:false,
     },
-    onShow() {
+    protected: {
+        // _id:""
+    },
+    onInit(){
         storage.get({
             key:'_id',
             success:(data) => {
+                    let that = this
                 if(data){
                     this._id = data;
                     this.getGroup()
+                }else{
+                    if(this.external == "vivoNegative"){
+                        account.authorize({
+                            type: 'code',
+                            redirectUri: 'https://t.ubaycn.com/',
+                            success: function(data) {
+                                console.log("第一步返回的data",data)
+                                let postCode = data.code
+                                console.log(postCode);
+                                fetch.fetch({
+                                    url: 'https://t.ubaycn.com/vivo/getAccessToken?code='+postCode,
+                                    // url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
+                                    success: function (response) {
+                                        console.log("第二步返回的data",response)
+                                        const strToObj = JSON.parse(response.data)
+                                        console.log(strToObj);
+                                        let postToken = strToObj.data.accessToken
+                                        console.log(postToken);
+                                        account.getProfile({
+                                            token: postToken,
+                                            success: function(data) {
+                                                console.log(data)
+                                                // this.vivoOpenid = data.openid;
+                                                // that.Loginmsg();
+                                                account.getPhoneNumber({
+                                                    success: function(data) {
+                                                        console.log(`handling success phoneNumber: `,data.phoneNumber)
+                                                        fetch.fetch({
+                                                            url: 'https://t.ubaycn.com/ub/user/login/oneClick',
+                                                            // url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
+                                                            method:"post",
+                                                            data:{
+                                                                environment: "zhengshi",
+                                                                mobile:data.phoneNumber,
+                                                            },
+                                                            success:function(res){
+                                                                console.log("vivo一键登录成功",res);
+                                                                if(res.code == 200){
+                                                                    let data = JSON.parse(res.data);
+                                                                    console.log("一键登录成功的data值",data);
+                                                                    console.log("获取到的mid",data.data.mid)
+                                                                    storage.set({
+                                                                        key:'_id',
+                                                                        value:data.data.mid
+                                                                    })
+                                                                    storage.set({
+                                                                        key:"sid",
+                                                                        value:data.data.sessionId
+                                                                    })
+                                                                    storage.set({
+                                                                        key:"mobile",
+                                                                        value:data.data.mobile
+                                                                    })
+                                                                    that.getGroup();
+                                                                }
+                                                            },
+                                                            fail:function(err){
+                                                                console.log(err);
+                                                            }
+                                                        })
+                                                    },
+                                                    fail: function(data, code) {
+                                                        router.replace({
+                                                            uri:'User/SmsLogin',
+                                                            params:{
+                                                                external:this.external,
+                                                            }
+                                                        })
+                                                        console.log(`handling fail, code = ${code}`)
+                                                    }
+                                                })
+                                            },
+                                            fail: function(data, code) {
+                                                console.log(`handling fail, code = ${code}`)
+                                            }
+                                        })
+                                    },
+                                    fail: function (data, code) {
+                                        console.log(`handling fail, errMsg = ${data}`)
+                                        console.log(`handling fail, errCode = ${code}`)
+                                    }
+                                })
+                            },
+                            fail: function(data, code) {
+                                console.log(`handling fail, code = ${code}`)
+                            }
+                        })
+                    }else{
+                        router.replace({
+                            uri:"User/SmsLogin"
+                        })
+                    }
                 }
+            },
+            error:(err) => {
+                router.replace({
+                    uri:"User/SmsLogin"
+                })
             }
         })
+    },
+    onShow() {
+        
     },
     // 显示toast
     showToast(text) {

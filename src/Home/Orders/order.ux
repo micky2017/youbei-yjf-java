@@ -80,8 +80,10 @@
 <script>
     import router from '@system.router';
     import request from '../../utils/request'
+    import Newrequest from '../../utils/newRequest'
     import webview from '@system.webview'
     import fetch from '@system.fetch'
+    import storage from "@system.storage";
     import statis from '../../utils/statistics'
 
     export default Custom_page ({
@@ -115,7 +117,43 @@
                     payTypeName: "银联",
                     payType: "3",
                 }
-            ]
+            ],
+            mobile:"",
+            external: '',
+            sessionId:"",
+        },
+        onInit() {
+            // 获取手机号
+            storage.get({
+                key: "mobile",
+                success: (data) => {
+                    this.mobile = data
+                    console.log("缴费页面获取到的mobile",data)
+                },
+                fail: function (data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
+            storage.get({
+                key: "external",
+                success: (data) => {
+                    this.external = data
+                    console.log("缴费页面获取到的external",data)
+                },
+                fail: function (data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
+            storage.get({
+                key: "sid",
+                success: (data) => {
+                    this.sessionId = data
+                    console.log("缴费页面获取到的sessionId",data)
+                },
+                fail: function (data, code) {
+                    console.log(`handling fail, code = ${code}`)
+                }
+            })
         },
         // 显示toast
         showToast(text,back){
@@ -288,6 +326,19 @@
             Object.assign(params,JSON.parse(this.reqData))
             // params.testpackage = 'test'
             statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
+            // console.log("传输的sessionId：",this.sessionId)
+            // Newrequest.get(`tatistics/quick`,{scene:"4",phone:this.mobile,sourceType:this.external,sessionId:this.sessionId}).then(res =>{
+            //     console.log("get请求新接口成功",res)
+            // }).catch(err =>{
+            //     console.log("get请求新接口失败",err)
+            // })
+            fetch.fetch({
+                url:"https://t.ubaycn.com/ub/tatistics/quick?scene=4&phone="+this.mobile+"&sourceType="+this.external+"&sessionId="+this.sessionId,
+                method:"GET",
+                success:function(res){
+                    console.log("于哥出品"+res);
+                }
+            })
 
             // APP_STATISTICS.track_event("pay_click",{'pay_type':this.data.paymentItemName,"pay_amount":String(this.payAmount)});
             // fetch.fetch({

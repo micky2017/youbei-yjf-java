@@ -2,6 +2,10 @@ import fetch from '@system.fetch';
 import storage from"@system.storage";
 
 const  requestHandle = (params)  => {
+    // // 独立环境
+    // let newData = params.data;
+    // newData = Object.assign(newData,{environment:'duli'})
+    // console.log(newData,params);
     // if(params.data){
     //   params.data.testpackage = "test";
     // }else{
@@ -20,6 +24,7 @@ const  requestHandle = (params)  => {
         return fetch.fetch({
             url: params.url,
             header: {
+              // cookie: `sid=${res.data}`
               cookie: `sid=${res.data}`
             },
             method: params.method,
@@ -74,8 +79,8 @@ const  requestHandle = (params)  => {
         method: 'post',
         url: `https://api.ubaycn.com/${url}`,
         // url: `https://test-api.ubaycn.com/${url}`,
-        // url: `http://192.168.8.121:7010/${url}`,
         // url: `http://192.168.1.157:7010/${url}`,
+        // url: `http://192.168.1.109:8090/ub/${url}`,
         data: params
       })
     },
@@ -87,7 +92,7 @@ const  requestHandle = (params)  => {
       // params.testpackage = 'test'
       return requestHandle({
         method: 'get',
-        // url: queryString(`http://192.168.8.121:7010/${url}`, params),
+        // url: queryString(`http://192.168.1.109:8090/ub/${url}`, params),
         // url: queryString(`http://192.168.1.157:7010/${url}`, params),
         // url: queryString(`https://test-api.ubaycn.com/${url}`, params),
         url: queryString(`https://api.ubaycn.com/${url}`, params),

@@ -60,13 +60,13 @@ export default Custom_page({
 
         storage.get({
             key:'activeUrl',
-           success: (activeUrl) => {
-               this.trustedurl.push(activeUrl)
-               this.trustedurl.push(`https://life.ubaycn.com/wx/#/product`)
-               this.trustedurl.push(`https://life.ubaycn.com/#/product`)
-               this.activeUrl = activeUrl
-               this.getWebUrl()
-           }
+            success: (activeUrl) => {
+                this.trustedurl.push(activeUrl)
+                this.trustedurl.push(`https://life.ubaycn.com/wx/#/product`)
+                this.trustedurl.push(`https://life.ubaycn.com/#/product`)
+                this.activeUrl = activeUrl
+                this.getWebUrl()
+            }
         })
         
     },
@@ -74,6 +74,8 @@ export default Custom_page({
          storage.get({
             key:'_id',
             success:(data) => {
+                console.log(data);
+                console.log(this.activeUrl);
                 if(data){
                     this.webUrl = `${this.activeUrl}?sid=${data}&external=${this.source}&mobile=${this.mobile}`
                     this.trustedurl.push(`${this.activeUrl}/?sid=${data}&external=${this.source}&mobile=${this.mobile}#/`)

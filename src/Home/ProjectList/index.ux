@@ -70,7 +70,7 @@
             })
         },
         inputFocus(){
-                this.$element('search').focus({ focus: false })
+            this.$element('search').focus({ focus: false })
         },
         affirmItem(item){
             const index = this.paymentItemList.indexOf(item);

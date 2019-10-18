@@ -1,7 +1,7 @@
 <import src="../../common/TitleBar.ux"></import>
 <template>
     <div class="regist">
-
+        
     </div>
 </template>
 
@@ -13,6 +13,9 @@
     import router from '@system.router'
     import storage from"@system.storage";
     import request from '../../utils/request'
+    import statis from '../../utils/statistics.js'
+    import account from '@service.account'
+    import fetch from '@system.fetch'
 
     export default Custom_page ({
         public: {
@@ -20,7 +23,10 @@
             type:"水费",
             uri:'',
             external:'vivo',
-            paymentItemList:[]
+            paymentItemList:[],
+        },
+        protected: {
+            vivoOpenid: ""
         },
         onReady() {
             // this.uri = this.$page.uri
@@ -32,13 +38,24 @@
                 this.type = "1"
             }
             this.toRechange()
+            console.log(this.external);
+            if(this.external == "vivoNegative"){
+                statis.statis('vivo_ask_num',{},this)
+                
+            }else if(this.external == "Huawei"){
+                statis.statis('huawei_ask_num',{},this)
+            }
+            storage.set({
+                key:'external',
+                value:this.external
+            })
         },
         toRechange(){
             //1  电费// 2  水费// 3  燃气费// 4  手机充值
             // 5  通讯费// 6  有线电视费// 7  供暖费// 8  非税代收
             // 9  物业费// 10 教育考试// 11 交通罚款// 12 养老
             // 13 加油卡充值// 14 ETC充值// 15 其他// 16 党费
-            const types = ['', '电费','水费','燃气费','手机充值','通讯费','有线电视费','供暖费','非税代收', '物业费','教育考试','交通罚款','养老','加油卡充值','ETC充值','其他','党费']
+            // const types = ['', '电费','水费','燃气费','手机充值','通讯费','有线电视费','供暖费','非税代收', '物业费','教育考试','交通罚款','养老','加油卡充值','ETC充值','其他','党费']
             storage.get({
 				key:"sid",
 				success: (data) => {
@@ -48,13 +65,15 @@
                         // 缴费类别
                         console.log('transit'+this.cityName)
 						request.post('jiaofei/pay-type-lst',{cityName:decodeURI(this.cityName)}).then(res => {
-							console.log(res)
-							console.log('transit'+this.type)
+                            console.log(res)
+							console.log('transit',this.type);
 							if(res.status == 200){
                                 for(let i = 0;i<res.data.length;i++){
                                     const item = res.data[i];
+                                    // console.log(item);
                                     if(item.typeName.indexOf(this.type) != -1){
                                         if(item.typeName.indexOf('手机') != -1){
+                                            console.log("手机",item.typeName.indexOf('手机'))
                                             router.replace({
                                                 uri:'Home/Mobile',
                                                 params:{
@@ -64,7 +83,8 @@
                                                 }
                                             })
                                         }else{
-                                            this.toRecharge(types.indexOf(decodeURI(this.type)))
+                                            console.log("非手机",item.type)
+                                            this.toRecharge(item.type)
                                             // router.replace({
                                             //     uri:'Home/Recharge',
                                             //     params:{
@@ -87,7 +107,34 @@
                                 uri:'Home'
                             })
                         })
-                        
+                    }else{
+                        // router.replace({
+                        //     uri:'User/SmsLogin',
+                        //     params:{
+                        //         external:this.external,
+                        //     }
+                        // })
+                        if(this.external == "vivoNegative"){
+                            this.empower();
+                        }else{
+                            router.replace({
+                                uri:'User/SmsLogin',
+                                params:{
+                                    external:this.external,
+                                }
+                            })
+                        }
+                    }
+                },
+                error:(err) => {
+                    // router.replace({
+                    //     uri:'User/SmsLogin',
+                    //     params:{
+                    //         external:this.external,
+                    //     }
+                    // })
+                    if(this.external == "vivoNegative"){
+                        this.empower();
                     }else{
                         router.replace({
                             uri:'User/SmsLogin',
@@ -96,20 +143,12 @@
                             }
                         })
                     }
-                },
-                error:(err) => {
-                    router.replace({
-                        uri:'User/SmsLogin',
-                        params:{
-                            external:this.external,
-                        }
-                    })
                 }
             })
             
         },
         toRecharge(type){
-            console.log(222)
+            console.log(this.cityName,type)
             // 缴费项目信息
 			request.post('jiaofei/pay-type-detail', {
 				cityName: decodeURI(this.cityName),
@@ -120,7 +159,7 @@
 					this.paymentItemList = res.data.paymentItemList;
 					if(this.paymentItemList.length > 1){
 						// 列表选择
-						router.push({
+						router.replace({
 							uri:'Home/ProjectList',
 							params:{
 								title: decodeURI(this.type),
@@ -133,17 +172,16 @@
 							}
 						})
 					}else{
-						console.log(obj.params.name)
 						// 账单详情
-						router.push({
+						router.replace({
 							uri:'Home/Recharge',
 							params:{
 								payName:'1',
-								title: obj.params.title,
-								type:obj.params.type,
-								icon:obj.params.icon,
+								title: decodeURI(this.type),
+								type,
+								icon:this.icon,
 								external:this.external,
-								cityName:this.cityName,
+                                cityName:this.cityName,
 								paymentItemModelList:item.paymentItemModelList,//项目信息
 							}
 						})
@@ -169,6 +207,131 @@
                     this[key] = value
                 }
             }
+        },
+        empower(){
+            let that = this
+            account.authorize({
+                type: 'code',
+                redirectUri: 'https://t.ubaycn.com/',
+                success: function(data) {
+                    console.log("第一步返回的data",data)
+                    let postCode = data.code
+                    console.log(postCode);
+                    fetch.fetch({
+                        url: 'https://t.ubaycn.com/vivo/getAccessToken?code='+postCode,
+                        // url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
+                        success: function (response) {
+                            console.log("第二步返回的data",response)
+                            const strToObj = JSON.parse(response.data)
+                            console.log(strToObj);
+                            let postToken = strToObj.data.accessToken
+                            console.log(postToken);
+                            account.getProfile({
+                                token: postToken,
+                                success: function(data) {
+                                    console.log(data)
+                                    that.vivoOpenid = data.openid;
+                                    // that.Loginmsg();
+                                    account.getPhoneNumber({
+                                        success: function(data) {
+                                            console.log(`handling success phoneNumber: `,data.phoneNumber)
+                                            fetch.fetch({
+                                                url: 'https://t.ubaycn.com/ub/user/login/oneClick',
+                                                // url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
+                                                method:"post",
+                                                data:{
+                                                    environment: "zhengshi",
+                                                    mobile:data.phoneNumber,
+                                                    openId:that.vivoOpenid
+                                                },
+                                                success:function(res){
+                                                    console.log("vivo一键登录成功",res);
+                                                    if(res.code == 200){
+                                                        let data = JSON.parse(res.data);
+                                                        console.log("一键登录成功的data值",data);
+                                                        console.log("获取到的sid",data.data.sessionId)
+                                                        storage.set({
+                                                            key:'_id',
+                                                            value:res.data.mid
+                                                        })
+                                                        storage.set({
+                                                            key:"sid",
+                                                            value:data.data.sessionId
+                                                        })
+                                                        storage.set({
+                                                            key:"mobile",
+                                                            value:data.data.mobile
+                                                        })
+                                                        if(res.data.isFirst){
+                                                            storage.set({
+                                                                key:'firstLogin',
+                                                                value:'true'
+                                                            })
+                                                        }
+                                                        if(res.data.regIqy){
+                                                            storage.set({
+                                                                key:'regIqy',
+                                                                value:'true'
+                                                            })
+                                                        }
+                                                        if(res.data.regGiving){
+                                                            storage.set({
+                                                                key:'regGiving',
+                                                                value:res.data.regGiving
+                                                            })
+                                                        }
+                                                        console.log("传出去的手机号",data.data.mobile)
+                                                        that.toRechange();
+                                                    }
+                                                },
+                                                fail:function(err){
+                                                    console.log(err);
+                                                }
+                                            })
+                                        },
+                                        fail: function(data, code) {
+                                            router.replace({
+                                                uri:'User/SmsLogin',
+                                                params:{
+                                                    external:that.external,
+                                                }
+                                            })
+                                            console.log(`手机号授权错误返回, code = ${code}`)
+                                        }
+                                    })
+                                },
+                                fail: function(data, code) {
+                                    console.log(`OAuth授权错误返回, code = ${code}`)
+                                    router.replace({
+                                        uri:'User/SmsLogin',
+                                        params:{
+                                            external:that.external,
+                                        }
+                                    })
+                                }
+                            })
+                        },
+                        fail: function (data, code) {
+                            console.log(`获取token错误返回, errMsg = ${data}`)
+                            router.replace({
+                                uri:'User/SmsLogin',
+                                params:{
+                                    external:that.external,
+                                }
+                            })
+                        }
+                    })
+                },
+                fail: function(data, code) {
+                    console.log(`第一步错误返回, code = ${code}`)
+                    router.replace({
+                        uri:'User/SmsLogin',
+                        params:{
+                            external:that.external,
+                        }
+                    })
+                }
+            })
         }
     })
 </script>

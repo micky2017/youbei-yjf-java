@@ -50,7 +50,7 @@
             console.log(this.paymentItemList)
         },
         inputFocus(){
-                this.$element('search').focus({ focus: false })
+            this.$element('search').focus({ focus: false })
         },
         affirmItem(item){
             const index = this.billQueryList.indexOf(item);
