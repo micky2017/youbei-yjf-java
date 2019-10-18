@@ -757,6 +757,8 @@ export default Custom_page({
 	},
 	// 创建桌面快捷方式
 	createShortcut() {
+		console.log("csc");
+		//*
 		shortcut.hasInstalled({
 			success: (ret) => {
 				if (ret) {
@@ -775,83 +777,12 @@ export default Custom_page({
 							})
 							this.addChange('add');
 							this.showShortcut = false;
-							// 添加到桌面功能打点
-							fetch.fetch({
-								url: "https://t.ubaycn.com/ub/tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid,
-								// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=5&phone="+this.relaymobile+"&sourceType="+this.external+"&sessionId="+this.sid,
-								method: "GET",
-								success: function (res) {
-									console.log("于哥出品" + res);
-								}
+							// this.showJDEActiveModel = true;				
+						},
+						fail: function (errmsg, errcode) {
+							prompt.showToast({
+								message: `${errcode}: ${errmsg}`
 							})
-							// this.showJDEActiveModel = true;              
-						},
-						fail: function (errmsg, errcode) {
-							// prompt.showToast({
-							// message: `${errcode}: ${errmsg}`
-							// })
-						}
-					})
-				}
-			}
-		})
-	},
-	createShortcut_() {
-		console.log("csc");
-		shortcut.hasInstalled({
-			success(o) {
-				console.log("hasInstalled success", o);
-				if (!o) {
-					shortcut.install({
-						success() {
-							console.log("install success");
-						},
-						fail() {
-							console.log("install fail");
-						},
-						complete() {
-							console.log("install complete");
-						}
-					});
-				}
-			},
-			fail() {
-				console.log("hasInstalled fail");
-			},
-			complete() {
-				console.log("hasInstalled complete");
-			}
-		})
-		/*
-		shortcut.hasInstalled({
-			success: (ret) => {
-				console.log("a1");
-				if (ret) {
-					console.log("a2");
-					prompt.showToast({
-						message: '已创建桌面图标'
-					})
-					this.showShortcut = false;
-					// this.showJDEActiveModel = true;
-					this.addChange('add');
-				} else {
-					console.log("a3");
-					shortcut.install({
-						success: () => {
-							console.log("a4");
-							// statis.statis('hasInstalled_success', {}, this)
-							// prompt.showToast({
-							// 	message: '成功创建桌面图标'
-							// })
-							// this.addChange('add');
-							// this.showShortcut = false;
-							// // this.showJDEActiveModel = true;				
-						},
-						fail: function (errmsg, errcode) {
-							// prompt.showToast({
-							//   message: `${errcode}: ${errmsg}`
-							// })
-							console.log("a5");
 						}
 					})
 				}
