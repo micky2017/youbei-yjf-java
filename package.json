@@ -24,6 +24,8 @@
   "dependencies": {
     "babel-loader": "^8.0.5",
     "eslint": "^5.15.3",
+    "md5": "^2.2.1",
     "webpack": "^4.29.6"
   }
 }
+

@@ -153,16 +153,20 @@ export default Custom_page({
         timer: ''
     },
     onInit() {
-        console.log("当前来源是：", this.external);
-        if (this.external == "unted") {
-            statis.statis('ted_ask_num', {}, this);
-        }
-        if (this.external) {
-            storage.set({
-                key: 'external',
-                value: this.external
-            })
-        }
+        storage.get({
+            key:'external',
+            success:(data) => {
+                console.log("登录页面取到的external：",data)
+                if(data){
+                    this.external = data
+                    console.log("登录页面传出去的external：",this.external)
+                    storage.set({
+                        key:'external',
+                        value:data
+                    })
+                }
+            }
+        })
         storage.get({
             key: 'reg_pic',
             success: (data) => {
@@ -343,6 +347,7 @@ export default Custom_page({
             return false;
         }
         // that.brand();
+        this.Loginmsg()
         device.getInfo({
             success: function (ret) {
                 console.log(ret);
@@ -357,54 +362,6 @@ export default Custom_page({
                     that.sourceType = "999"
                 }
                 console.log("当前手机型号:" + that.sourceName, "当前手机传参：" + that.sourceType);
-                if (that.external == "vivoNegative") {
-                    account.authorize({
-                        type: 'code',
-                        redirectUri: 'https://t.ubaycn.com/',
-                        success: function (data) {
-                            // console.log(`handling success: ${data.code}`)
-                            let postCode = data.code
-                            console.log(postCode);
-                            fetch.fetch({
-                                url: 'https://t.ubaycn.com/ub/api/vivo/getAccessToken?code=' + postCode,
-                                success: function (response) {
-                                    // console.log(`the status code of the response:`+response)
-                                    const strToObj = JSON.parse(response.data)
-                                    console.log(response);
-                                    let postToken = strToObj.data.accessToken
-                                    console.log(postToken);
-                                    account.getProfile({
-                                        token: postToken,
-                                        success: function (data) {
-                                            console.log(data)
-                                            that.vivoOpenid = data.openid;
-                                            that.Loginmsg();
-                                            statis.statis('vivo_login_click', {}, this);
-                                        },
-                                        fail: function (data, code) {
-                                            console.log(`handling fail, code = ${code}`)
-                                        }
-                                    })
-                                },
-                                fail: function (data, code) {
-                                    console.log(`handling fail, errMsg = ${data}`)
-                                    console.log(`handling fail, errCode = ${code}`)
-                                }
-                            })
-                        },
-                        fail: function (data, code) {
-                            console.log(`handling fail, code = ${code}`)
-                        }
-                    })
-                } else if (that.external == "unted") {
-                    that.Loginmsg();
-                    statis.statis('unted_login_click', {}, this);
-                } else if (that.external == "Huawei") {
-                    that.Loginmsg();
-                    statis.statis('Huawei_login_click', {}, this);
-                } else {
-                    that.Loginmsg();
-                }
             }
         })
 
@@ -486,6 +443,7 @@ export default Custom_page({
     },
     // login
     Loginmsg() {
+        let laiyuan = this.external;
         const params = {
             mobile: this.sms_phone,
             code: this.sms_code,
@@ -510,6 +468,22 @@ export default Custom_page({
                 console.log("user/login/sms", res);
                 statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
 
+                // 轻粒子打点
+                if(this.external == "vivoNegative"){
+                    statis.statis('vivo_login_click',{},this);
+                }else if(this.external == "unted"){
+                    statis.statis('unted_login_click',{},this);
+                }else if(this.external == "Huawei"){
+                    statis.statis('Huawei_login_click',{},this);
+                }
+
+                fetch.fetch({
+                    url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
+                    method:"GET",
+                    success:function(res){
+                        console.log("于哥出品"+res);
+                    }
+                })
                 // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
                 // fetch.fetch({
                 //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
@@ -553,7 +527,7 @@ export default Custom_page({
                     key: 'sessionId',
                     value: res.data.sessionId,
                     success: function () {
-                        router.replace({
+                        router.back({
                             uri: "/"
                         })
                         // router.back({

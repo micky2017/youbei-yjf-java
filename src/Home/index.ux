@@ -873,9 +873,9 @@ export default Custom_page({
 							console.log(res);
 							console.log(res.data.list);
 							console.log("---- ----");
-							for (var i = res.data.list.length - 1; i > 0; i--) {
+							for (var i = res.data.list.length - 1; i >= 0; i--) {
 								if (res.data.list[i].children.length == 0) {
-									res.data.list.pop();
+									res.data.list.splice(i, 1);
 								}
 							}
 							console.log(res.data.list);
@@ -1130,7 +1130,7 @@ export default Custom_page({
 						that.cityName = city;
 						// 缴费类别
 						request.post('payment/pay-type-lst', {
-							cityName: city//,
+							cityName: this.cityName//,
 							// environment: "test"
 						}).then(res => {
 							// console.log(res)
@@ -1153,7 +1153,7 @@ export default Custom_page({
 						that.cityName = city;
 						// 缴费类别
 						request.post('payment/pay-type-lst', {
-							cityName: city//,
+							cityName: this.cityName
 							// environment: "test"
 						}).then(res => {
 							console.log(res)
@@ -1176,7 +1176,7 @@ export default Custom_page({
 				that.cityName = city;
 				// 缴费类别
 				request.post('payment/pay-type-lst', {
-					cityName: city//,
+					cityName: this.cityName
 					// environment: "test"
 				}).then(res => {
 					// console.log(res)
