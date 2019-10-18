@@ -64,7 +64,7 @@
 								<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
 								<div if="!isGroup" class="common-content">
 									<!-- <div class="common-content"> -->
-									<text class="common-content_title">常用缴费a</text>
+									<text class="common-content_title">常用缴费</text>
 									<div class="common-content_body">
 										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
 											<div class="icon" if="true">
@@ -575,7 +575,7 @@ export default Custom_page({
 							this.getResource()
 							this.activeSwitch = 'open'
 							// 首次登录
-							this.onDayFirstLogin()
+							// this.onDayFirstLogin()
 						} else {
 							this.activeSwitch = 'close'
 							this.guideList = []
@@ -669,7 +669,7 @@ export default Custom_page({
 		shortcut.hasInstalled({
 			success: (ret) => {
 				if (ret) {
-					that.addChange('add');
+					// that.addChange('add');
 					that.showShortcut = false;
 					statis.statis('hasInstalled_success', {}, this)
 				} else {
@@ -764,13 +764,14 @@ export default Custom_page({
 	createShortcut() {
 		shortcut.hasInstalled({
 			success: (ret) => {
+				console.log(ret);
 				if (ret) {
 					prompt.showToast({
 						message: '已创建桌面图标'
 					})
 					this.showShortcut = false;
 					// this.showJDEActiveModel = true;
-					this.addChange('add');
+					// this.addChange('add');
 				} else {
 					shortcut.install({
 						success: () => {
@@ -778,7 +779,7 @@ export default Custom_page({
 							prompt.showToast({
 								message: '成功创建桌面图标'
 							})
-							this.addChange('add');
+							// this.addChange('add');
 							this.showShortcut = false;
 							// 添加到桌面功能打点
 							fetch.fetch({
@@ -791,11 +792,16 @@ export default Custom_page({
 						},
 						fail: function (errmsg, errcode) {
 							prompt.showToast({
-								message: `${errcode}: ${errmsg}`
+								message: `创建失败，请到设置中打开权限`
 							})
 						}
 					})
 				}
+			},
+			fail:(err)=>{
+				prompt.showToast({
+					message: `创建失败，请重新创建`
+				})
 			}
 		})
 		/**/
@@ -1052,9 +1058,9 @@ export default Custom_page({
 								if (recordsModel.length > 0) {
 									const paymentDate = recordsModel[0].paymentDate
 									const date = this.format(Date.parse(new Date()))
-									if (paymentDate.split(' ')[0] == date) {
-										this.addChange('pay');
-									}
+									// if (paymentDate.split(' ')[0] == date) {
+									// 	this.addChange('pay');
+									// }
 								}
 								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 									this.hasMoreData = false;
@@ -1129,9 +1135,9 @@ export default Custom_page({
 																			if (recordsModel.length > 0) {
 																				const paymentDate = recordsModel[0].paymentDate
 																				const date = this.format(Date.parse(new Date()))
-																				if (paymentDate.split(' ')[0] == date) {
-																					this.addChange('pay');
-																				}
+																				// if (paymentDate.split(' ')[0] == date) {
+																				// 	this.addChange('pay');
+																				// }
 																			}
 																			if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 																				this.hasMoreData = false;
@@ -1200,9 +1206,9 @@ export default Custom_page({
 								if (recordsModel.length > 0) {
 									const paymentDate = recordsModel[0].paymentDate
 									const date = this.format(Date.parse(new Date()))
-									if (paymentDate.split(' ')[0] == date) {
-										this.addChange('pay');
-									}
+									// if (paymentDate.split(' ')[0] == date) {
+									// 	this.addChange('pay');
+									// }
 								}
 								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 									this.hasMoreData = false;
@@ -1654,6 +1660,7 @@ export default Custom_page({
 		})
 	},
 	share(){
+		console.log("分享");
 		if(this.isLogin){
 			let that = this;
 			console.log(share.getProvider())
@@ -1689,7 +1696,7 @@ export default Custom_page({
 							console.log(`handling fail, failMess=${data},code=${code}`)
 						},
 						cancel: function(code){
-							console.log(`handling fail, failMess=${data},code=${code}`)
+							console.log(`handling cancel, failMess=${data},code=${code}`)
 						}
 					})
 
