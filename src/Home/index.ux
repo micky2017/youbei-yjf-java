@@ -515,8 +515,9 @@ export default Custom_page({
 		request.post('payment/get-active-img', { source }).then(res => {
 			console.log("payment/get-active-img", res);
 			if (res.status == 200) {
-				const data = res.data.data.pic_conf;
-				this.guideList = data.guide_pic.data//引导页
+				// const data = res.data.data.pic_conf;
+				const data = res.data;
+				this.guideList = data.guide_pic//引导页
 				this.homeBannerList = data.home_banner.data//banner
 				console.log("homeBannerList", this.homeBannerList)
 				if (this.homeBannerList.length > 0) {
