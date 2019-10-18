@@ -1696,7 +1696,7 @@ export default Custom_page({
 							console.log(`handling fail, failMess=${data},code=${code}`)
 						},
 						cancel: function(code){
-							console.log(`handling cancel, failMess=${data},code=${code}`)
+							console.log(`handling fail, failMess=${data},code=${code}`)
 						}
 					})
 
