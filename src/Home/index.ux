@@ -518,12 +518,12 @@ export default Custom_page({
 				// const data = res.data.data.pic_conf;
 				const data = res.data;
 				this.guideList = data.guide_pic//引导页
-				this.homeBannerList = data.home_banner.data//banner
+				this.homeBannerList = data.home_banner//banner
 				console.log("homeBannerList", this.homeBannerList)
 				if (this.homeBannerList.length > 0) {
 					this.showHomeBanner = true;
 				}
-				this.homeAdsList = data.home_ads.data//首页资源位
+				this.homeAdsList = data.home_ads//首页资源位
 			}
 		})
 	},
