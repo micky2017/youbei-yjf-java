@@ -10,7 +10,7 @@
 				<text onclick="skip()">立即体验</text>
 			</div> -->
 			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
-				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.pic}}" alt="">
+				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.imgPath}}" alt="">
 			</swiper>
 			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length <=0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
@@ -47,7 +47,7 @@
 
 								<div class="common-swiper_content">
 									<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true" loop="true">
-										<image @click="goUrl($item,'HomeBannerList')" src="{{imgUrl}}{{$item.pic}}" for="homeBannerList"></image>
+										<image @click="goUrl($item,'HomeBannerList')" src="{{imgUrl}}{{$item.imgPath}}" for="homeBannerList"></image>
 									</swiper>
 									<swiper if="homeBannerList.length <= 0" class="common-swiper" autoplay="true" loop="true" indicator-selected-color="#9A70C2">
 										<image @click="goUrl(item)" src="{{item.pic}}" for="item in bannerList" alt=""></image>
@@ -120,7 +120,7 @@
 								</div>
 								<div class="activity-entry-banner">
 									<swiper autoplay="true" loop="true" indicator="true" class="common-swiper" indicator-selected-color="#9A70C2">
-										<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in homeAdsList" alt=""></image>
+										<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in homeAdsList" alt=""></image>
 									</swiper>
 								</div>
 							</div>
@@ -194,7 +194,7 @@
 						</div>
 						<div class="records-banner">
 							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
-								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in jiluAdsList" alt=""></image>
+								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in jiluAdsList" alt=""></image>
 							</swiper>
 							<!-- <image src="./images/home-banner.jpg"></image> -->
 						</div>
@@ -275,7 +275,7 @@
 						<list-item>
 							<div class="records-banner">
 								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
-									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.pic}}" for="item in myAdsList" alt=""></image>
+									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in myAdsList" alt=""></image>
 								</swiper>
 							</div>
 							<div class="list">
@@ -529,6 +529,7 @@ export default Custom_page({
 	},
 	getNotification() {
 		request.post('lottery/inform').then(res => {
+			console.log("lottery/inform", res);
 			if (res.status == 0) {
 				this.notificationList = res.data
 			}
@@ -626,15 +627,15 @@ export default Custom_page({
 	getResource() {
 		request.get('payment/get-resource-img').then(res => {
 			if (res.status == 200) {
-				const data = res.data.pic_conf;
-				this.guideList = data.guide_pic.data//引导页
-				this.homeBannerList = data.home_banner.data//banner
+				const data = res.data;
+				this.guideList = data.guide_pic//引导页
+				this.homeBannerList = data.home_banner//banner
 				if (this.homeBannerList.length > 0) {
 					this.showHomeBanner = true;
 				}
-				this.homeAdsList = data.home_ads.data//首页资源位
-				this.jiluAdsList = data.jilu_ads.data//缴费记录广告位
-				this.myAdsList = data.my_ads.data//我的广告位
+				this.homeAdsList = data.home_ads//首页资源位
+				this.jiluAdsList = data.jilu_ads//缴费记录广告位
+				this.myAdsList = data.my_ads//我的广告位
 			}
 		})
 	},
@@ -794,7 +795,7 @@ export default Custom_page({
 	// banner
 	getBanner() {
 		request.post('payment/get-banner-list').then(res => {
-			console.clear();
+			// console.clear();
 			console.log("payment/get-banner-list", res);
 			if (res.status == 200) {
 				if (res.data.bannerList.length > 0) {
@@ -863,7 +864,7 @@ export default Custom_page({
 						sessionId: data,
 						isHome: true
 					}).then(res => {
-						console.clear();
+						// console.clear();
 						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
 							that.isGroup = res.data.isGroup
@@ -949,9 +950,11 @@ export default Custom_page({
 	// 获取引导页
 	getGuidePage() {
 		request.post('payment/get-guide-page').then(res => {
+			// console.clear();
+			console.log("payment/get-guide-page", res);
 			if (res.status == 200) {
-				if (res.data.guidePageList.length > 0) {
-					this.guidePageList = res.data.guidePageList;
+				if (res.data.length > 0) {
+					this.guidePageList = res.data;
 				} else {
 					this.skip();
 				}
@@ -1403,7 +1406,7 @@ export default Custom_page({
 		// console.log("cityName", this.cityName);
 		if (obj.params.title.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
-			console.clear();
+			// console.clear();
 			console.log("before Home/Mobile");
 			console.log("obj", obj);
 			// return false;
@@ -1443,11 +1446,11 @@ export default Custom_page({
 									}
 								})
 							} else {
-								console.log(obj.params.name)
-								console.clear();
-								console.log("00000000");
-								console.log(this);
-								console.log(that);
+								// console.log(obj.params.name)
+								// console.clear();
+								// console.log("00000000");
+								// console.log(this);
+								// console.log(that);
 								// return false;
 								// 账单详情
 								router.push({
