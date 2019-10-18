@@ -7,7 +7,11 @@ const requestHandle = (params) => {
     storage.get({
       key: "sessionId",
     }).then(res => {
-      console.log("request success");
+      // console.log("request success");
+      params.data = Object.assign(params.data, { sessionId: res.data });
+      // if(params.url.indexOf("weather") > 0){
+      //   alert("weather");
+      // }
       return fetch.fetch({
         url: params.url,
         header: {
@@ -17,13 +21,33 @@ const requestHandle = (params) => {
         data: params.data || {},
         responseType: 'json',
       }).then(response => {
-        const content = response.data.data
-        if (typeof content.data != "object") {
-          content.data = JSON.parse(content.data);
+        // alert(params.url);
+        const content = response.data.data;
+        for (var i in content) {
+          if (typeof content[i] == "string") {
+            try {
+              content[i] = JSON.parse(content[i]);
+            } catch (err) {
+
+            }
+          }
         }
+        // console.log(params.url + ".content", content);
+        // if (typeof content.data != "object") {
+        // if (typeof content.data == "string") {
+        //   content.data = JSON.parse(content.data);
+        // }
+        // console.log(params.url.indexOf("get-weather")>1);
+        // if(params.url.indexOf("get-weather") > 0){
+        //   console.clear();
+        //   console.log("request.weather", content.data);
+        // }else{
+        //   console.log("params.url", params.url);
+        // }
         return resolve(content)
       }).catch((error, code) => {
         console.log(`🐛 request fail, code = ${code}`)
+        console.log("params.url", params.url);
         return reject(error)
       })
     }).catch(res => {
@@ -35,6 +59,9 @@ const requestHandle = (params) => {
       }).then(response => {
         const result = response.data
         const content = result.data
+        if (typeof content.data != "object") {
+          content.data = JSON.parse(content.data);
+        }
         return resolve(content)
       }).catch((error, code) => {
         console.log(`🐛 request fail, code = ${code}`)
@@ -55,16 +82,18 @@ function queryString(url, query) {
   let paramStr = str.join('&')
   return paramStr ? `${url}?${paramStr}` : url
 }
-const environment = ["test", "yanzheng", "duli", ""][0];
+const environment = ["test", "yanzheng", "duli", "prod", ""][3];
 const api = [
   'https://api.ubaycn.com/',
   'https://test-api.ubaycn.com/',
   'http://192.168.1.157:7010/',
-  'http://192.168.1.109:8090/'
+  'http://192.168.1.109:8090/',
+  'http://192.168.43.187:8090/'
 ][3] + "ub/";
 export default {
   post: function (url, params) {
     params = Object.assign({ environment: environment }, params);
+    console.log("url & params", url, params);
     return requestHandle({
       method: 'post',
       url: api + url,

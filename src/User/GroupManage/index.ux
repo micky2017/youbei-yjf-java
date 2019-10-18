@@ -20,12 +20,12 @@
                         <image width="80" height="80" resize-mode="contain" src="{{item.imgUrl}}"></image>
                         <div>
                             <text class="pay-type_text">{{item.typeName}}</text>
-                            <text class="pay-bill">{{item.bill}}</text>
+                            <text class="pay-bill">{{item.houseNumber}}</text>
                         </div>
                     </div>
                     <div class="group-content_right">
-                        <image resize-mode="contain" @click="goRecharge($item.groupName,item)" src="../../images/groupImg/choose_icon.png"></image>
-                        <image resize-mode="contain" @click="showDeleteBillFn($item.groupName,item)" src="../../images/groupImg/delete_icon.png"></image>
+                        <image resize-mode="contain" @click="goRecharge(item.gid,item.groupName,item)" src="../../images/groupImg/choose_icon.png"></image>
+                        <image resize-mode="contain" @click="showDeleteBillFn(item.id)" src="../../images/groupImg/delete_icon.png"></image>
                     </div>
                 </div>
             </list-item>
@@ -100,6 +100,7 @@ export default Custom_page({
         groupName: '',
         item: {},
         billItem: {},
+        billId: "",
         toast_text: '',
         show_toast: false,
         showLoading: false
@@ -125,11 +126,12 @@ export default Custom_page({
     getGroup() {
         var that = this;
         request.post('user/get-group').then(res => {
-            // console.clear();
+            console.clear();
             console.log("GM.user/get-group", res);
             if (res.status == 200) {
                 console.log("get-group.200");
-                that.groupList = res.data;
+                // res.data = eval(res.data.list);
+                that.groupList = eval(res.data.list);
             }
         })
     },
@@ -203,15 +205,18 @@ export default Custom_page({
     },
     // 删除户号
     deleteBill() {
-        console.log(this.item)
-        console.log(this.item.groupName)
+        // console.log(this.item)
+        // console.log(this.item.groupName)
+        console.log(this.billId);
+        // return false;
         request.post('user/delete-bill', {
-            sid: this._id,
-            groupName: this.groupName,
-            bill: this.billItem.bill
+            id: this.billId
+            // sid: this._id,
+            // groupName: this.groupName,
+            // bill: this.billItem.bill
         }).then(res => {
-            this.groupName = '';
-            this.billItem = {};
+            this.billId = '';
+            // this.billItem = {};
             this.closeWindow();
             if (res.status == 200) {
                 this.showToast('删除成功');
@@ -232,19 +237,22 @@ export default Custom_page({
         this.showDelete = true;
         this.item = item;
     },
-    showDeleteBillFn(groupName, billItem) {
-        this.groupName = groupName;
-        this.billItem = billItem;
+    showDeleteBillFn(billId) {
+        // this.groupId = groupId;
+        this.billId = billId;
         this.showDeleteBill = true;
     },
-    goRecharge(groupName, billitem) {
+    goRecharge(groupId, groupName, billitem) {
+        console.log(groupId, groupName, billitem);
+        // return false;
         this.showLoading = true;
         // 缴费项目信息
         request.post('payment/pay-type-detail', {
             cityName: billitem.cityName,
             type: billitem.type,
         }).then(res => {
-            console.log(res)
+            console.log("payment/pay-type-detail", res)
+            // return false;
             this.showLoading = false;
             if (res.status == 200) {
                 const item = res.data.paymentItemPagingModel;
@@ -258,18 +266,44 @@ export default Custom_page({
                             paymentList.push(element)
                         }
                     }
+                    console.log(billitem);
+                    console.log("params post to Rechage",{
+                        payName: '1',
+                        title: billitem.typeName,
+                        type: billitem.type,
+                        // icon: billitem.imagUrl,
+                        icon: billitem.imgUrl,
+                        cityName: billitem.cityName,
+                        paymentItemModelList: paymentList,//项目信息
+                        bid: billitem.id,
+                        groupId,
+                        groupName,
+                        oldGroupId: groupId,
+                        // oldBill: billitem.bill
+                        oldBill: billitem.houseNumber
+                    });
+                    console.log(billitem);
+                    // return false;
+                    storage.set({
+                        key: "bid",
+                        value: billitem.id
+                    });
                     router.push({
                         uri: 'User/Recharge',
                         params: {
                             payName: '1',
                             title: billitem.typeName,
                             type: billitem.type,
-                            icon: billitem.imagUrl,
+                            // icon: billitem.imagUrl,
+                            icon: billitem.imgUrl,
                             cityName: billitem.cityName,
                             paymentItemModelList: paymentList,//项目信息
+                            bid: billitem.bid,
+                            groupId,
                             groupName,
-                            oldGroupName: groupName,
-                            oldBill: billitem.bill
+                            oldGroupId: groupId,
+                            // oldBill: billitem.bill
+                            oldBill: billitem.houseNumber
                         }
                     })
                 } else {

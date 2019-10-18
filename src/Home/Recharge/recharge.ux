@@ -175,7 +175,7 @@ export default Custom_page({
         iconUrl: '',
         // title: "",
         // type: "",
-        // cityName: "",
+        cityName: "",
         payTimeTips: '',
         paymentItemModel: {},
         listPageModelList: [],
@@ -190,32 +190,32 @@ export default Custom_page({
         filedName: '',
         billkeys: [],
         historyBillkey: '',
-        oldGroupName: '我家',
+        // oldGroupName: '',
+        // oldGroupId: '',
         oldBill: '',
         billKey: '',
-        groupName: '我家',
-        reqData: {
-
-        },
+        groupName: '',
+        groupId: '',
+        reqData: {},
     },
-    private: {
-
-    },
+    private: {},
     inputFocus() {
         const list = this.paymentItem.queryPaymentBillParamModelList
         console.log("queryPaymentBillParamModelList", list);
         for (let i = 0; i < list.length; i++) {
             if (this.$element(list[i].nameType)) {
-                this.$element(list[i].nameType).focus({ focus: false })
+                console.log(this.$element(list[i].nameType));
+                console.log(list[i].nameType);
+                // this.$element(list[i].nameType).focus({ focus: false })
             }
         }
-
     },
     pushSelect() {
         router.push({
             uri: 'User/GroupSelect',
             params: {
-                groupName: this.groupName,
+                // groupName: this.groupName,
+                groupId: this.groupId
             }
         })
     },
@@ -271,8 +271,9 @@ export default Custom_page({
     },
     ifLogin() {
         storage.get({
-            key: "sid",
+            key: "sessionId",
             success: (data) => {
+                console.log("278");
                 if (data) {
                     this.getDetail()
                 } else {
@@ -295,13 +296,13 @@ export default Custom_page({
         })
     },
     getDetail() {
-
         if (this.cityName) {
             this.getTypeDetail()
         } else {
             storage.get({
                 key: "cityName",
                 success: (data) => {
+                    console.log("cityName from storage", data);
                     if (data) {
                         this.cityName = data;
                         this.getTypeDetail()
@@ -323,20 +324,50 @@ export default Custom_page({
         })
     },
     onShow() {
+        // setInterval(() => {
+        //     this.groupName = new Date().getTime();
+        // }, 1000);
+        var that = this;
+        // console.log("pre gn");
+        // this.groupName = "asdf";
+        // console.log("suf gn");
+        // return false;
+        console.clear();
+        console.log("recharge.onShow");
+        console.log("this", this);
         storage.get({
-            key: 'groupName',
+            key: 'groupId',
             success: (data) => {
                 if (data) {
-                    this.groupName = data;
+                    this.groupId = data;
                     storage.delete({
-                        key: 'groupName'
-                    })
+                        key: "groupId"
+                    });
+                    // storage.delete({
+                    //     key: 'groupId'
+                    // })
+                    storage.get({
+                        key: "groupName",
+                        success: (data) => {
+                            // console.clear();
+                            console.log("groupName from storage", data);
+                            that.groupName = data;
+                            storage.delete({
+                                key: "groupName"
+                            });
+                        },
+                        fail: () => {
+
+                        }
+                    });
                 }
             }
         })
     },
     onReady() {
-
+        // console.clear();
+        // console.log(this);
+        // return false;
         storage.get({
             key: 'external',
             success: (data) => {
@@ -355,15 +386,16 @@ export default Custom_page({
             }
         })
         if (this.payName) {
+            // console.clear();
+            console.log("payName", this.payName);
             this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
             this.paymentItem = this.paymentItemModelList[0];
-            console.log(this.paymentItem)
+            console.log("this.paymentItem", this.paymentItem)
             this.getIcon()
             this.getHistoryBillkey();
         } else {
             this.ifLogin()
         }
-
     },
     // 输入框监听
     changeItem(item, response) {
@@ -378,9 +410,7 @@ export default Custom_page({
                     this.historyBillkey = ""
                 }
             }
-
         }
-
         this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
     },
     // 去空格操作
@@ -412,6 +442,7 @@ export default Custom_page({
             cityName: this.cityName,
             type: this.type,
         }).then(res => {
+            console.log("payment/pay-type-detail", res);
             if (res.status == 200) {
                 const item = res.data.paymentItemPagingModel;
                 this.paymentItemList = res.data.paymentItemList;
@@ -429,104 +460,62 @@ export default Custom_page({
         })
     },
     onInit() {
-        this.billKey = this.oldBill;
-        this.groupName = this.oldGroupName;
+        console.log("recharge.init");
+        // this.billKey = this.oldBill;
+        var that = this;
+        storage.get({
+            key: "groupId",
+            success(gid) {
+                if (gid) {
+                    this.groupId = gid;
+                    storage.get({
+                        key: "groupName",
+                        success(gname) {
+                            console.log("gname from storage", gname);
+                            that.groupName = gname;
+                        }
+                    });
+                } else {
+                    that.getGroup();
+                }
+            }
+        });
     },
     getIcon() {
         const iconList = [
-            {
-                icon: '/Home/images/icon/water.png',
-                typeName: '水费',
-                id: '',
-                path: 'Home/Recharge'
-            },
-            {
-                icon: '/Home/images/icon/power.png',
-                typeName: '电费',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/ranqi.png',
-                typeName: '燃气费',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/mobile.png',
-                typeName: '手机充值',
-                id: '',
-                path: 'Home/Recharge'
-            },
-            {
-                icon: '/Home/images/icon/tv.png',
-                typeName: '有线电视',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/jiayouka.png',
-                typeName: '加油卡',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/wuye.png',
-                typeName: '物业费',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/dang.png',
-                typeName: '党费',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/jiaoyu.png',
-                typeName: '教育考试',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/daishou.png',
-                typeName: '非税代收',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/qunuan.png',
-                typeName: '供暖费',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/liuliang.png',
-                typeName: '流量',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/qita.png',
-                typeName: '其他',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/etc.png',
-                typeName: 'ETC',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/yanglao.png',
-                typeName: '养老',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/jiaotong.png',
-                typeName: '交通',
-                id: ''
-            },
-            {
-                icon: '/Home/images/icon/tongxu.png',
-                typeName: '通讯费',
-                id: ''
-            }
+            { icon: '/Home/images/icon/water.png', typeName: '水费', id: '', path: 'Home/Recharge' },
+            { icon: '/Home/images/icon/power.png', typeName: '电费', id: '' },
+            { icon: '/Home/images/icon/ranqi.png', typeName: '燃气费', id: '' },
+            { icon: '/Home/images/icon/mobile.png', typeName: '手机充值', id: '', path: 'Home/Recharge' },
+            { icon: '/Home/images/icon/tv.png', typeName: '有线电视', id: '' },
+            { icon: '/Home/images/icon/jiayouka.png', typeName: '加油卡', id: '' },
+            { icon: '/Home/images/icon/wuye.png', typeName: '物业费', id: '' },
+            { icon: '/Home/images/icon/dang.png', typeName: '党费', id: '' },
+            { icon: '/Home/images/icon/jiaoyu.png', typeName: '教育考试', id: '' },
+            { icon: '/Home/images/icon/daishou.png', typeName: '非税代收', id: '' },
+            { icon: '/Home/images/icon/qunuan.png', typeName: '供暖费', id: '' },
+            { icon: '/Home/images/icon/liuliang.png', typeName: '流量', id: '' },
+            { icon: '/Home/images/icon/qita.png', typeName: '其他', id: '' },
+            { icon: '/Home/images/icon/etc.png', typeName: 'ETC', id: '' },
+            { icon: '/Home/images/icon/yanglao.png', typeName: '养老', id: '' },
+            { icon: '/Home/images/icon/jiaotong.png', typeName: '交通', id: '' },
+            { icon: '/Home/images/icon/tongxu.png', typeName: '通讯费', id: '' }
         ];
         for (let i = 0; i < iconList.length; i++) {
             if (this.title.indexOf(iconList[i].typeName) != -1) {
                 this.iconUrl = `${iconList[i].icon}`
             }
         }
+    },
+    getGroup() {
+        console.log("recharge.get-group");
+        request.post("user/get-group").then(res => {
+            console.log("user/get-group", res);
+            res.data = eval(res.data.list);
+            console.log(res.data);
+            this.groupName = res.data[0].groupName;
+            this.groupId = res.data[0].id;
+        });
     },
     // 获取历史记录
     getHistoryBillkey() {
@@ -542,7 +531,6 @@ export default Custom_page({
                             }
                         }
                     }
-
                 }
             }
         })
@@ -598,31 +586,51 @@ export default Custom_page({
         })
     },
     saveGroup(params) {
+        console.clear();
+        console.log("recharge.saveGroup");
+        console.log("this.groupId", this.groupId);
+        console.log("params from event", params);
+        console.log("params to post", {
+            // uid: "",
+            gid: this.groupId,
+            houseNumber: params.billKey,
+            type: this.type,
+            cityName: this.cityName,
+            paymentItemId: this.paymentItem.paymentItemId
+        });
+        // return false;
         storage.get({
-            key: '_id',
+            key: 'uid',
             success: (data) => {
-                request.post('user/save-group', {
-                    sid: data,
-                    paymentItemId: this.paymentItem.paymentItemId,
-                    groupName: this.groupName,
+                //         console.log("groupId from storage", data);
+                request.post('user/save-bill', {
+                    // sid: data,
+                    uid: data,
+                    gid: this.groupId,
                     cityName: this.cityName,
+                    houseNumber: params.billKey,
                     type: this.type,
-                    bill: params.billKey
+                    paymentItemId: this.paymentItem.paymentItemId,
+                    // groupName: this.groupName,
+                    // bill: params.billKey
                 }).then(res => {
                     console.log(res)
                 }).catch(err => {
-
+                    console.log(err);
                 })
             }
         })
     },
     // 查询缴费账单
     toInspect() {
+        // console.log(this.);
+        // return false;
         console.log(this.reqData)
         // this.reqData['billkey'] = this.billkey;
         this.inputFocus()
         statis.statis('search_bill_click', { external: this.external }, this)
         const list = this.paymentItem.queryPaymentBillParamModelList
+        console.log("list", list);
         for (let i = 0; i < list.length; i++) {
             if (list[i].isNull == 0) {
                 if (!this.reqData[list[i].nameType]) {
@@ -649,15 +657,20 @@ export default Custom_page({
                 this.reqData[key] = this.deleteSpace(element)
             }
         }
+        console.log(params, this.reqData);
         Object.assign(params, this.reqData);
         // paymentItemId  cityName type bill payName groupName
+        console.log("params before saveGroup", params);
         this.saveGroup(params)
+        // return false;
         console.log(params)
         // 查缴
-        request.post('jiaofei/generate-bill', params).then(res => {
+        request.post('payment/generate-bill', params).then(res => {
+            console.log("payment/generate-bill", res);
             this.showLoading = false;
             if (res.status == 200) {
-                if (res.data.msg.indexOf("成功") != -1) {
+                // if (res.data.msg.indexOf("成功") != -1) {
+                if (res.msg == "成功") {
                     // 账单打点
                     const statisParams = {
                         paymentName: this.paymentItem.paymentItemName,
@@ -697,19 +710,18 @@ export default Custom_page({
                             }
                         })
                     }
-
                 } else {
                     this.showToast(res.data.msg)
                 }
-
             } else {
-                this.showToast(res.data.msg)
+                // this.showToast(res.data.msg)
+                this.showToast(res.msg)
             }
         }).catch(err => {
             this.showLoading = false;
             this.showToast("网络错误")
+            console.log("网络错误", err);
         })
-
         // if(this.itemValue){
         // router.push({
         //     uri: "Home/Inspect",
@@ -722,7 +734,6 @@ export default Custom_page({
         // }else{
         //     this.showToast('您有信息未填写')
         // }
-
     }
 })
 </script>

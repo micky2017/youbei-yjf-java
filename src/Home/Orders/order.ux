@@ -294,7 +294,8 @@
 			// 	url:`${this.$app.$data.logUrl}?event=pay_click&data={'pay_type':${this.data.paymentItemName},"pay_amount":${this.payAmount}}&tag=云缴费`,
 			// })
             request.post('pay/creat',params).then(res => {
-                console.log(res)
+                console.log("pay/creat", res)
+                // return false;
                 this.showLoading = false;
                 if(res.status == 200){
                     // router.push({

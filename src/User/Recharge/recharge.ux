@@ -9,7 +9,7 @@
         <div class="payment-content_bg"></div>
         <div class="payment-content">
             <div class="payment-icon">
-                <image width="58" height="58"  resize-mode="contain" src="{{iconUrl}}"></image>
+                <image width="58" height="58" resize-mode="contain" src="{{iconUrl}}"></image>
                 <text>{{title}}</text>
             </div>
             <div class="payment-item_info">
@@ -50,7 +50,7 @@
                     </div>
                     <div class="payment-item_content">
                         <div>
-                            <input  id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
+                            <input id="billKey" name="billKey" value="{{billKey}}" onchange="changeItem({name:'客户编号',nameType:'billKey'})" type="text" placeholder="" />
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
@@ -144,7 +144,7 @@
 </template>
 
 <style lang="less">
-@import "./recharge.less";
+@import './recharge.less';
 </style>
 
 <script>
@@ -154,14 +154,14 @@ import statis from '../../utils/statistics'
 import storage from "@system.storage";
 export default Custom_page({
     public: {
-            external:'',
-            cityName:"",
-            title:"",
-            type:"",
-            paymentItemModelList: [],
-            icon:'',
-            payName:'',
-        },
+        external: '',
+        cityName: "",
+        title: "",
+        type: "",
+        paymentItemModelList: [],
+        icon: '',
+        payName: '',
+    },
     protected: {
         showLoading: false,
         // external: '',
@@ -172,14 +172,14 @@ export default Custom_page({
         itemName: '',
         selectMoney: '',
         billItem: null,
-        iconUrl:'',
-        oldGroupName:'',
-        oldBill:'',
+        iconUrl: '',
+        oldGroupName: '',
+        oldBill: '',
         // title: "",
         // type: "",
         // cityName: "",
         payTimeTips: '',
-        paymentItemModel:{},
+        paymentItemModel: {},
         listPageModelList: [],
         paymentItemList: [],
         cityModel: {},
@@ -190,10 +190,12 @@ export default Custom_page({
         rangeDataValue: [],
         itemValue: '',
         filedName: '',
-        billkeys:[],
-        historyBillkey:'',
-        billKey:'',
-        groupName:'我家',
+        billkeys: [],
+        historyBillkey: '',
+        billKey: '',
+        groupName: "",
+        groupId: '',
+        bid: '',
         reqData: {
 
         },
@@ -210,11 +212,11 @@ export default Custom_page({
         }
 
     },
-    pushSelect(){
+    pushSelect() {
         router.push({
-            uri:'User/GroupSelect',
-             params:{
-                groupName:this.groupName,
+            uri: 'User/GroupSelect',
+            params: {
+                groupName: this.groupName,
             }
         })
     },
@@ -261,43 +263,46 @@ export default Custom_page({
         }
         this.picker = false;
     },
-    backProjectList(){
+    backProjectList() {
         router.back()
     },
     // 选择框切换
     changeMoney(value) {
         this.selectMoney = value;
     },
-    ifLogin(){
+    ifLogin() {
+        console.log("ifLogin");
         storage.get({
-            key:"sid",
+            key: "sessionId",
             success: (data) => {
-                if(data){
+                if (data) {
                     this.getDetail()
-                }else{
+                } else {
                     router.replace({
-                        uri:'User/SmsLogin',
-                        params:{
-                            external:this.external,
+                        uri: 'User/SmsLogin',
+                        params: {
+                            external: this.external,
                         }
                     })
                 }
             },
             fail: (res) => {
                 router.replace({
-                    uri:'User/SmsLogin',
-                    params:{
-                        external:this.external,
+                    uri: 'User/SmsLogin',
+                    params: {
+                        external: this.external,
                     }
                 })
             }
         })
     },
-    getDetail(){
-        
-        if(this.cityName){
+    getDetail() {
+        // console.clear();
+        if (this.cityName) {
+            console.log("getDetail.cityName from this");
             this.getTypeDetail()
-        }else{
+        } else {
+            console.log("getDetail.cityName from storage");
             storage.get({
                 key: "cityName",
                 success: (data) => {
@@ -312,78 +317,110 @@ export default Custom_page({
             })
         }
     },
-    goCityList(){
+    goCityList() {
         console.log(this.type)
         router.push({
-            uri:'Home/CityList',
-            params:{
-                type:this.type,
+            uri: 'Home/CityList',
+            params: {
+                type: this.type,
             }
         })
     },
     onShow() {
+        console.log("recharge.onshow");
+        console.log(this);
+        // alert(this.groupName);
+        // this.groupName = "";
+        //*
+        var that = this;
         storage.get({
-            key:'groupName',
-            success:(data) => {
-                if(data){
-                    this.groupName = data;
-                    storage.delete({
-                        key:'groupName'
-                    })
+            key: 'groupId',
+            success: (gid) => {
+                console.log("recharge.storage.groupId", gid);
+                if (gid) {
+                    this.groupId = gid;
+                    storage.get({
+                        key: "groupName",
+                        success(gname){
+                            // if(gname){
+                                that.groupName = gname;
+                            // }
+                        }
+                    });
+                    // storage.delete({
+                    //     key: 'groupName'
+                    // })
                 }
             }
         })
+        /**/
     },
     onReady() {
-        
+        console.log("recharge.ready");
+        // alert(this.bid);
+        var that = this;
         storage.get({
-			key:'external',
-			success: (data) => {
-				if(data && data != ''){
-					storage.set({
-						key:'external',
-						value:this.external
-					})
-				}
-			},
-			fail: (err) => {
-				storage.set({
-					key:'external',
-					value:this.external
-				})
-			}
+            key: "bid",
+            success(bid){
+                console.log("bid from storgae", bid);
+                that.bid = bid;
+            }
+        });
+        storage.get({
+            key: 'external',
+            success: (data) => {
+                if (data && data != '') {
+                    storage.set({
+                        key: 'external',
+                        value: this.external
+                    })
+                }
+            },
+            fail: (err) => {
+                storage.set({
+                    key: 'external',
+                    value: this.external
+                })
+            }
         })
-        if(this.payName){
+        // console.clear();
+        // console.log("console cleared in recharge.ready");
+        console.log(this);
+        console.log("this.payName", this.payName);
+        if (this.payName) {
             this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
             this.paymentItem = this.paymentItemModelList[0];
             this.getIcon()
             this.getHistoryBillkey();
-        }else{
+        } else {
             this.ifLogin()
         }
-        
     },
     // 输入框监听
     changeItem(item, response) {
+        // console.clear();
         this.reqData[item.nameType] = response ? response.value : this.itemValue;
-        if(item.name == '客户编号'){
+        console.log(item);
+        // if (item.name == '客户编号') {
+        if (item.nameType == 'billKey') {
             this.billKey = response ? response.value : this.itemValue;
+            // this.showToast(this.billKey);
             const str = this.deleteSpace(this.billKey)
-            if(this.billkeys.indexOf(str) != -1){
+            if (this.billkeys.indexOf(str) != -1) {
                 this.changeBillkey(str)
-            }else{
-                if(this.historyBillkey != str){
+            } else {
+                if (this.historyBillkey != str) {
                     this.historyBillkey = ""
                 }
             }
-            
+
         }
-        
+
         this.itemValue = response ? `${item.name}:${response.value}` : this.itemValue;
     },
     // 去空格操作
-    deleteSpace(str){
-        str = str.replace(/^\s*|\s*$/g,"");
+    deleteSpace(str) {
+        str = str.replace(/^\s*|\s*$/g, "");
         return str;
     },
     // 缴费项目弹出选择框
@@ -427,9 +464,16 @@ export default Custom_page({
         })
     },
     onInit() {
+        console.clear();
+        console.log("this in init", this);
+        // alert(this.bid);
         this.billKey = this.oldBill;
+        // this.bid = 
+        console.log("this.groupId", this.groupId);
+        console.log("this.oldGroupId", this.oldGroupId);
+        // this.billKey = 9090;
     },
-    getIcon(){
+    getIcon() {
         const iconList = [
             {
                 icon: '/Home/images/icon/water.png',
@@ -519,33 +563,33 @@ export default Custom_page({
                 id: ''
             }
         ];
-        for(let i = 0;i<iconList.length;i++){
-            if(this.title.indexOf(iconList[i].typeName) != -1){
+        for (let i = 0; i < iconList.length; i++) {
+            if (this.title.indexOf(iconList[i].typeName) != -1) {
                 this.iconUrl = `${iconList[i].icon}`
             }
         }
     },
     // 获取历史记录
-    getHistoryBillkey(){
+    getHistoryBillkey() {
         storage.get({
             key: 'billkey',
             success: (data) => {
-                if(data){
-                    if(data.indexOf(this.paymentItem.paymentItemName) != -1){
+                if (data) {
+                    if (data.indexOf(this.paymentItem.paymentItemName) != -1) {
                         data = JSON.parse(data);
-                        for(let i = 0;i<data.length;i++){
-                            if(data[i].name == this.paymentItem.paymentItemName){
+                        for (let i = 0; i < data.length; i++) {
+                            if (data[i].name == this.paymentItem.paymentItemName) {
                                 this.billkeys = data[i].billkey
                             }
                         }
                     }
-                    
+
                 }
             }
         })
     },
-    changeBillkey(billkey){
-        this.historyBillkey =  billkey;
+    changeBillkey(billkey) {
+        this.historyBillkey = billkey;
         this.billKey = billkey;
     },
     // 缓存账户号
@@ -559,12 +603,12 @@ export default Custom_page({
                         for (let i = 0; i < data.length; i++) {
                             if (data[i].name == this.paymentItem.paymentItemName) {
                                 const billKey = this.deleteSpace(this.billKey)
-                                if(!(data[i].billkey.indexOf(billKey) != -1)){
+                                if (!(data[i].billkey.indexOf(billKey) != -1)) {
                                     // data[i].billkey.push(this.itemValue.split(':')[1])
-                                    if(data[i].billkey.length >= 3){
+                                    if (data[i].billkey.length >= 3) {
                                         data[i].billkey.shift()
                                         data[i].billkey.push(billKey)
-                                    }else{
+                                    } else {
                                         data[i].billkey.push(billKey)
                                     }
                                 }
@@ -594,35 +638,41 @@ export default Custom_page({
             }
         })
     },
-    saveGroup(){
+    saveGroup() {
         console.log(111111)
-        storage.get({
-            key:'_id',
-            success:(data) => {
-                const obj = {
-                    sid:data,
-                    paymentItemId:this.paymentItemModelList[0].paymentItemId,
-                    groupName:this.oldGroupName,
-                    cityName:this.cityName,
-                    type:this.type,
-                    bill:this.oldBill,
-                    newGroupName:this.groupName,
-                    newBill:this.billKey,
-                }
-                console.log(obj)
-                request.post('user/reset-bill',obj).then(res => {
-                    if(res.status == 200){
-                        this.showToast('修改成功');
-                        router.back()
-                    }else{
-                        this.showToast('修改失败')
-                    }
-                }).catch(err => {
-                        thisshowToast('网络错误')
-
-                })
+        // alert("this.billKey = " + this.billKey);
+        // storage.get({
+        //     key:'_id',
+        //     success:(data) => {
+        const obj = {
+            // sid:data,
+            paymentItemId: this.paymentItemModelList[0].paymentItemId,
+            // groupName: this.oldGroupName,
+            id: this.bid,
+            gid: this.groupId,
+            cityName: this.cityName,
+            type: this.type,
+            houseNumber: this.billKey,
+            // newGroupName: this.groupName,
+            // newBill: this.billKey,
+        }
+        console.log("obj", obj)
+        console.log(this);
+        // return false;
+        request.post('user/reset-bill', obj).then(res => {
+            console.log("user/reset-bill", res);
+            if (res.status == 200) {
+                this.showToast('修改成功');
+                router.back()
+            } else {
+                this.showToast('修改失败')
             }
+        }).catch(err => {
+            thisshowToast('网络错误')
+
         })
+        //     }
+        // })
     },
     // 查询缴费账单
     toInspect() {
@@ -664,27 +714,27 @@ export default Custom_page({
         // paymentItemId  cityName type bill payName groupName
 
         // 查缴
-        request.post('jiaofei/generate-bill', params).then(res => {
+        request.post('payment/generate-bill', params).then(res => {
             this.showLoading = false;
             if (res.status == 200) {
                 if (res.data.msg.indexOf("成功") != -1) {
                     // 账单打点
                     const statisParams = {
                         paymentName: this.paymentItem.paymentItemName,
-                        external:this.external
+                        external: this.external
                     }
-                    Object.assign(statisParams,this.reqData)
+                    Object.assign(statisParams, this.reqData)
                     statis.statis('search_bill', statisParams, this)
                     this.setBillkey();
                     const billQueryList = res.data.billQueryResultModel.billQueryResultDataModelList.map(item => {
                         return item.beginDate
                     })
-                    if(billQueryList.length > 1){
+                    if (billQueryList.length > 1) {
                         // 多账单
                         router.push({
-                            uri:'Home/MoreBill',
+                            uri: 'Home/MoreBill',
                             params: {
-                                title:this.title,
+                                title: this.title,
                                 paymentItem: this.paymentItem,
                                 itemValue: this.deleteSpace(this.itemValue),
                                 reqData: this.reqData,
@@ -693,11 +743,11 @@ export default Custom_page({
                                 billQueryList,
                             }
                         })
-                    }else{
+                    } else {
                         router.push({
                             uri: "Home/Inspect",
                             params: {
-                                title:this.title,
+                                title: this.title,
                                 paymentItem: this.paymentItem,
                                 itemValue: this.deleteSpace(this.itemValue),
                                 reqData: this.reqData,
@@ -707,7 +757,7 @@ export default Custom_page({
                             }
                         })
                     }
-                    
+
                 } else {
                     this.showToast(res.data.msg)
                 }

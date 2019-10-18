@@ -74,6 +74,7 @@ export default Custom_page({
             // console.clear();
             console.log("GS.user/get-group", res);
             if (res.status == 200) {
+                res.data = eval(res.data.list);
                 this.groupList = res.data
             }
         })
@@ -100,7 +101,8 @@ export default Custom_page({
         //新增
         request.post('user/add-group', {
             // sid: this._id,
-            groupId: this.groupIdValue
+            // groupId: this.groupIdValue
+            groupName: this.groupIdValue
         }).then(res => {
             this.closeWindow();
             this.item = {}
@@ -123,8 +125,7 @@ export default Custom_page({
     },
     selectGroup(groupId, groupName) {
         // console.log("id", "name", groupId, groupName)
-        alert(groupId);
-        alert(groupName);
+        // alert(groupId + " - " + groupName);
         this.groupId = groupId;
         this.groudName = groupName;
         storage.set({
@@ -135,9 +136,9 @@ export default Custom_page({
                     key: 'groupName',
                     value: groupName,
                     success: (res) => {
-                        setTimeout(function(){
-                            router.back();
-                        }, 2000);
+                        // setTimeout(function(){
+                        router.back();
+                        // }, 0);
                     }
                 });
             }

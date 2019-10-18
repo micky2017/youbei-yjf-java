@@ -62,12 +62,12 @@
 						</div> -->
 								<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
 								<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
-								<!-- <div if="!isGroup" class="common-content"> -->
-								<div class="common-content">
-									<text class="common-content_title">常用缴费</text>
+								<div if="!isGroup" class="common-content">
+									<!-- <div class="common-content"> -->
+									<text class="common-content_title">常用缴费a</text>
 									<div class="common-content_body">
 										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
-											<div class="icon">
+											<div class="icon" if="true">
 												<image resize-mode="contain" src="{{$item.icon}}"></image>
 											</div>
 											<div class="text">
@@ -77,8 +77,8 @@
 									</div>
 								</div>
 								<!-- 分组管理 -->
-								<!-- <div if="isGroup" class="common-content group-content"> -->
-								<div class="common-content group-content">
+								<div if="isGroup" class="common-content group-content">
+									<!-- <div class="common-content group-content"> -->
 									<div class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
 										<div class="group-item_title">
 											<text>{{$item.groupName}}</text>
@@ -87,7 +87,7 @@
 												<text>分组管理</text>
 											</div>
 										</div>
-										<div @click="goRechargeDetail($item.groupName,item)" class="group-item_cell" for="item in $item.children">
+										<div @click="goRechargeDetail($item.groupId,$item.groupName,item)" class="group-item_cell" for="item in $item.children">
 											<div class="group-cell_head">
 												<div class="group-head_left">
 													<image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
@@ -325,12 +325,12 @@
 										<text>帮助中心</text>
 									</div>
 								</div>
-								<div class="item" if="isLogin" @click="toPrize('Home/Suggest')">
+								<!-- <div class="item" if="isLogin" @click="toPrize('Home/Suggest')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/suggest_icon.png"></image>
 										<text>建议反馈</text>
 									</div>
-								</div>
+								</div> -->
 								<!-- <div class="item" @click="toDetail('User/About')">
 									<div class="inner inner-arrow">
 										<image height="30" src="./images/about.png"></image>
@@ -438,7 +438,7 @@ export default Custom_page({
 		showActiveModel: false,
 		guideList: [{ pic: '' }],
 		homeBannerList: [],
-		// isGroup: false,
+		isGroup: false,
 		groupList: [],
 		homeAdsList: [],
 		jiluAdsList: [],
@@ -690,14 +690,20 @@ export default Custom_page({
 	},
 	// 天气
 	getWeather() {
+		var that = this;
 		// console.log("获取天气成功：");
-		request.get("user/get-weather", { city: this.cityName }).then(res => {
-			// console.log(res);
+		request.get("user/get-weather", {
+			city: this.cityName
+		}).then(res => {
+			// console.clear();
+			console.log("user/get-weather", res);
+			return false;
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
 				// this.weather = "${wendu}℃ ${weather}";
-				this.weather = wendu + "℃ " + weather;
+				that.weather = wendu + "℃ " + weather;
+				console.log("that.weather", that.weather);
 			}
 		}).catch(err => {
 			console.log(err)
@@ -769,17 +775,89 @@ export default Custom_page({
 							})
 							this.addChange('add');
 							this.showShortcut = false;
-							// this.showJDEActiveModel = true;				
+							// 添加到桌面功能打点
+							fetch.fetch({
+								url: "https://t.ubaycn.com/ub/tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid,
+								// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=5&phone="+this.relaymobile+"&sourceType="+this.external+"&sessionId="+this.sid,
+								method: "GET",
+								success: function (res) {
+									console.log("于哥出品" + res);
+								}
+							})
+							// this.showJDEActiveModel = true;              
 						},
 						fail: function (errmsg, errcode) {
 							// prompt.showToast({
-							//   message: `${errcode}: ${errmsg}`
+							// message: `${errcode}: ${errmsg}`
 							// })
 						}
 					})
 				}
 			}
 		})
+	},
+	createShortcut_() {
+		console.log("csc");
+		shortcut.hasInstalled({
+			success(o) {
+				console.log("hasInstalled success", o);
+				if (!o) {
+					shortcut.install({
+						success() {
+							console.log("install success");
+						},
+						fail() {
+							console.log("install fail");
+						},
+						complete() {
+							console.log("install complete");
+						}
+					});
+				}
+			},
+			fail() {
+				console.log("hasInstalled fail");
+			},
+			complete() {
+				console.log("hasInstalled complete");
+			}
+		})
+		/*
+		shortcut.hasInstalled({
+			success: (ret) => {
+				console.log("a1");
+				if (ret) {
+					console.log("a2");
+					prompt.showToast({
+						message: '已创建桌面图标'
+					})
+					this.showShortcut = false;
+					// this.showJDEActiveModel = true;
+					this.addChange('add');
+				} else {
+					console.log("a3");
+					shortcut.install({
+						success: () => {
+							console.log("a4");
+							// statis.statis('hasInstalled_success', {}, this)
+							// prompt.showToast({
+							// 	message: '成功创建桌面图标'
+							// })
+							// this.addChange('add');
+							// this.showShortcut = false;
+							// // this.showJDEActiveModel = true;				
+						},
+						fail: function (errmsg, errcode) {
+							// prompt.showToast({
+							//   message: `${errcode}: ${errmsg}`
+							// })
+							console.log("a5");
+						}
+					})
+				}
+			}
+		})
+		/**/
 	},
 	// banner
 	getBanner() {
@@ -813,8 +891,8 @@ export default Custom_page({
 		// 缴费记录
 		request.post('order/payment-records', {
 			pageSize: 10,
-			currentPage: 1,
-			environment: "test"
+			currentPage: 1//,
+			// environment: "test"
 		}).then(res => {
 			setTimeout(() => {
 				this.refreshing = false
@@ -836,25 +914,50 @@ export default Custom_page({
 	},
 	onShow() {
 		// 获取分组
+		// storage.get({
+		// 	key: 'sessionId',
+		// 	success: (data) => {
+		// 		// console.clear();
+		// 		console.log("_id", "[" + data + "]");
+		// 		if (data) {
+		var that = this;
 		storage.get({
-			key: 'sessionId',
-			success: (data) => {
-				// console.clear();
-				console.log("_id", "[" + data + "]");
+			key: "sessionId",
+			success(data) {
 				if (data) {
-					request.post('user/get-group', { sessionId: data, isHome: true }).then(res => {
-						console.log("user/get-group", res)
+					request.post('user/get-group', {
+						sessionId: data,
+						isHome: true
+					}).then(res => {
+						console.clear();
+						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
-							// this.isGroup = res.data.isGroup
+							that.isGroup = res.data.isGroup
 							// this.groupList = res.data.group
 							// this.isGroup = res.data.length;
 							// this.isGroup = false;
-							this.groupList = res.data
+							// console.clear();
+							res.data.list = eval(res.data.list);
+							console.log("----");
+							console.log(res);
+							console.log(res.data.list);
+							console.log("---- ----");
+							for (var i = res.data.list.length - 1; i > 0; i--) {
+								if (res.data.list[i].children.length == 0) {
+									res.data.list.pop();
+								}
+							}
+							console.log(res.data.list);
+							that.groupList = res.data.list;
 						}
 					})
+
 				}
 			}
-		})
+		});
+		// 		}
+		// 	}
+		// })
 		router.clear()
 	},
 	//打电话
@@ -924,6 +1027,7 @@ export default Custom_page({
 		})
 	},
 	onReady() {
+		var that = this;
 		storage.get({
 			key: 'external',
 			success: (data) => {
@@ -967,19 +1071,25 @@ export default Custom_page({
 					// 缴费记录
 					request.post('order/payment-records', {
 						pageSize: 10,
-						currentPage: 1,
-						environment: "test"
+						currentPage: 1//,
+						// environment: "test"
 					}).then(res => {
-						console.log("order/payment-records". res);
+						console.log("order/payment-records", res);
 						if (res.status == 200) {
 							this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+							console.log("hkPaymentRecordsModel", res.data.hkPaymentRecordsModel);
+							console.log("orderPagingH5Model", this.orderPagingH5Model);
 							const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
 							if (recordsModel.length > 0) {
 								const paymentDate = recordsModel[0].paymentDate
 								const date = this.format(Date.parse(new Date()))
-								console.log(date, paymentDate.split(' ')[0])
+								console.log("paymentDate", paymentDate);
+								// console.log("", );
+								// console.log();
+								// console.log();
+								// console.log(date, paymentDate.split(' ')[0])
 								if (paymentDate.split(' ')[0] == date) {
-									this.addChange('pay')
+									this.addChange('pay');
 								}
 							}
 							if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
@@ -989,7 +1099,7 @@ export default Custom_page({
 							this.hasMoreData = false;
 						}
 					}).catch(err => {
-						console.log(22)
+						console.log(22, err);
 						this.hasMoreData = false;
 					})
 				}
@@ -1013,11 +1123,15 @@ export default Custom_page({
 		storage.get({
 			key: "cityName",
 			success: (data) => {
-				console.log(data)
+				console.log(1040, data)
 				if (data && data != "" && data != null) {
-					this.cityName = data;
+					// this.cityName = data;
+					that.cityName = data;
 					// 缴费类别
-					request.post('payment/pay-type-lst', { cityName: this.cityName, environment: "test" }).then(res => {
+					request.post('payment/pay-type-lst', {
+						cityName: this.cityName//,
+						// environment: "test"
+					}).then(res => {
 						// console.log(res)
 						if (res.status == 200) {
 							this.cebPaymentCategoriesList = res.data.data;
@@ -1081,7 +1195,10 @@ export default Custom_page({
 						const city = res.data.result.addressComponent.city || '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
+						request.post('payment/pay-type-lst', {
+							cityName: city//,
+							// environment: "test"
+						}).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
 								that.cebPaymentCategoriesList = res.data.data;
@@ -1101,7 +1218,10 @@ export default Custom_page({
 						const city = '北京市'
 						that.cityName = city;
 						// 缴费类别
-						request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
+						request.post('payment/pay-type-lst', {
+							cityName: city//,
+							// environment: "test"
+						}).then(res => {
 							// console.log(res)
 							if (res.status == 200) {
 								that.cebPaymentCategoriesList = res.data.data;
@@ -1121,7 +1241,10 @@ export default Custom_page({
 				const city = '北京市'
 				that.cityName = city;
 				// 缴费类别
-				request.post('payment/pay-type-lst', { cityName: city, environment: "test" }).then(res => {
+				request.post('payment/pay-type-lst', {
+					cityName: city//,
+					// environment: "test"
+				}).then(res => {
 					// console.log(res)
 					if (res.status == 200) {
 						that.cebPaymentCategoriesList = res.data.data;
@@ -1162,13 +1285,13 @@ export default Custom_page({
 			// 缴费记录
 			request.post('order/payment-records', {
 				pageSize: this.pageSize,
-				currentPage: this.currentPage,
-				environment: "test"
+				currentPage: this.currentPage//,
+				// environment: "test"
 			}).then(res => {
 				if (res.status == 200) {
 					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
 					this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
-					console.log(this.orderPagingH5Model)
+					console.log("this.orderPagingH5Model", this.orderPagingH5Model)
 					if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 						this.hasMoreData = false;
 					}
@@ -1263,7 +1386,7 @@ export default Custom_page({
 			})
 		}
 	},
-	goRechargeDetail(groupName, billitem) {
+	goRechargeDetail(groupId, groupName, billitem) {
 		this.showLoading = true;
 		// 缴费项目信息
 		storage.get({
@@ -1282,7 +1405,7 @@ export default Custom_page({
 						if (this.paymentItemList.length > 1) {
 							const paymentItemModelList = item.paymentItemModelList;
 							let paymentList = []
-							console.log("paymentItemModelList", paymentItemModelList);
+							console.log("paymentItemModelList from Home", paymentItemModelList);
 							for (let i = 0; i < paymentItemModelList.length; i++) {
 								const element = paymentItemModelList[i]
 								console.log("billitem", billitem)
@@ -1292,6 +1415,8 @@ export default Custom_page({
 								}
 							}
 							console.log("paymentList", paymentList);
+							console.log("billitem", billitem);
+							// return false;
 							router.push({
 								uri: 'Home/Recharge',
 								params: {
@@ -1302,8 +1427,9 @@ export default Custom_page({
 									cityName: billitem.cityName,
 									paymentItemModelList: paymentList,//项目信息
 									groupName,
-									oldGroupName: groupName,
-									oldBill: billitem.bill
+									groupId,
+									// oldGroupName: groupName,
+									billKey: billitem.houseNumber
 								}
 							})
 						} else {
@@ -1340,6 +1466,10 @@ export default Custom_page({
 		// console.log("cityName", this.cityName);
 		if (obj.params.title.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
+			console.clear();
+			console.log("before Home/Mobile");
+			console.log("obj", obj);
+			// return false;
 			router.push(obj)
 		} else {
 			// 缴费项目信息
@@ -1347,6 +1477,7 @@ export default Custom_page({
 				key: "sessionId",
 				success: function (data) {
 					console.log("cityName of ptd", that.cityName);
+					// return false;
 					request.post('payment/pay-type-detail', {
 						sessionId: data,
 						cityName: that.cityName,
@@ -1357,13 +1488,18 @@ export default Custom_page({
 							this.paymentItemList = res.data.paymentItemList;
 							if (this.paymentItemList.length > 1) {
 								// 列表选择
+								// console.clear();
+								// console.log("-------- --------");
+								// console.log(this);
+								// console.log(that);
+								// return false;
 								router.push({
 									uri: 'Home/ProjectList',
 									params: {
 										title: obj.params.title,
 										type: obj.params.type,
 										icon: obj.params.icon,
-										cityName: this.cityName,
+										cityName: that.cityName,
 										external: this.external,
 										paymentItemList: this.paymentItemList,//选择列表
 										paymentItemModelList: item.paymentItemModelList,//项目信息
@@ -1371,6 +1507,11 @@ export default Custom_page({
 								})
 							} else {
 								console.log(obj.params.name)
+								console.clear();
+								console.log("00000000");
+								console.log(this);
+								console.log(that);
+								// return false;
 								// 账单详情
 								router.push({
 									uri: 'Home/Recharge',
@@ -1380,7 +1521,7 @@ export default Custom_page({
 										type: obj.params.type,
 										icon: obj.params.icon,
 										external: this.external,
-										cityName: this.cityName,
+										cityName: that.cityName,
 										paymentItemModelList: item.paymentItemModelList,//项目信息
 									}
 								})

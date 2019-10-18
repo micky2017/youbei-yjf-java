@@ -29,7 +29,7 @@
 import router from '@system.router'
 import storage from '@system.storage'
 // import request from '../../utils/request'
-
+ 
 export default Custom_page({
     public: {
         title: '',
@@ -45,6 +45,9 @@ export default Custom_page({
         itemValue: '',
     },
     onInit() {
+        console.clear();
+        console.log("PL.init");
+        console.log(this.cityName);
         // console.log("paymentItemList", this.paymentItemList);
         // console.log("searchList", this.searchList);
         // console.log("paymentItemModelList", this.paymentItemModelList);
@@ -79,6 +82,10 @@ export default Custom_page({
     affirmItem(item) {
         const index = this.paymentItemList.indexOf(item);
         const paymentItemModel = this.paymentItemModelList[index];
+        // console.clear();
+        // console.log("affirmItem");
+        // console.log(this);
+        // return false;
         router.push({
             uri: 'Home/Recharge',
             params: {

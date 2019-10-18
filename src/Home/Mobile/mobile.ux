@@ -6,8 +6,8 @@
     <div class="recharge" onclick="inputFocus()">
         <TitleBar external={{external}} onclick="inputFocus()" title={{title}} color="#fff"></TitleBar>
         <YjfLoading if="showLoading" />
-        
-         <div class="payment-content_bg"></div>
+
+        <div class="payment-content_bg"></div>
         <div class="payment-content">
             <text class="operator">{{operator}}</text>
             <div class="mobile-input">
@@ -27,12 +27,12 @@
                     <div if="!showMobileError && itemValue != '' && selectItem != $item" class="payment-item_content" @click="selectItemValue($item)">
                         <text>{{$item}}元</text>
                     </div>
-                    <div if="showMobileError || itemValue == ''" class="payment-item_content no-choose" >
+                    <div if="showMobileError || itemValue == ''" class="payment-item_content no-choose">
                         <text>{{$item}}元</text>
                     </div>
                 </div>
             </div>
-            
+
         </div>
         <!-- <div class="input-body">
             <text>充值号码</text>
@@ -49,279 +49,293 @@
             </div>
         </div> -->
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
-        
+
     </div>
 </template>
 
 <style lang="less">
-    @import './mobile.less';
+@import './mobile.less';
 </style>
 
 <script>
-    import router from '@system.router'
-    import request from '../../utils/request'
-    import storage from"@system.storage";
-    import webview from '@system.webview'
-    import contact from '@system.contact'
-    import statis from '../../utils/statistics'
+import router from '@system.router'
+import request from '../../utils/request'
+import storage from "@system.storage";
+import webview from '@system.webview'
+import contact from '@system.contact'
+import statis from '../../utils/statistics'
 
-    export default Custom_page ({
-        public: {
-            external:'',
-            cityName:"",
-            title:"",
-            type:"",
-        },
-        protected: {
-            showLoading:false,
-            picker:false,
-            show_toast:false,
-            showMobileError:false,
-            // external:'',
-            errInfo:'您输入的号码有误，请重新输入',
-            pickerTitle:'',
-            toast_text:'',
-            operator:'',
-            itemName:'',
-            selectMoney:'',
-            billItem:null,
-            // title:"",
-            // type:"",
-            // cityName:"",
-            paymentItemModelList:[],
-            listPageModelList:[],
-            paymentItemList:[],
-            cityModel:{},
-            paymentItem:{},
-            rangeData:[],
-            itemValue:'',
-            selectItem:'',
-            paymentItemModel:'',
-            paymentItemName:'',
-            paymentList:['30','50','100','200','300'],
-        },
-        onReady() {
-            this.ifLogin()
-            storage.get({
-                key:'external',
-                success: (data) => {
-                    if(data && data != ''){
-                        storage.set({
-                            key:'external',
-                            value:this.external
-                        })
-                    }
-                },
-                fail: (err) => {
+export default Custom_page({
+    public: {
+        external: '',
+        cityName: "",
+        title: "",
+        type: "",
+    },
+    protected: {
+        showLoading: false,
+        picker: false,
+        show_toast: false,
+        showMobileError: false,
+        // external:'',
+        errInfo: '您输入的号码有误，请重新输入',
+        pickerTitle: '',
+        toast_text: '',
+        operator: '',
+        itemName: '',
+        selectMoney: '',
+        billItem: null,
+        // title:"",
+        // type:"",
+        // cityName:"",
+        paymentItemModelList: [],
+        listPageModelList: [],
+        paymentItemList: [],
+        cityModel: {},
+        paymentItem: {},
+        rangeData: [],
+        itemValue: '',
+        selectItem: '',
+        paymentItemModel: '',
+        paymentItemName: '',
+        paymentList: ['30', '50', '100', '200', '300'],
+    },
+    onReady() {
+        this.ifLogin()
+        storage.get({
+            key: 'external',
+            success: (data) => {
+                if (data && data != '') {
                     storage.set({
-                        key:'external',
-                        value:this.external
+                        key: 'external',
+                        value: this.external
                     })
                 }
-            })
-            storage.get({
-				key:"cityName",
-				success: (data) => {
-					if(data){
-                        this.cityName = data;
-					}
-				},
-				fail: function(data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-            
-        },
-        ifLogin(){
-            storage.get({
-                key:"sessionId",
-                success: (data) => {
-                    if(data){
-                        
-                    }else{
-                        router.replace({
-                            uri:'User/SmsLogin',
-                            params:{
-                                external:'external',
-                            }
-                        })
-                    }
-                },
-                fail: (res) => {
-                    router.replace({
-                        uri:'User/SmsLogin',
-                        params:{
-                                external:'external',
-                            }
-                    })
-                }
-            })
-        },
-        selectItemValue(itemValue){
-            this.selectItem = itemValue;
-            
-        },
-        changeItem(response){
-            this.itemValue = response ? response.value : this.itemValue;
-            // 检查手机号 并查询信息
-            this.getPaymentDetail()
-        },
-        pickContact(){
-            contact.pick({
-                success: (data) => {
-                    this.itemValue = data.number;
-                    this.showToast(`您选取了${data.displayName }的联系方式`)
-                    this.inputFocus();
-                    console.log('contact: name=' + data.displayName + ', number=' + data.number)
-                },
-                fail: function(data, code) {
-                    this.showToast('选取联系人失败')
-                }
-            })
-        },
-        // 显示toast
-        showToast(text,back){
-            this.toast_text = text;
-            this.show_toast = true;
-            setTimeout(() => {
-                this.show_toast = false;
-                if(back){
-                    router.back()
-                }
-            },1500)
-        },
-        inputFocus(){
-            this.$element('mobile').focus({focus:false})
-            // 检查手机号 并查询信息
-            this.getPaymentDetail()
-
-        },
-        onInit() {
-            storage.get({
-                key:'mobile',
-                success:(data) => {
-                    console.log(data)
-                    if(data){
-                        this.itemValue = data;
-                    }
-                },
-                fail:(err) => [
-                    console.log(err)
-                ]
-            })
-        },
-        getPaymentDetail(){
-            if(!(/^1[3456789]\d{9}$/.test(this.itemValue))){ 
-                this.showMobileError = true;
-                this.errInfo = '您输入的号码有误，请重新输入'
-                return false; 
-            }else{
-                this.showMobileError = false;
-                // 缴费项目信息
-            request.post('payment/mobile-pay',{
-                mobile:this.itemValue,
-            }).then(res => {
-                console.log(res)
-                if(res.status == 200){
-                    this.$element('mobile').focus({focus:false})
-                    const item = res.data.mobileRechargeModel;
-                    this.paymentItemName = res.data.paymentItemList[0];
-                    this.paymentItemModel = item.paymentItemModelList[0];
-                    this.operator = this.paymentItemModel.paymentItemName;
-                    this.paymentList = this.paymentItemModel.createPaymentBillParamsModelList[0].rechargeLimit.split('|');
-                    if(!this.selectItem){
-                        this.selectItem = this.paymentList[0];
-                    }
-                }else{
-                    this.showToast(res.msg);
-                    this.showMobileError = true;
-                    this.errInfo = '暂不支持';
-                }
-            })
-            }
-        },
-        toInspect(){
-            this.inputFocus()
-            statis.statis('mobile_click',{external:this.external},this);
-            if(!(/^1[3456789]\d{9}$/.test(this.itemValue))){ 
-                this.showToast("手机号码有误，请重填");
-                return false; 
-            }
-
-            if(this.itemValue){
-                statis.statis('mobile_click_success',{mobile:this.itemValue,external:this.external},this);
-                this.mobilePay();
-                // router.push({
-                //     uri:'Home/MobilePay',
-                //     params:{
-                //         mobile:this.itemValue
-                //     }
-                // })
-            }else{
-                this.showToast('您有信息未填写')
-            }
-            
-        },
-        mobilePay(){
-            this.inputFocus()
-            if(this.itemValue){
-                this.showLoading = true;
-                // 订单日期
-                const date = new Date();
-                const year = date.getFullYear();  // 获取完整的年份(4位,1970)
-                const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0'+(date.getMonth() + 1);  // 获取月份(0-11,0代表1月,用的时候记得加上1)
-                const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
-                const merOrderDate = year+month+day;
-                // 基础数据
-                const data = this.paymentItemModel;
-
-                let outTradeNo="";  //订单号
-                for(let i=0;i<6;i++) //6位随机数，用以加在时间戳后面。
-                {
-                    outTradeNo += Math.floor(Math.random()*10);
-                }
-                outTradeNo = new Date().getTime() + outTradeNo; 
-                
-                const params = {
-                    merOrderNo:outTradeNo,
-                    merOrderDate,
-                    payAmount:this.selectItem,
-                    paymentItemCode:data.paymentItemCode,
-                    paymentItemId:data.paymentItemId,
-                    billKey:this.itemValue,
-                    billAmount:'',
-                    queryAcqSsn:'',
-                    contractNo:'',
-                    filed: [],
-                    type:'1',
-                    billQueryResultDataModel:JSON.stringify({})
-                }
-                statis.statis('pay_click',{pay_type:`手机充值${this.itemValue}`,"pay_amount":String(this.selectItem)},this)
-                // params.testpackage = 'test'
-                request.post('pay/creat',params).then(res => {
-                    console.log(res)
-                    this.showLoading = false;
-                    if(res.status == 200){
-                        if(res.data.url){
-                            statis.statis('pay_click_success',{pay_type:`手机充值${this.itemValue}`,"pay_amount":String(this.selectItem)},this)
-                            webview.loadUrl({
-                                url: res.data.url,
-                                trustedurl:['https://api.ubaycn.com/pay/cb'],
-                                allowthirdpartycookies: true
-                            })
-                        }else{
-                            this.showToast(res.data.respMsg)
-                        }
-                    }else{
-                        this.showToast(res.msg)
-                    }
-                }).catch(err => {
-                    this.showLoading = false;
-                    this.showToast('网络错误')
+            },
+            fail: (err) => {
+                storage.set({
+                    key: 'external',
+                    value: this.external
                 })
-            }else{
-                this.showToast('您有信息未填写')
             }
+        })
+        storage.get({
+            key: "cityName",
+            success: (data) => {
+                if (data) {
+                    this.cityName = data;
+                }
+            },
+            fail: function (data, code) {
+                console.log(`handling fail, code = ${code}`)
+            }
+        })
+
+    },
+    ifLogin() {
+        storage.get({
+            key: "sessionId",
+            success: (data) => {
+                if (data) {
+
+                } else {
+                    router.replace({
+                        uri: 'User/SmsLogin',
+                        params: {
+                            external: 'external',
+                        }
+                    })
+                }
+            },
+            fail: (res) => {
+                router.replace({
+                    uri: 'User/SmsLogin',
+                    params: {
+                        external: 'external',
+                    }
+                })
+            }
+        })
+    },
+    selectItemValue(itemValue) {
+        this.selectItem = itemValue;
+
+    },
+    changeItem(response) {
+        this.itemValue = response ? response.value : this.itemValue;
+        // 检查手机号 并查询信息
+        this.getPaymentDetail()
+    },
+    pickContact() {
+        contact.pick({
+            success: (data) => {
+                this.itemValue = data.number;
+                this.showToast(`您选取了${data.displayName}的联系方式`)
+                this.inputFocus();
+                console.log('contact: name=' + data.displayName + ', number=' + data.number)
+            },
+            fail: function (data, code) {
+                this.showToast('选取联系人失败')
+            }
+        })
+    },
+    // 显示toast
+    showToast(text, back) {
+        this.toast_text = text;
+        this.show_toast = true;
+        setTimeout(() => {
+            this.show_toast = false;
+            if (back) {
+                router.back()
+            }
+        }, 1500)
+    },
+    inputFocus() {
+        this.$element('mobile').focus({ focus: false })
+        // 检查手机号 并查询信息
+        this.getPaymentDetail()
+
+    },
+    onInit() {
+        storage.get({
+            key: 'mobile',
+            success: (data) => {
+                console.log(data)
+                if (data) {
+                    this.itemValue = data;
+                }
+            },
+            fail: (err) => [
+                console.log(err)
+            ]
+        })
+    },
+    getPaymentDetail() {
+        var that = this;
+        if (!(/^1[3456789]\d{9}$/.test(this.itemValue))) {
+            this.showMobileError = true;
+            this.errInfo = '您输入的号码有误，请重新输入'
+            return false;
+        } else {
+            this.showMobileError = false;
+            // 缴费项目信息
+            // storage.get({
+            //     key: "sessionId",
+            //     success: function (data) {
+                    request.post('payment/mobile-pay', {
+                        mobile: that.itemValue
+                    }).then(res => {
+                        console.log("payment/mobile-pay", res)
+                        if (res.status == 200) {
+                            that.$element('mobile').focus({ focus: false })
+                            const item = res.data.mobileRechargeModel;
+                            console.log("res.data", res.data);
+                            that.paymentItemName = res.data.paymentItemList[0];
+                            that.paymentItemModel = item.paymentItemModelList[0];
+                            that.operator = that.paymentItemModel.paymentItemName;
+                            that.paymentList = that.paymentItemModel.createPaymentBillParamsModelList[0].rechargeLimit.split('|');
+                            console.log("item", item);
+                            console.log("paymentItemModel", that.paymentItemModel);
+                            if (!that.selectItem) {
+                                that.selectItem = that.paymentList[0];
+                            }
+                        } else {
+                            that.showToast(res.msg);
+                            that.showMobileError = true;
+                            that.errInfo = '暂不支持';
+                        }
+                    })
+                // }
+            // });
         }
-    })
+    },
+    toInspect() {
+        this.inputFocus()
+        statis.statis('mobile_click', { external: this.external }, this);
+        if (!(/^1[3456789]\d{9}$/.test(this.itemValue))) {
+            this.showToast("手机号码有误，请重填");
+            return false;
+        }
+
+        if (this.itemValue) {
+            statis.statis('mobile_click_success', { mobile: this.itemValue, external: this.external }, this);
+            this.mobilePay();
+            // router.push({
+            //     uri:'Home/MobilePay',
+            //     params:{
+            //         mobile:this.itemValue
+            //     }
+            // })
+        } else {
+            this.showToast('您有信息未填写')
+        }
+
+    },
+    mobilePay() {
+        this.inputFocus()
+        if (this.itemValue) {
+            this.showLoading = true;
+            // 订单日期
+            const date = new Date();
+            const year = date.getFullYear();  // 获取完整的年份(4位,1970)
+            const month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);  // 获取月份(0-11,0代表1月,用的时候记得加上1)
+            const day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+            const merOrderDate = year + month + day;
+            // 基础数据
+            const data = this.paymentItemModel;
+            console.log("mobilePay.data", data);
+
+            let outTradeNo = "";  //订单号
+            for (let i = 0; i < 6; i++) //6位随机数，用以加在时间戳后面。
+            {
+                outTradeNo += Math.floor(Math.random() * 10);
+            }
+            outTradeNo = new Date().getTime() + outTradeNo;
+
+            const params = {
+                // sessionId: this.sessionId,
+                merOrderNo: outTradeNo,
+                merOrderDate,
+                payAmount: this.selectItem,
+                paymentItemCode: data.paymentItemCode,
+                paymentItemId: data.paymentItemId,
+                billKey: this.itemValue,
+                billAmount: '',
+                queryAcqSsn: '',
+                contractNo: '',
+                filed: [],
+                type: '1',
+                billQueryResultDataModel: JSON.stringify({})
+            }
+            statis.statis('pay_click', { pay_type: `手机充值${this.itemValue}`, "pay_amount": String(this.selectItem) }, this)
+            // params.testpackage = 'test'
+            console.log("mobilePay params", params);
+            console.log("paymentItemCode", params.paymentItemCode);
+            request.post('pay/creat', params).then(res => {
+                console.log('pay/creat', res)
+                this.showLoading = false;
+                if (res.status == 200) {
+                    if (res.data.url) {
+                        statis.statis('pay_click_success', { pay_type: `手机充值${this.itemValue}`, "pay_amount": String(this.selectItem) }, this)
+                        // alert(res.data.url);
+                        webview.loadUrl({
+                            url: res.data.url,
+                            trustedurl: ['https://api.ubaycn.com/pay/cb'],
+                            allowthirdpartycookies: true
+                        })
+                    } else {
+                        this.showToast(res.data.respMsg)
+                    }
+                } else {
+                    this.showToast(res.msg)
+                }
+            }).catch(err => {
+                this.showLoading = false;
+                this.showToast('网络错误')
+            })
+        } else {
+            this.showToast('您有信息未填写')
+        }
+    }
+})
 </script>

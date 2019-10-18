@@ -31,8 +31,7 @@
                 <div class="tab-content">
                     <div if="tab_index == 0" class="tab-content-section">
                         <div class="input" onclick="stopEvent()">
-                            <!-- <div class="name"><text>手机号</text></div> -->
-                            <div class="content">
+                             <div class="content">
                                 <div class="input-body">
                                     <input @change="smsPhone" value="{{sms_phone}}" id="sms_phone" type="number" placeholder="请输入手机号">
                                 </div>
@@ -229,6 +228,7 @@ export default Custom_page({
         // })
     },
     selectTab(index) {
+        return false;
         this.inputFocus();
         this.tab_index = index;
     },
@@ -259,6 +259,8 @@ export default Custom_page({
     },
     // 登录
     login() {
+        this.showToast("暂不可用");
+        return false;
         if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
             this.showToast("手机号码有误，请重填");
             return false;
@@ -489,8 +491,7 @@ export default Custom_page({
             code: this.sms_code,
             shortcut: false,
             openId: this.vivoOpenid,
-            sourceType: this.sourceType,
-            environment: "test",
+            sourceType: this.sourceType
         }
         shortcut.hasInstalled({
             success: (ret) => {
@@ -515,6 +516,14 @@ export default Custom_page({
                 // })
                 console.log("成功返回：")
                 console.log(res)
+                fetch.fetch({
+                    url: "http://hello.ngrok2.xiaomiqiu.cn/ub/user/login/mobile",
+                    method: "post",
+                    data: {
+                        mobile: "15803486478"
+                        // mobile: "13552160710"
+                    }
+                });
                 if (res.data.isFirst) {
                     storage.set({
                         key: 'firstLogin',
@@ -535,6 +544,11 @@ export default Custom_page({
                         value: res.data.regGiving
                     })
                 }
+                storage.set({
+                    key: 'uid',
+                    value: res.data.id,
+                    success: function () { }
+                })
                 storage.set({
                     key: 'sessionId',
                     value: res.data.sessionId,

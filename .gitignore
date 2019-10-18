@@ -5,3 +5,5 @@ node_modules
 build
 dist
 package-lock.json
+/doc
+.gitignore
