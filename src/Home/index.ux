@@ -698,7 +698,7 @@ export default Custom_page({
 		}).then(res => {
 			// console.clear();
 			console.log("user/get-weather", res);
-			return false;
+			// return false;
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
@@ -794,6 +794,8 @@ export default Custom_page({
 	// banner
 	getBanner() {
 		request.post('payment/get-banner-list').then(res => {
+			console.clear();
+			console.log("payment/get-banner-list", res);
 			if (res.status == 200) {
 				if (res.data.bannerList.length > 0) {
 					this.bannerList = res.data.bannerList;
