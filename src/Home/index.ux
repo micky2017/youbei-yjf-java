@@ -131,7 +131,7 @@
 						<!-- 缴费类别 -->
 						<list-item>
 							<div class="fast-title">
-								<text class="fast-title_text">便捷缴费10191435</text>
+								<text class="fast-title_text">便捷缴费10191632</text>
 								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
 							</div>
 							<div class="no-network" if="!netWork">
@@ -942,15 +942,17 @@ export default Custom_page({
 						// console.clear();
 						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
-							that.isGroup = res.data.isGroup
-							res.data.list = eval(res.data.list);
-							for (var i = res.data.list.length - 1; i >= 0; i--) {
-								if (res.data.list[i].children.length == 0) {
-									res.data.list.splice(i, 1);
+							that.isGroup = res.data.isGroup;
+							if(that.isGroup){
+								res.data.list = eval(res.data.list);
+								for (var i = res.data.list.length - 1; i >= 0; i--) {
+									if (res.data.list[i].children.length == 0) {
+										res.data.list.splice(i, 1);
+									}
 								}
+								console.log(res.data.list);
+								that.groupList = res.data.list;
 							}
-							console.log(res.data.list);
-							that.groupList = res.data.list;
 						}
 					})
 				}
