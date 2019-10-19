@@ -1557,7 +1557,7 @@ export default Custom_page({
 								oldGroupName: groupName,
 								oldBill: billitem.bill
 							});
-							return false;
+							// return false;
 							router.push({
 								uri: 'Home/Recharge',
 								params: {

@@ -216,7 +216,8 @@ export default Custom_page({
         router.push({
             uri: 'User/GroupSelect',
             params: {
-                groupName: this.groupName,
+                // groupName: this.groupName
+                groupId: this.groupId
             }
         })
     },
@@ -328,10 +329,11 @@ export default Custom_page({
     },
     onShow() {
         console.log("recharge.onshow");
-        console.log(this);
+        this.getGroup();
+        // console.log(this);
         // alert(this.groupName);
         // this.groupName = "";
-        //*
+        /*
         var that = this;
         storage.get({
             key: 'groupId',
@@ -395,6 +397,48 @@ export default Custom_page({
         } else {
             this.ifLogin()
         }
+    },
+    getGroup() {
+        //*
+        console.clear();
+        console.log("enter recharge.get-group");
+        let that = this;
+        storage.get({
+            key: "groupId",
+            success(gid) {
+                if (gid) {
+                    console.log("storage.GroupId detected");
+                    that.groupId = gid;
+                    storage.delete({
+                        key: "groupId"
+                    });
+                    storage.get({
+                        key: "groupName",
+                        success(gname){
+                            that.groupName = gname;
+                            storage.delete({
+                                key: "groupName"
+                            });
+                        }
+                    });
+                } else {
+                    console.log("no groupId in storgae");
+                    if (!that.groupId) {
+                        console.log("no this.groupId");
+                        request.post("user/get-group").then(res => {
+                            console.log("user/get-group", res);
+                            res.data = eval(res.data.list);
+                            console.log("data", res.data);
+                            console.log("data.length", res.data.length);
+                            that.groupName = res.data[0].groupName;
+                            that.groupId = res.data[0].id;
+                        });
+                    }else{
+                        console.log("this.groupId exist, nothing todo");
+                    }
+                }
+            }
+        });
     },
     // 输入框监听
     changeItem(item, response) {
