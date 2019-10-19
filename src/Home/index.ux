@@ -1,3 +1,4 @@
+
 <template>
 	<div class="yjf-home">
 		<!-- 引导页 -->
@@ -8,15 +9,11 @@
 			<!-- <div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
 				<text onclick="skip()">立即体验</text>
 			</div> -->
-			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false"
-				if="showGuide && guideList.length>0">
-				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList"
-					src="{{imgUrl}}{{item.imgPath}}" alt="">
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
+				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.imgPath}}" alt="">
 			</swiper>
-			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false"
-				if="showGuide && guideList.length <=0">
-				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}"
-					alt="">
+			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length <=0">
+				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guidePageList" src="{{item}}" alt="">
 			</swiper>
 
 		</div>
@@ -50,11 +47,9 @@
 
 								<div class="common-swiper_content">
 									<swiper if="homeBannerList.length > 0" class="common-swiper" autoplay="true" loop="true">
-										<image @click="goUrl($item,'HomeBannerList')" src="{{imgUrl}}{{$item.imgPath}}"
-											for="homeBannerList"></image>
+										<image @click="goUrl($item,'HomeBannerList')" src="{{imgUrl}}{{$item.imgPath}}" for="homeBannerList"></image>
 									</swiper>
-									<swiper if="homeBannerList.length <= 0" class="common-swiper" autoplay="true" loop="true"
-										indicator-selected-color="#9A70C2">
+									<swiper if="homeBannerList.length <= 0" class="common-swiper" autoplay="true" loop="true" indicator-selected-color="#9A70C2">
 										<image @click="goUrl(item)" src="{{item.pic}}" for="item in bannerList" alt=""></image>
 									</swiper>
 								</div>
@@ -71,10 +66,7 @@
 									<!-- <div class="common-content"> -->
 									<text class="common-content_title">常用缴费</text>
 									<div class="common-content_body">
-										<div class="item"
-											if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'"
-											for="{{cebPaymentCategoriesList}}"
-											@click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
+										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
 											<div class="icon" if="true">
 												<image resize-mode="contain" src="{{$item.icon}}"></image>
 											</div>
@@ -87,19 +79,15 @@
 								<!-- 分组管理 -->
 								<div if="isGroup" class="common-content group-content">
 									<!-- <div class="common-content group-content"> -->
-									<div class="group-item"
-										style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}"
-										for="groupList">
+									<div class="group-item" style="{{$idx == (groupList.length -1)? 'border-bottom-width:0px' :'border-bottom-width:1px'}}" for="groupList">
 										<div class="group-item_title">
 											<text>{{$item.groupName}}</text>
 											<div if="$idx == 0" @click="toDetail('User/GroupManage')">
-												<image width="26" height="26" resize-mode="contain" src="../images/groupImg/add_group_icon.png">
-												</image>
+												<image width="26" height="26" resize-mode="contain" src="../images/groupImg/add_group_icon.png"></image>
 												<text>分组管理</text>
 											</div>
 										</div>
-										<div @click="goRechargeDetail($item.groupId,$item.groupName,item)" class="group-item_cell"
-											for="item in $item.children">
+										<div @click="goRechargeDetail($item.groupId,$item.groupName,item)" class="group-item_cell" for="item in $item.children">
 											<div class="group-cell_head">
 												<div class="group-head_left">
 													<image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
@@ -134,10 +122,8 @@
 									</swiper>
 								</div>
 								<div class="activity-entry-banner">
-									<swiper autoplay="true" loop="true" indicator="true" class="common-swiper"
-										indicator-selected-color="#9A70C2">
-										<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in homeAdsList"
-											alt=""></image>
+									<swiper autoplay="true" loop="true" indicator="true" class="common-swiper" indicator-selected-color="#9A70C2">
+										<image @click="goUrl(item,'homeAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in homeAdsList" alt=""></image>
 									</swiper>
 								</div>
 							</div>
@@ -146,15 +132,13 @@
 						<list-item>
 							<div class="fast-title">
 								<text class="fast-title_text">便捷缴费</text>
-								<image if="activeSwitch == 'open'" width="300" resize-mode="contain"
-									src="./images/activityImg/activity_count_icon.png"></image>
+								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
 							</div>
 							<div class="no-network" if="!netWork">
 								<text>世界上最远的距离是没有网络</text>
 							</div>
 							<div class="grids">
-								<div class="item" for="{{cebPaymentCategoriesList}}"
-									@click="toJFDetail('Home/Recharge',$item.typeName,$item.type,$item.icon)">
+								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,$item.icon)">
 									<div class="icon">
 										<image resize-mode="contain" src="{{$item.icon}}"></image>
 									</div>
@@ -182,33 +166,26 @@
 					</div> -->
 					<div if="showActiveModel" @click="closeActiveModel" class="activity-model-body">
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60"
-								src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
-						<image class="activity-model_img" width="693" height="717" src="./images/activityImg/model_content_img.png">
-						</image>
-						<image @click="toActive" class="activity-model_btn" width="340" height="90"
-							src="./images/activityImg/model_content_btn.png"></image>
+						<image class="activity-model_img" width="693" height="717" src="./images/activityImg/model_content_img.png"></image>
+						<image @click="toActive" class="activity-model_btn" width="340" height="90" src="./images/activityImg/model_content_btn.png"></image>
 					</div>
 					<div if="showIqiyiActiveModel" @click="closeActiveModel" class="activity-model-body iqiyi-model">
 
-						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/iqiyi_model.png">
-						</image>
+						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/iqiyi_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60"
-								src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
 					<!-- <div if="" @click="closeActiveModel" class="activity-model-body iqiyi-model"> -->
-					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel"
-						class="activity-model-body iqiyi-model">
+					<div if="showJDEActiveModel && !isLogin && !showGuide" @click="closeActiveModel" class="activity-model-body iqiyi-model">
 
 						<image class="activity-model_img" width="600" height="615" src="./images/activityImg/JDE_model.png"></image>
 						<div @click="toPrize('Home/MyPrize')" class="activity-model_btn"></div>
 						<div>
-							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60"
-								src="./images/activityImg/model_close_btn.png"></image>
+							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
 						</div>
 					</div>
 				</div>
@@ -219,10 +196,8 @@
 							<div class="title"><text>缴费记录</text></div>
 						</div>
 						<div class="records-banner">
-							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper"
-								indicator-selected-color="#9A70C2">
-								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in jiluAdsList"
-									alt=""></image>
+							<swiper if="jiluAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
+								<image @click="goUrl(item,'jiluAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in jiluAdsList" alt=""></image>
 							</swiper>
 							<!-- <image src="./images/home-banner.jpg"></image> -->
 						</div>
@@ -254,10 +229,8 @@
 							</div> -->
 						</div>
 						<!-- 缴费记录列表 -->
-						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color="#9A70C2"
-							onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
-							<list if="orderPagingH5Model.recordsModel.length > 0" style="height:100%" onscrolltop="refreshingFn"
-								onscrollbottom="renderMoreListItem">
+						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color="#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
+							<list if="orderPagingH5Model.recordsModel.length > 0" style="height:100%" onscrolltop="refreshingFn" onscrollbottom="renderMoreListItem">
 								<list-item>
 									<div class="list">
 										<div class="item" @click="toDetail('Order',item)" for="item in orderPagingH5Model.recordsModel">
@@ -304,10 +277,8 @@
 					<list>
 						<list-item>
 							<div class="records-banner">
-								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper"
-									indicator-selected-color="#9A70C2">
-									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in myAdsList"
-										alt=""></image>
+								<swiper if="myAdsList.length > 0" indicator="false" class="common-swiper" indicator-selected-color="#9A70C2">
+									<image @click="goUrl(item,'myAdsList')" src="{{imgUrl}}{{item.imgPath}}" for="item in myAdsList" alt=""></image>
 								</swiper>
 							</div>
 							<div class="list">
@@ -424,460 +395,982 @@
 </template>
 
 <style lang="less">
-	@import './index.less';
+@import './index.less';
 </style>
 
 <script>
-	import router from '@system.router';
-	import request from '../utils/request'
-	import Newrequest from '../utils/newRequest'
-	import statis from '../utils/statistics'
-	import getUserInfo from '../common/getuserid.js';
-	import geolocation from '@system.geolocation';
-	import util from '../util.js';
-	import storage from "@system.storage";
-	import webview from '@system.webview'
-	import clipboard from '@system.clipboard'
-	import account from '@service.account'
-	import share from '@service.share';
+import router from '@system.router';
+import request from '../utils/request'
+import Newrequest from '../utils/newRequest'
+import statis from '../utils/statistics'
+import getUserInfo from '../common/getuserid.js';
+import geolocation from '@system.geolocation';
+import util from '../util.js';
+import storage from "@system.storage";
+import webview from '@system.webview'
+import clipboard from '@system.clipboard'
+import account from '@service.account'
+import share from '@service.share';
 
-	const fetch = require('@system.fetch');
-	const prompt = require('@system.prompt');
-	const shortcut = require('@system.shortcut')
-	const device = require('@system.device');
-	export default Custom_page({
-		public: {
-			external: 'master',
-			tabIndex: 0
+const fetch = require('@system.fetch');
+const prompt = require('@system.prompt');
+const shortcut = require('@system.shortcut')
+const device = require('@system.device');
+export default Custom_page({
+	public: {
+		external: 'master',
+		tabIndex: 0
+	},
+	protected: {
+		isLogin: false,
+		showGuide: false,
+		showShortcut: false,
+		sid: '',
+		showIqiyiActiveModel: false,
+		showHomeBanner: false,
+		activeSwitch: 'close',
+		weather: '',
+		guidePageList: [],
+		guideSecond: 3,
+		showJDEActiveModel: false,
+		mobile: '',
+		relaymobile: "",
+		imgUrl: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
+		refreshing: false,
+		tab: 'i0',
+		pageSize: 10,
+		currentPage: 1,
+		cityName: "北京市",
+		cityId: "101701",
+		hasMoreData: false,
+		netWork: true,
+		timer: '',
+		swIndex: 0,
+		notificationList: [],
+		brand: '',
+		showActiveModel: false,
+		guideList: [{ pic: '' }],
+		homeBannerList: [],
+		isGroup: false,
+		groupList: [],
+		homeAdsList: [],
+		jiluAdsList: [],
+		myAdsList: [],
+		bannerList: [{ pic: './images/home-banner.jpg', url: '' }],
+		cebPaymentCategoriesList: [],
+		orderPagingH5Model: {
+			pageInfo: {},
+			recordsModel: []
 		},
-		protected: {
-			isLogin: false,
-			showGuide: false,
-			showShortcut: false,
-			sid: '',
-			showIqiyiActiveModel: false,
-			showHomeBanner: false,
-			activeSwitch: 'close',
-			weather: '',
-			guidePageList: [],
-			guideSecond: 3,
-			showJDEActiveModel: false,
-			mobile: '',
-			relaymobile: "",
-			imgUrl: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
-			refreshing: false,
-			tab: 'i0',
-			pageSize: 10,
-			currentPage: 1,
-			cityName: "北京市",
-			cityId: "101701",
-			hasMoreData: false,
-			netWork: true,
-			timer: '',
-			swIndex: 0,
-			notificationList: [],
-			brand: '',
-			showActiveModel: false,
-			guideList: [{ pic: '' }],
-			homeBannerList: [],
-			isGroup: false,
-			groupList: [],
-			homeAdsList: [],
-			jiluAdsList: [],
-			myAdsList: [],
-			bannerList: [{ pic: './images/home-banner.jpg', url: '' }],
-			cebPaymentCategoriesList: [],
-			orderPagingH5Model: {
-				pageInfo: {},
-				recordsModel: []
-			},
-		},
-		private: {
-			detail: null,
-			tq: [],
-			scene: "1",
-			phone: "",
-			sourceType: "vivo"
-		},
-		onInit() {
-			console.log("首页获取到的external：", this.external)
-			// 获取当前来源
-			storage.set({
-				key: "external",
-				value: this.external
-			})
-			storage.get({
-				key: "external",
-				success: (data) => {
-					if (data != "") {
-						console.log("storage取到的external：", data)
-						this.external = data
-						storage.set({
-							key: "external",
-							value: data
-						})
-					} else {
-						this.external = "master"
-					}
+	},
+	private: {
+		detail: null,
+		tq: [],
+		scene: "1",
+		phone: "",
+		sourceType: "vivo"
+	},
+	onInit() {
+		console.log("首页获取到的external：", this.external)
+		// 获取当前来源
+		storage.set({
+			key: "external",
+			value: this.external
+		})
+		storage.get({
+			key: "external",
+			success: (data) => {
+				if (data != "") {
+					console.log("storage取到的external：", data)
+					this.external = data
+					storage.set({
+						key: "external",
+						value: data
+					})
+				} else {
+					this.external = "master"
 				}
-			})
-			storage.set({
-				key: "activeSwitch",
-				value: 'close'
-			})
-			this.activeSwitch = 'close';
-			storage.get({
-				key: 'regGiving',
-				success: (data) => {
-					if (data == 'iqy') {
-						this.showIqiyiActiveModel = true;
-						storage.delete({
-							key: 'regGiving'
-						})
-					} else if (data == 'jde') {
-						this.showJDEActiveModel = true;
-						storage.delete({
-							key: 'regGiving'
-						})
-					}
+			}
+		})
+		storage.set({
+			key: "activeSwitch",
+			value: 'close'
+		})
+		this.activeSwitch = 'close';
+		storage.get({
+			key: 'regGiving',
+			success: (data) => {
+				if (data == 'iqy') {
+					this.showIqiyiActiveModel = true;
+					storage.delete({
+						key: 'regGiving'
+					})
+				} else if (data == 'jde') {
+					this.showJDEActiveModel = true;
+					storage.delete({
+						key: 'regGiving'
+					})
 				}
-			})
-			device.getInfo({
-				success: (ret) => {
-					this.brand = ret.brand;
-					// this.getActiveSwitch(this.brand)
+			}
+		})
+		device.getInfo({
+			success: (ret) => {
+				this.brand = ret.brand;
+				// this.getActiveSwitch(this.brand)
+			}
+		})
+		// weather
+		this.getWeather();
+		// 是否提示用户添加到桌面
+		this.showProptShortcut();
+		// 引导页
+		storage.get({
+			key: 'showGuide',
+			success: (data) => {
+				if (data) {
+					this.skip()
+				} else {
+					this.getGuidePage()
+					this.showGuide = true;
+					this.createShortcut()
+					// util.createShortcut();
+					storage.set({
+						key: 'showGuide',
+						value: 'true'
+					})
 				}
-			})
-			// weather
-			this.getWeather();
-			// 是否提示用户添加到桌面
-			this.showProptShortcut();
-			// 引导页
-			storage.get({
-				key: 'showGuide',
-				success: (data) => {
-					if (data) {
-						this.skip()
-					} else {
-						this.getGuidePage()
-						this.showGuide = true;
-						this.createShortcut()
-						// util.createShortcut();
-						storage.set({
-							key: 'showGuide',
-							value: 'true'
-						})
-					}
+			}
+		})
+	},
+	getActiveImage(source) {
+		request.post('payment/get-active-img', { source }).then(res => {
+			console.log("payment/get-active-img", res);
+			if (res.status == 200) {
+				const data = res.data;
+				this.guideList = data.guide_pic//引导页
+				this.homeBannerList = data.home_banner//banner
+				console.log("homeBannerList", this.homeBannerList)
+				if (this.homeBannerList.length > 0) {
+					this.showHomeBanner = true;
 				}
-			})
-		},
-		getActiveImage(source) {
-			request.post('payment/get-active-img', { source }).then(res => {
-				console.log("payment/get-active-img", res);
-				if (res.status == 200) {
-					const data = res.data;
-					this.guideList = data.guide_pic//引导页
-					this.homeBannerList = data.home_banner//banner
-					console.log("homeBannerList", this.homeBannerList)
-					if (this.homeBannerList.length > 0) {
-						this.showHomeBanner = true;
-					}
-					this.homeAdsList = data.home_ads//首页资源位
-				}
-			})
-		},
-		getNotification() {
-			request.post('lottery/inform').then(res => {
-				console.log("lottery/inform", res);
-				if (res.status == 0) {
-					this.notificationList = res.data
-				}
-			})
-		},
-		getActiveSwitch(brand) {
-			// brand = 'oppo'
-			storage.get({
-				key: 'external',
-				success: (data) => {
-					request.get(`payment/channel-switch?channel=${data}&brand=${brand}`).then(res => {
-						if (res.status == 200) {
-							if (res.data.isOpen == 'open') {
-								this.getResource()
-								this.activeSwitch = 'open'
-								// 首次登录
-								// this.onDayFirstLogin()
-							} else {
-								this.activeSwitch = 'close'
-								this.guideList = []
-							}
-							if (res.data.reg_pic) {
-								storage.set({
-									key: 'reg_pic',
-									value: res.data.reg_pic
-								})
-							} else {
-								storage.delete({
-									key: 'reg_pic'
-								})
-							}
+				this.homeAdsList = data.home_ads//首页资源位
+			}
+		})
+	},
+	getNotification() {
+		request.post('lottery/inform').then(res => {
+			console.log("lottery/inform", res);
+			if (res.status == 0) {
+				this.notificationList = res.data
+			}
+		})
+	},
+	getActiveSwitch(brand) {
+		// brand = 'oppo'
+		storage.get({
+			key: 'external',
+			success: (data) => {
+				request.get(`payment/channel-switch?channel=${data}&brand=${brand}`).then(res => {
+					if (res.status == 200) {
+						if (res.data.isOpen == 'open') {
+							this.getResource()
+							this.activeSwitch = 'open'
+							// 首次登录
+							// this.onDayFirstLogin()
+						} else {
+							this.activeSwitch = 'close'
+							this.guideList = []
+						}
+						if (res.data.reg_pic) {
 							storage.set({
-								key: 'activeSwitch',
-								value: this.activeSwitch
+								key: 'reg_pic',
+								value: res.data.reg_pic
 							})
-							storage.set({
-								key: 'activeUrl',
-								value: res.data.url
+						} else {
+							storage.delete({
+								key: 'reg_pic'
 							})
 						}
-					})
-				},
-				fail: () => {
-
-				}
-			})
-		},
-		onDayFirstLogin() {
-			this.addChange('log')
-		},
-		toGroupManage() {
-			if (this.isLogin) {
-				router.push({
-					uri: 'User/GroupManage'
-				})
-			} else {
-				router.push({
-					uri: 'User/SmsLogin'
-				})
-			}
-		},
-		// 请增加抽奖次数
-		addChange(type) {
-			storage.get({
-				key: 'sessionId',
-				success: (res) => {
-					if (res) {
-						request.post('lottery/addChance', { type, sid: res }).then(res => {
-							if (res.status == 0 && type == 'log') {
-								this.showActiveModel = true;
-							}
+						storage.set({
+							key: 'activeSwitch',
+							value: this.activeSwitch
 						})
-					}
-				},
-			})
-		},
-		// 获取资源位
-		getResource() {
-			request.get('payment/get-resource-img').then(res => {
-				if (res.status == 200) {
-					const data = res.data;
-					this.guideList = data.guide_pic//引导页
-					this.homeBannerList = data.home_banner//banner
-					if (this.homeBannerList.length > 0) {
-						this.showHomeBanner = true;
-					}
-					this.homeAdsList = data.home_ads//首页资源位
-					this.jiluAdsList = data.jilu_ads//缴费记录广告位
-					this.myAdsList = data.my_ads//我的广告位
-				}
-			})
-		},
-		toActive() {
-			router.push({
-				uri: 'Home/Active'
-			})
-		},
-		showActiveModelFn() {
-			this.showActiveModel = true;
-		},
-		closeActiveModel() {
-			this.showActiveModel = false;
-			this.showIqiyiActiveModel = false;
-			this.showJDEActiveModel = false;
-		},
-		showProptShortcut() {
-			const that = this;
-			shortcut.hasInstalled({
-				success: (ret) => {
-					if (ret) {
-						// that.addChange('add');
-						that.showShortcut = false;
-						statis.statis('hasInstalled_success', {}, this)
-					} else {
-						that.showShortcut = true;
-					}
-				}
-			})
-		},
-		onDestroy() {
-			if (this.timer) {
-				clearInterval(this.timer)
-			}
-		},
-		toHelpcenter() {
-			router.push({
-				uri: 'User/Helpcenter'
-			})
-		},
-		toPrize(url) {
-			statis.statis('my_prize_click', { external: this.external }, this)
-			this.showIqiyiActiveModel = false;
-			this.showJDEActiveModel = false;
-			if (this.isLogin) {
-				router.push({
-					uri: url
-				})
-			} else {
-				router.push({
-					uri: 'User/SmsLogin'
-				})
-			}
-		},
-		// 天气
-		getWeather() {
-			var that = this;
-			request.get("user/get-weather", {
-				city: this.cityName
-			}).then(res => {
-				console.log("user/get-weather", res);
-				return false;
-				if (res.data.data.forecast) {
-					const weather = res.data.data.forecast[0].type;
-					const wendu = res.data.data.wendu;
-					that.weather = wendu + "℃ " + weather;
-					console.log("that.weather", that.weather);
-				}
-			}).catch(err => {
-				console.log(err)
-			})
-		},
-		goUrl(item, source) {
-			if (source) {
-				statis.statis("banner_click", { source: source, external: this.external }, this)
-			}
-			if (this.isLogin) {
-				if (item.url) {
-					if (item.url.indexOf('http') != -1) {
 						storage.set({
 							key: 'activeUrl',
-							value: item.url,
-							success: () => {
-								router.push({
-									uri: 'Home/Active',
-									params: {
-										title: item.desc
-									}
-								})
-							}
+							value: res.data.url
 						})
-					} else {
-						if (item.url != '-') {
-							router.push({
-								uri: item.url
-							})
-						}
+					}
+				})
+			},
+			fail: () => {
 
-					}
+			}
+		})
+	},
+	onDayFirstLogin() {
+		this.addChange('log')
+	},
+	toGroupManage() {
+		if (this.isLogin) {
+			router.push({
+				uri: 'User/GroupManage'
+			})
+		} else {
+			router.push({
+				uri: 'User/SmsLogin'
+			})
+		}
+	},
+	// 请增加抽奖次数
+	addChange(type) {
+		storage.get({
+			key: 'sessionId',
+			success: (res) => {
+				if (res) {
+					request.post('lottery/addChance', { type, sid: res }).then(res => {
+						if (res.status == 0 && type == 'log') {
+							this.showActiveModel = true;
+						}
+					})
 				}
-			} else {
-				if (item.url) {
-					if (item.url == '/' || item.url == '/Home') {
-						this.skip()
-					} else {
-						router.push({
-							uri: 'User/SmsLogin'
-						})
-					}
+			},
+		})
+	},
+	// 获取资源位
+	getResource() {
+		request.get('payment/get-resource-img').then(res => {
+			if (res.status == 200) {
+				const data = res.data;
+				this.guideList = data.guide_pic//引导页
+				this.homeBannerList = data.home_banner//banner
+				if (this.homeBannerList.length > 0) {
+					this.showHomeBanner = true;
+				}
+				this.homeAdsList = data.home_ads//首页资源位
+				this.jiluAdsList = data.jilu_ads//缴费记录广告位
+				this.myAdsList = data.my_ads//我的广告位
+			}
+		})
+	},
+	toActive() {
+		router.push({
+			uri: 'Home/Active'
+		})
+	},
+	showActiveModelFn() {
+		this.showActiveModel = true;
+	},
+	closeActiveModel() {
+		this.showActiveModel = false;
+		this.showIqiyiActiveModel = false;
+		this.showJDEActiveModel = false;
+	},
+	showProptShortcut() {
+		const that = this;
+		shortcut.hasInstalled({
+			success: (ret) => {
+				if (ret) {
+					// that.addChange('add');
+					that.showShortcut = false;
+					statis.statis('hasInstalled_success', {}, this)
+				} else {
+					that.showShortcut = true;
 				}
 			}
-		},
-		// 创建桌面快捷方式
-		createShortcut() {
-			shortcut.hasInstalled({
-				success: (ret) => {
-					console.log(ret);
-					if (ret) {
-						prompt.showToast({
-							message: '已创建桌面图标'
+		})
+	},
+	onDestroy() {
+		if (this.timer) {
+			clearInterval(this.timer)
+		}
+	},
+	toHelpcenter() {
+		router.push({
+			uri: 'User/Helpcenter'
+		})
+	},
+	toPrize(url) {
+		statis.statis('my_prize_click', { external: this.external }, this)
+		this.showIqiyiActiveModel = false;
+		this.showJDEActiveModel = false;
+		if (this.isLogin) {
+			router.push({
+				uri: url
+			})
+		} else {
+			router.push({
+				uri: 'User/SmsLogin'
+			})
+		}
+	},
+	// 天气
+	getWeather() {
+		var that = this;
+		request.get("user/get-weather", {
+			city: this.cityName
+		}).then(res => {
+			console.log("user/get-weather", res);
+			return false;
+			if (res.data.data.forecast) {
+				const weather = res.data.data.forecast[0].type;
+				const wendu = res.data.data.wendu;
+				that.weather = wendu + "℃ " + weather;
+				console.log("that.weather", that.weather);
+			}
+		}).catch(err => {
+			console.log(err)
+		})
+	},
+	goUrl(item, source) {
+		if (source) {
+			statis.statis("banner_click", { source: source, external: this.external }, this)
+		}
+		if (this.isLogin) {
+			if (item.url) {
+				if (item.url.indexOf('http') != -1) {
+					storage.set({
+						key: 'activeUrl',
+						value: item.url,
+						success: () => {
+							router.push({
+								uri: 'Home/Active',
+								params: {
+									title: item.desc
+								}
+							})
+						}
+					})
+				} else {
+					if (item.url != '-') {
+						router.push({
+							uri: item.url
 						})
-						this.showShortcut = false;
-						// this.showJDEActiveModel = true;
-						// this.addChange('add');
-					} else {
-						shortcut.install({
-							success: () => {
-								statis.statis('hasInstalled_success', {}, this)
-								prompt.showToast({
-									message: '成功创建桌面图标'
-								})
-								// this.addChange('add');
-								this.showShortcut = false;
-								// 添加到桌面功能打点
-								fetch.fetch({
-									url: "https://t.ubaycn.com/ub/tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid,
-									// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=5&phone="+this.relaymobile+"&sourceType="+this.external+"&sessionId="+this.sid,
-									method: "GET",
-									success: function (res) { }
-								})
-								// this.showJDEActiveModel = true;				
-							},
-							fail: function (errmsg, errcode) {
-								prompt.showToast({
-									message: `创建失败，请到设置中打开权限`
-								})
+					}
+
+				}
+			}
+		} else {
+			if (item.url) {
+				if (item.url == '/' || item.url == '/Home') {
+					this.skip()
+				} else {
+					router.push({
+						uri: 'User/SmsLogin'
+					})
+				}
+			}
+		}
+	},
+	// 创建桌面快捷方式
+	createShortcut() {
+		shortcut.hasInstalled({
+			success: (ret) => {
+				console.log(ret);
+				if (ret) {
+					prompt.showToast({
+						message: '已创建桌面图标'
+					})
+					this.showShortcut = false;
+					// this.showJDEActiveModel = true;
+					// this.addChange('add');
+				} else {
+					shortcut.install({
+						success: () => {
+							statis.statis('hasInstalled_success', {}, this)
+							prompt.showToast({
+								message: '成功创建桌面图标'
+							})
+							// this.addChange('add');
+							this.showShortcut = false;
+							// 添加到桌面功能打点
+							fetch.fetch({
+								url: "https://t.ubaycn.com/ub/tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid,
+								// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=5&phone="+this.relaymobile+"&sourceType="+this.external+"&sessionId="+this.sid,
+								method: "GET",
+								success: function (res) { }
+							})
+							// this.showJDEActiveModel = true;				
+						},
+						fail: function (errmsg, errcode) {
+							prompt.showToast({
+								message: `创建失败，请到设置中打开权限`
+							})
+						}
+					})
+				}
+			},
+			fail: (err) => {
+				prompt.showToast({
+					message: `创建失败，请重新创建`
+				})
+			}
+		})
+		/**/
+	},
+	// banner
+	getBanner() {
+		request.post('payment/get-banner-list').then(res => {
+			// console.clear();
+			console.log("payment/get-banner-list", res);
+			if (res.status == 200) {
+				if (res.data.bannerList.length > 0) {
+					this.bannerList = res.data.bannerList;
+				}
+			}
+		})
+	},
+	// 引导页切换
+	lanuchChange(swiper) {
+		this.swIndex = swiper.index;
+	},
+	skip() {
+		this.showGuide = false;
+		storage.set({
+			key: 'showGuide',
+			value: 'true'
+		})
+	},
+	// 触发下拉刷新
+	refreshingFn() {
+		this.refreshing = true;
+	},
+	// 下拉刷新事件
+	refreshingTop(e) {
+		this.refreshing = e.refreshing
+		this.currentPage = 1;
+		// 缴费记录
+		request.post('order/payment-records', {
+			pageSize: 10,
+			currentPage: 1//,
+			// environment: "test"
+		}).then(res => {
+			setTimeout(() => {
+				this.refreshing = false
+			})
+			if (res.status == 200) {
+				this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+				if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+					this.hasMoreData = false;
+				}
+			} else {
+				this.hasMoreData = false;
+			}
+		}).catch(err => {
+			setTimeout(() => {
+				this.refreshing = false
+			})
+			this.hasMoreData = false;
+		})
+	},
+	onShow() {
+		// 获取分组
+		var that = this;
+		storage.get({
+			key: "sessionId",
+			success(data) {
+				if (data) {
+					request.post('user/get-group', {
+						sessionId: data,
+						isHome: true
+					}).then(res => {
+						// console.clear();
+						console.log("Home.user/get-group", res)
+						if (res.status == 200) {
+							that.isGroup = res.data.isGroup
+							res.data.list = eval(res.data.list);
+							for (var i = res.data.list.length - 1; i > 0; i--) {
+								if (res.data.list[i].children.length == 0) {
+									res.data.list.splice(i, 1);
+								}
 							}
+							that.groupList = res.data.list;
+						}
+					})
+
+				}
+			}
+		});
+
+		// 页面初始化埋点
+		this.device()
+		// 获取手机号
+		storage.get({
+			key: "mobile",
+			success: (data) => {
+				if(data){
+					const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
+					this.mobile = mobile;
+					this.relaymobile = data;
+					this.isLogin = true;
+				}else{
+					this.isLogin = false;
+				}
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		// 获取城市名字
+		storage.get({
+			key: "cityName",
+			success: (data) => {
+				if (data && data != "" && data != null) {
+					that.cityName = data;
+					// 缴费类别
+					request.post('payment/pay-type-lst', {
+						cityName: this.cityName//,
+					}).then(res => {
+						if (res.status == 200) {
+							this.cebPaymentCategoriesList = res.data.data;
+						}
+					}).catch(err => {
+						this.netWork = false
+					})
+				} else {
+					// 获取城市定位
+					this.getLocation()
+				}
+			},
+			fail: function (data, code) {
+				// 获取城市定位
+				this.getLocation()
+			}
+		})
+		// 获取城市Id
+		storage.get({
+			key: "cityId",
+			success: (data) => {
+				if (data) {
+					this.cityId = data;
+				}
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		router.clear()
+	},
+	//打电话
+	call() {
+		prompt.showDialog({
+			title: '拨打云缴费客服电话',
+			message: '4009095595',
+			buttons: [
+				{
+					text: '拨打',
+					color: '#996fc5'
+				},
+				{
+					text: '取消',
+					color: '#996fc5'
+				}
+			],
+			success: function (data) {
+				if (data.index == 0) {
+					router.push({
+						uri: 'tel://4009095595'
+					})
+				}
+				if (data.index == 1) {
+					// prompt.showToast({
+					// 	message: '不打'
+					// });
+				}
+			},
+			cancel: function () {
+				prompt.showToast({
+					message: '失败'
+				});
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`);
+			}
+		});
+	},
+	// footbar切换
+	reTab(tab) {
+		let arr = ['主页', '缴费记录', '我的']
+		let me = this;
+		me.tab = 'i' + tab.index;
+		this.tabIndex = tab.index;
+		// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
+		statis.statis('tab_change_click', { tabName: arr[tab.index], external: this.external }, this)
+	},
+	tip() {
+		prompt.showToast({
+			message: 'message'
+		});
+	},
+	// 获取引导页
+	getGuidePage() {
+		request.post('payment/get-guide-page').then(res => {
+			// console.clear();
+			console.log("payment/get-guide-page", res);
+			if (res.status == 200) {
+				if (res.data.length > 0) {
+					this.guidePageList = res.data;
+				} else {
+					this.skip();
+				}
+			} else {
+				this.skip()
+			}
+		})
+	},
+	onReady() {
+		var that = this;
+		storage.get({
+			key: 'external',
+			success: (data) => {
+				console.log(data);
+				if (data && data != '') {
+					this.external = data;
+					this.getActiveImage(this.external)
+				} else {
+					storage.set({
+						key: 'external',
+						value: this.external
+					})
+					this.getActiveImage(this.external)
+				}
+			},
+			fail: (err) => {
+				storage.set({
+					key: 'external',
+					value: this.external
+				})
+			}
+		})
+		// 缴费类别
+		request.post('payment/pay-type-lst', {
+			cityName: '北京市'
+		}).then(res => {
+			console.log("payment/pay-type-lst", res)
+			if (res.status == 200) {
+				this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+			}
+		}).catch(err => {
+			this.netWork = false
+		})
+		// 数据获取 sessionId
+		if (this.external == "vivoNegative") {
+			storage.get({
+				key: "sid",
+				success: (data) => {
+					console.log('sid' + data)
+					this.sid = data;
+					if (this.sid) {
+						this.isLogin = true;
+						// 缴费记录
+						request.post('order/payment-records', {
+							pageSize: 10,
+							currentPage: 1
+						}).then(res => {
+							if (res.status == 200) {
+								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+								const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+								if (recordsModel.length > 0) {
+									const paymentDate = recordsModel[0].paymentDate
+									const date = this.format(Date.parse(new Date()))
+									// if (paymentDate.split(' ')[0] == date) {
+									// 	this.addChange('pay');
+									// }
+								}
+								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+									this.hasMoreData = false;
+								}
+							} else {
+								this.hasMoreData = false;
+							}
+						}).catch(err => {
+							console.log(22)
+							this.hasMoreData = false;
+						})
+					} else {
+						account.authorize({
+							type: 'code',
+							redirectUri: 'https://t.ubaycn.com/',
+							success: function (data) {
+								console.log("第一步返回的data", data)
+								let postCode = data.code
+								console.log(postCode);
+								fetch.fetch({
+									url: 'https://t.ubaycn.com/vivo/getAccessToken?code=' + postCode,
+									// url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
+									success: function (response) {
+										console.log("第二步返回的data", response)
+										const strToObj = JSON.parse(response.data)
+										console.log(strToObj);
+										let postToken = strToObj.data.accessToken
+										console.log(postToken);
+										account.getProfile({
+											token: postToken,
+											success: function (data) {
+												console.log(data)
+												// this.vivoOpenid = data.openid;
+												// that.Loginmsg();
+												account.getPhoneNumber({
+													success: function (data) {
+														console.log(`handling success phoneNumber: `, data.phoneNumber)
+														fetch.fetch({
+															url: 'https://t.ubaycn.com/ub/user/login/oneClick',
+															// url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
+															method: "post",
+															data: {
+																environment: "zhengshi",
+																mobile: data.phoneNumber,
+															},
+															success: function (res) {
+																console.log("vivo一键登录成功", res);
+																if (res.code == 200) {
+																	let data = JSON.parse(res.data);
+																	console.log("一键登录成功的data值", data);
+																	console.log("获取到的sid", data.data.sessionId)
+																	storage.set({
+																		key: '_id',
+																		value: res.data.mid
+																	})
+																	storage.set({
+																		key: "sid",
+																		value: data.data.sessionId
+																	})
+																	storage.set({
+																		key: "mobile",
+																		value: data.data.mobile
+																	})
+																	request.post('order/payment-records', {
+																		pageSize: 10,
+																		currentPage: 1
+																	}).then(res => {
+																		that.isLogin = true;
+																		if (res.status == 200) {
+																			this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+																			const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+																			if (recordsModel.length > 0) {
+																				const paymentDate = recordsModel[0].paymentDate
+																				const date = this.format(Date.parse(new Date()))
+																				// if (paymentDate.split(' ')[0] == date) {
+																				// 	this.addChange('pay');
+																				// }
+																			}
+																			if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+																				this.hasMoreData = false;
+																			}
+																		} else {
+																			that.hasMoreData = false;
+																		}
+																	}).catch(err => {
+																		console.log(22)
+																		that.hasMoreData = false;
+																	})
+																}
+															},
+															fail: function (err) {
+																console.log(err);
+															}
+														})
+													},
+													fail: function (data, code) {
+														router.replace({
+															uri: 'User/SmsLogin',
+															params: {
+																external: this.external,
+															}
+														})
+														console.log(`handling fail, code = ${code}`)
+													}
+												})
+											},
+											fail: function (data, code) {
+												console.log(`handling fail, code = ${code}`)
+											}
+										})
+									},
+									fail: function (data, code) {
+										console.log(`handling fail, errMsg = ${data}`)
+										console.log(`handling fail, errCode = ${code}`)
+									}
+								})
+							},
+							fail: function (data, code) {
+								console.log(`handling fail, code = ${code}`)
+							}
+						})
+					}
+				}
+			})
+
+		} else {
+			storage.get({
+				key: "sessionId",
+				success: (data) => {
+					// console.log('sid' + data)
+					this.sid = data;
+					if (this.sid) {
+						this.isLogin = true;
+						// 缴费记录
+						request.post('order/payment-records', {
+							pageSize: 10,
+							currentPage: 1//,
+						}).then(res => {
+							console.log("order/payment-records", res);
+							if (res.status == 200) {
+								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+								const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+								if (recordsModel.length > 0) {
+									const paymentDate = recordsModel[0].paymentDate
+									const date = this.format(Date.parse(new Date()))
+									// if (paymentDate.split(' ')[0] == date) {
+									// 	this.addChange('pay');
+									// }
+								}
+								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+									this.hasMoreData = false;
+								}
+							} else {
+								this.hasMoreData = false;
+							}
+						}).catch(err => {
+							this.hasMoreData = false;
 						})
 					}
 				},
-				fail: (err) => {
-					prompt.showToast({
-						message: `创建失败，请重新创建`
-					})
+				fail: function (data, code) {
+					console.log(`handling fail, code = ${code}`)
 				}
 			})
-			/**/
-		},
-		// banner
-		getBanner() {
-			request.post('payment/get-banner-list').then(res => {
-				// console.clear();
-				console.log("payment/get-banner-list", res);
-				if (res.status == 200) {
-					if (res.data.bannerList.length > 0) {
-						this.bannerList = res.data.bannerList;
+		}
+		getUserInfo((data) => {
+			// prompt.showToast({
+			// 	message: data.sid
+			// });				
+		});
+		let me = this;
+	},
+	add0(m) { return m < 10 ? '0' + m : m },
+	format(shijianchuo) {
+		//shijianchuo是整数，否则要parseInt转换
+		var time = new Date(shijianchuo);
+		var y = time.getFullYear();
+		var m = time.getMonth() + 1;
+		var d = time.getDate();
+		var h = time.getHours();
+		var mm = time.getMinutes();
+		var s = time.getSeconds();
+		// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+		return y + '-' + this.add0(m) + '-' + this.add0(d);
+	},
+	// 获取定位
+	getLocation() {
+		const that = this;
+		// 定位
+		geolocation.getLocation({
+			success: function (data) {
+				fetch.fetch({
+					url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
+					responseType: 'json',
+					method: 'GET',
+					success: (res) => {
+						const city = res.data.result.addressComponent.city || '北京市'
+						that.cityName = city;
+						// 缴费类别
+						request.post('payment/pay-type-lst', {
+							cityName: this.cityName//,
+							// environment: "test"
+						}).then(res => {
+							// console.log(res)
+							if (res.status == 200) {
+								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+							} else {
+								this.showToast(res.msg)
+							}
+						}).catch(err => {
+							that.netWork = false
+						})
+						console.log("cityName", city);
+						storage.set({
+							key: "cityName",
+							value: city,
+						})
+					},
+					fail: function (err, code) {
+						const city = '北京市'
+						that.cityName = city;
+						// 缴费类别
+						request.post('payment/pay-type-lst', {
+							cityName: this.cityName//,
+							// environment: "test"
+						}).then(res => {
+							// console.log(res)
+							if (res.status == 200) {
+								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+							}
+						}).catch(err => {
+							that.netWork = false
+						})
+						console.log("cityName", city);
+						storage.set({
+							key: "cityName",
+							value: city,
+						})
 					}
-				}
-			})
-		},
-		// 引导页切换
-		lanuchChange(swiper) {
-			this.swIndex = swiper.index;
-		},
-		skip() {
-			this.showGuide = false;
-			storage.set({
-				key: 'showGuide',
-				value: 'true'
-			})
-		},
-		// 触发下拉刷新
-		refreshingFn() {
-			this.refreshing = true;
-		},
-		// 下拉刷新事件
-		refreshingTop(e) {
-			this.refreshing = e.refreshing
-			this.currentPage = 1;
+				})
+			},
+			fail: function (data, code) {
+				const city = '北京市'
+				that.cityName = city;
+				// 缴费类别
+				request.post('payment/pay-type-lst', {
+					cityName: this.cityName//,
+					// environment: "test"
+				}).then(res => {
+					// console.log(res)
+					if (res.status == 200) {
+						this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+					}
+				}).catch(err => {
+					that.netWork = false
+				})
+				console.log("cityName", city);
+				storage.set({
+					key: "cityName",
+					value: city,
+				})
+			}
+		})
+	},
+	// 复制微信号
+	copyWx() {
+		statis.statis('copy_wx', { external: this.external }, this)
+		clipboard.set({
+			text: 'ubaycn',
+			success: () => {
+				prompt.showToast({
+					message: '复制成功'
+				})
+			},
+			fail: () => {
+				prompt.showToast({
+					message: '复制失败'
+				})
+			}
+		})
+	},
+	// 上拉加载缴费记录
+	renderMoreListItem() {
+		if (this.currentPage < this.orderPagingH5Model.pageInfo.totalReco / this.pageSize) {
+			this.hasMoreData = true;
+			this.currentPage += 1;
 			// 缴费记录
 			request.post('order/payment-records', {
-				pageSize: 10,
-				currentPage: 1//,
+				pageSize: this.pageSize,
+				currentPage: this.currentPage//,
 				// environment: "test"
 			}).then(res => {
-				setTimeout(() => {
-					this.refreshing = false
-				})
 				if (res.status == 200) {
-					this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
+					this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
+					console.log("this.orderPagingH5Model", this.orderPagingH5Model)
 					if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 						this.hasMoreData = false;
 					}
@@ -885,662 +1378,210 @@
 					this.hasMoreData = false;
 				}
 			}).catch(err => {
-				setTimeout(() => {
-					this.refreshing = false
-				})
 				this.hasMoreData = false;
 			})
-		},
-		onShow() {
-			// 获取分组
-			var that = this;
-			storage.get({
-				key: "sessionId",
-				success(data) {
-					if (data) {
-						request.post('user/get-group', {
-							sessionId: data,
-							isHome: true
-						}).then(res => {
-							// console.clear();
-							console.log("Home.user/get-group", res)
-							if (res.status == 200) {
-								that.isGroup = res.data.isGroup
-								res.data.list = eval(res.data.list);
-								for (var i = res.data.list.length - 1; i > 0; i--) {
-									if (res.data.list[i].children.length == 0) {
-										res.data.list.pop();
-									}
-								}
-								that.groupList = res.data.list;
-							}
-						})
 
-					}
-				}
-			});
-
-			// 页面初始化埋点
-			this.device()
-			// 获取手机号
-			storage.get({
-				key: "mobile",
-				success: (data) => {
-					if(data){
-						const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
-						this.mobile = mobile;
-						this.relaymobile = data;
-						this.isLogin = true;
-					}else{
-						this.isLogin = false;
-					}
-				},
-				fail: function (data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-			// 获取城市名字
-			storage.get({
-				key: "cityName",
-				success: (data) => {
-					if (data && data != "" && data != null) {
-						that.cityName = data;
-						// 缴费类别
-						request.post('payment/pay-type-lst', {
-							cityName: this.cityName//,
-						}).then(res => {
-							if (res.status == 200) {
-								this.cebPaymentCategoriesList = res.data.data;
-							}
-						}).catch(err => {
-							this.netWork = false
-						})
-					} else {
-						// 获取城市定位
-						this.getLocation()
-					}
-				},
-				fail: function (data, code) {
-					// 获取城市定位
-					this.getLocation()
-				}
-			})
-			// 获取城市Id
-			storage.get({
-				key: "cityId",
-				success: (data) => {
-					if (data) {
-						this.cityId = data;
-					}
-				},
-				fail: function (data, code) {
-					console.log(`handling fail, code = ${code}`)
-				}
-			})
-			router.clear()
-		},
-		//打电话
-		call() {
-			prompt.showDialog({
-				title: '拨打云缴费客服电话',
-				message: '4009095595',
-				buttons: [
-					{
-						text: '拨打',
-						color: '#996fc5'
-					},
-					{
-						text: '取消',
-						color: '#996fc5'
-					}
-				],
+		} else {
+			this.hasMoreData = false;
+		}
+	},
+	// 缴费记录页面跳转城市选择
+	orderToDetail() {
+		router.push({
+			uri: 'Home/CityList',
+			params: {
+				tabIndex: 1,
+			}
+		})
+	},
+	// 页面跳转
+	toDetail(url, name) {
+		console.log(this.external)
+		console.log(this.external == 'testShare')
+		if (this.external == 'testShare') {
+			share.share({
+				shareType: 0,
+				title: '测试标题',
+				summary: '测试摘要',
+				imagePath: '/images/icon/power.png',
+				// imagePath: 'https://cdn.ubaycn.com/upload/images/2019-06-04/c6e8b88b88810cc3a6ee2b5e48d588c5.png',
+				targetUrl: 'http://www.quickapp.cn',
 				success: function (data) {
-					if (data.index == 0) {
-						router.push({
-							uri: 'tel://4009095595'
-						})
-					}
-					if (data.index == 1) {
-						// prompt.showToast({
-						// 	message: '不打'
-						// });
-					}
-				},
-				cancel: function () {
-					prompt.showToast({
-						message: '失败'
-					});
+					console.log('handling success')
 				},
 				fail: function (data, code) {
-					console.log(`handling fail, code = ${code}`);
+					console.log(`handling fail, code = ${code}`)
+					console.log(`data=${data}`)
 				}
-			});
-		},
-		// footbar切换
-		reTab(tab) {
-			let arr = ['主页', '缴费记录', '我的']
-			let me = this;
-			me.tab = 'i' + tab.index;
-			this.tabIndex = tab.index;
-			// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
-			statis.statis('tab_change_click', { tabName: arr[tab.index], external: this.external }, this)
-		},
-		tip() {
-			prompt.showToast({
-				message: 'message'
-			});
-		},
-		// 获取引导页
-		getGuidePage() {
-			request.post('payment/get-guide-page').then(res => {
-				// console.clear();
-				console.log("payment/get-guide-page", res);
-				if (res.status == 200) {
-					if (res.data.length > 0) {
-						this.guidePageList = res.data;
-					} else {
-						this.skip();
+			})
+		} else {
+			let obj
+			if (name) {
+				obj = {
+					uri: url,
+					params: {
+						title: name
 					}
-				} else {
-					this.skip()
 				}
-			})
-		},
-		onReady() {
-			var that = this;
-			storage.get({
-				key: 'external',
-				success: (data) => {
-					console.log(data);
-					if (data && data != '') {
-						this.external = data;
-						this.getActiveImage(this.external)
-					} else {
-						storage.set({
-							key: 'external',
-							value: this.external
-						})
-						this.getActiveImage(this.external)
-					}
-				},
-				fail: (err) => {
-					storage.set({
-						key: 'external',
-						value: this.external
-					})
+			} else {
+				obj = {
+					uri: url
 				}
+			}
+			router.push(obj)
+		}
+	},
+	// 缴费类别点击事件
+	toJFDetail(url, name, type, icon, jfType) {
+		if (jfType == 'common') {
+			// 常用缴费
+			statis.statis('class_type_common_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
+		} else if (jfType == 'fast') {
+			// 快速缴费
+			statis.statis('class_type_fast_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
+		} else {
+			// 首页缴费
+			statis.statis('class_type_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
+		}
+
+		// 页面埋点
+		fetch.fetch({
+			url: "https://t.ubaycn.com/ub/tatistics/quick?scene=3&phone=" + this.relaymobile + "&sourceType=" + this.external,
+			method: "GET",
+			success: function (res) {
+				// console.log("于哥出品"+res);
+			}
+		})
+
+		const obj = {
+			uri: url,
+			params: {
+				title: name,
+				type,
+				external: this.external,
+				icon,
+			}
+		}
+		if (name.indexOf("手机") != -1) {
+			obj.uri = "Home/Mobile"
+		}
+		if (this.isLogin) {
+			// 跳转缴费页
+			this.getJfTypeDetail(obj)
+		} else {
+			router.push({
+				uri: 'User/SmsLogin'
 			})
-			// 缴费类别
-			request.post('payment/pay-type-lst', { cityName: '北京市' }).then(res => {
-				console.log("payment/pay-type-lst", res)
-				if (res.status == 200) {
-					this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
-				}
-			}).catch(err => {
-				this.netWork = false
-			})
-			// 数据获取 sessionId
-			if (this.external == "vivoNegative") {
-				storage.get({
-					key: "sid",
-					success: (data) => {
-						console.log('sid' + data)
-						this.sid = data;
-						if (this.sid) {
-							this.isLogin = true;
-							// 缴费记录
-							request.post('order/payment-records', {
-								pageSize: 10,
-								currentPage: 1
-							}).then(res => {
-								if (res.status == 200) {
-									this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-									const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-									if (recordsModel.length > 0) {
-										const paymentDate = recordsModel[0].paymentDate
-										const date = this.format(Date.parse(new Date()))
-										// if (paymentDate.split(' ')[0] == date) {
-										// 	this.addChange('pay');
-										// }
-									}
-									if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-										this.hasMoreData = false;
-									}
-								} else {
-									this.hasMoreData = false;
+		}
+	},
+	goRechargeDetail(groupId, groupName, billitem) {
+		this.showLoading = true;
+		// 缴费项目信息
+		storage.get({
+			key: "sessionId",
+			success: function (data) {
+				request.post('payment/pay-type-detail', {
+					sessionId: data,
+					cityName: billitem.cityName,
+					type: billitem.type,
+				}).then(res => {
+					console.log("payment/pay-type-detail", res)
+					this.showLoading = false;
+					if (res.status == 200) {
+						const item = res.data.paymentItemPagingModel;
+						this.paymentItemList = res.data.paymentItemList;
+						if (this.paymentItemList.length > 1) {
+							const paymentItemModelList = item.paymentItemModelList;
+							let paymentList = []
+							console.log("paymentItemModelList from Home", paymentItemModelList);
+							for (let i = 0; i < paymentItemModelList.length; i++) {
+								const element = paymentItemModelList[i]
+								console.log("billitem", billitem)
+								console.log(element.paymentItemId, billitem.paymentItemId)
+								if (element.paymentItemId == billitem.paymentItemId) {
+									paymentList.push(element)
 								}
-							}).catch(err => {
-								console.log(22)
-								this.hasMoreData = false;
+							}
+							router.push({
+								uri: 'Home/Recharge',
+								params: {
+									payName: '1',
+									title: billitem.typeName,
+									type: billitem.type,
+									icon: billitem.imagUrl,
+									cityName: billitem.cityName,
+									paymentItemModelList: paymentList,//项目信息
+									groupName,
+									groupId,
+									billKey: billitem.houseNumber
+								}
 							})
 						} else {
-							account.authorize({
-								type: 'code',
-								redirectUri: 'https://t.ubaycn.com/',
-								success: function (data) {
-									console.log("第一步返回的data", data)
-									let postCode = data.code
-									console.log(postCode);
-									fetch.fetch({
-										url: 'https://t.ubaycn.com/vivo/getAccessToken?code=' + postCode,
-										// url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
-										success: function (response) {
-											console.log("第二步返回的data", response)
-											const strToObj = JSON.parse(response.data)
-											console.log(strToObj);
-											let postToken = strToObj.data.accessToken
-											console.log(postToken);
-											account.getProfile({
-												token: postToken,
-												success: function (data) {
-													console.log(data)
-													// this.vivoOpenid = data.openid;
-													// that.Loginmsg();
-													account.getPhoneNumber({
-														success: function (data) {
-															console.log(`handling success phoneNumber: `, data.phoneNumber)
-															fetch.fetch({
-																url: 'https://t.ubaycn.com/ub/user/login/oneClick',
-																// url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
-																method: "post",
-																data: {
-																	environment: "zhengshi",
-																	mobile: data.phoneNumber,
-																},
-																success: function (res) {
-																	console.log("vivo一键登录成功", res);
-																	if (res.code == 200) {
-																		let data = JSON.parse(res.data);
-																		console.log("一键登录成功的data值", data);
-																		console.log("获取到的sid", data.data.sessionId)
-																		storage.set({
-																			key: '_id',
-																			value: res.data.mid
-																		})
-																		storage.set({
-																			key: "sid",
-																			value: data.data.sessionId
-																		})
-																		storage.set({
-																			key: "mobile",
-																			value: data.data.mobile
-																		})
-																		request.post('order/payment-records', {
-																			pageSize: 10,
-																			currentPage: 1
-																		}).then(res => {
-																			that.isLogin = true;
-																			if (res.status == 200) {
-																				this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-																				const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-																				if (recordsModel.length > 0) {
-																					const paymentDate = recordsModel[0].paymentDate
-																					const date = this.format(Date.parse(new Date()))
-																					// if (paymentDate.split(' ')[0] == date) {
-																					// 	this.addChange('pay');
-																					// }
-																				}
-																				if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-																					this.hasMoreData = false;
-																				}
-																			} else {
-																				that.hasMoreData = false;
-																			}
-																		}).catch(err => {
-																			console.log(22)
-																			that.hasMoreData = false;
-																		})
-																	}
-																},
-																fail: function (err) {
-																	console.log(err);
-																}
-															})
-														},
-														fail: function (data, code) {
-															router.replace({
-																uri: 'User/SmsLogin',
-																params: {
-																	external: this.external,
-																}
-															})
-															console.log(`handling fail, code = ${code}`)
-														}
-													})
-												},
-												fail: function (data, code) {
-													console.log(`handling fail, code = ${code}`)
-												}
-											})
-										},
-										fail: function (data, code) {
-											console.log(`handling fail, errMsg = ${data}`)
-											console.log(`handling fail, errCode = ${code}`)
-										}
-									})
-								},
-								fail: function (data, code) {
-									console.log(`handling fail, code = ${code}`)
+							// 账单详情
+							router.push({
+								uri: 'Home/Recharge',
+								params: {
+									payName: '1',
+									title: billitem.typeName,
+									type: billitem.type,
+									icon: billitem.imagUrl,
+									cityName: billitem.cityName,
+									paymentItemModelList: item.paymentItemModelList,//项目信息
+									groupName,
+									oldGroupName: groupName,
+									oldBill: billitem.bill
 								}
 							})
-						}
-					}
-				})
-
-			} else {
-				storage.get({
-					key: "sessionId",
-					success: (data) => {
-						// console.log('sid' + data)
-						this.sid = data;
-						if (this.sid) {
-							this.isLogin = true;
-							// 缴费记录
-							request.post('order/payment-records', {
-								pageSize: 10,
-								currentPage: 1//,
-							}).then(res => {
-								console.log("order/payment-records", res);
-								if (res.status == 200) {
-									this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-									const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-									if (recordsModel.length > 0) {
-										const paymentDate = recordsModel[0].paymentDate
-										const date = this.format(Date.parse(new Date()))
-										// if (paymentDate.split(' ')[0] == date) {
-										// 	this.addChange('pay');
-										// }
-									}
-									if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-										this.hasMoreData = false;
-									}
-								} else {
-									this.hasMoreData = false;
-								}
-							}).catch(err => {
-								this.hasMoreData = false;
-							})
-						}
-					},
-					fail: function (data, code) {
-						console.log(`handling fail, code = ${code}`)
-					}
-				})
-			}
-			getUserInfo((data) => {
-				// prompt.showToast({
-				// 	message: data.sid
-				// });				
-			});
-			let me = this;
-		},
-		add0(m) { return m < 10 ? '0' + m : m },
-		format(shijianchuo) {
-			//shijianchuo是整数，否则要parseInt转换
-			var time = new Date(shijianchuo);
-			var y = time.getFullYear();
-			var m = time.getMonth() + 1;
-			var d = time.getDate();
-			var h = time.getHours();
-			var mm = time.getMinutes();
-			var s = time.getSeconds();
-			// + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
-			return y + '-' + this.add0(m) + '-' + this.add0(d);
-		},
-		// 获取定位
-		getLocation() {
-			const that = this;
-			// 定位
-			geolocation.getLocation({
-				success: function (data) {
-					fetch.fetch({
-						url: `http://api.map.baidu.com/geocoder?callback=renderReverse&location=${data.latitude},${data.longitude}&output=json&key=ZkxZNceDHlX9o9HyL5OibAErPqTrvWt0`,
-						responseType: 'json',
-						method: 'GET',
-						success: (res) => {
-							const city = res.data.result.addressComponent.city || '北京市'
-							that.cityName = city;
-							// 缴费类别
-							request.post('payment/pay-type-lst', {
-								cityName: city//,
-								// environment: "test"
-							}).then(res => {
-								// console.log(res)
-								if (res.status == 200) {
-									that.cebPaymentCategoriesList = res.data.data;
-								} else {
-									this.showToast(res.msg)
-								}
-							}).catch(err => {
-								that.netWork = false
-							})
-							console.log("cityName", city);
-							storage.set({
-								key: "cityName",
-								value: city,
-							})
-						},
-						fail: function (err, code) {
-							const city = '北京市'
-							that.cityName = city;
-							// 缴费类别
-							request.post('payment/pay-type-lst', {
-								cityName: city//,
-								// environment: "test"
-							}).then(res => {
-								// console.log(res)
-								if (res.status == 200) {
-									that.cebPaymentCategoriesList = res.data.data;
-								}
-							}).catch(err => {
-								that.netWork = false
-							})
-							console.log("cityName", city);
-							storage.set({
-								key: "cityName",
-								value: city,
-							})
-						}
-					})
-				},
-				fail: function (data, code) {
-					const city = '北京市'
-					that.cityName = city;
-					// 缴费类别
-					request.post('payment/pay-type-lst', {
-						cityName: city//,
-						// environment: "test"
-					}).then(res => {
-						// console.log(res)
-						if (res.status == 200) {
-							that.cebPaymentCategoriesList = res.data.data;
-						}
-					}).catch(err => {
-						that.netWork = false
-					})
-					console.log("cityName", city);
-					storage.set({
-						key: "cityName",
-						value: city,
-					})
-				}
-			})
-		},
-		// 复制微信号
-		copyWx() {
-			statis.statis('copy_wx', { external: this.external }, this)
-			clipboard.set({
-				text: 'ubaycn',
-				success: () => {
-					prompt.showToast({
-						message: '复制成功'
-					})
-				},
-				fail: () => {
-					prompt.showToast({
-						message: '复制失败'
-					})
-				}
-			})
-		},
-		// 上拉加载缴费记录
-		renderMoreListItem() {
-			if (this.currentPage < this.orderPagingH5Model.pageInfo.totalReco / this.pageSize) {
-				this.hasMoreData = true;
-				this.currentPage += 1;
-				// 缴费记录
-				request.post('order/payment-records', {
-					pageSize: this.pageSize,
-					currentPage: this.currentPage//,
-					// environment: "test"
-				}).then(res => {
-					if (res.status == 200) {
-						this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
-						this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
-						console.log("this.orderPagingH5Model", this.orderPagingH5Model)
-						if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-							this.hasMoreData = false;
 						}
 					} else {
-						this.hasMoreData = false;
+						this.showToast(res.msg);
 					}
 				}).catch(err => {
-					this.hasMoreData = false;
-				})
-
-			} else {
-				this.hasMoreData = false;
-			}
-		},
-		// 缴费记录页面跳转城市选择
-		orderToDetail() {
-			router.push({
-				uri: 'Home/CityList',
-				params: {
-					tabIndex: 1,
-				}
-			})
-		},
-		// 页面跳转
-		toDetail(url, name) {
-			console.log(this.external)
-			console.log(this.external == 'testShare')
-			if (this.external == 'testShare') {
-				share.share({
-					shareType: 0,
-					title: '测试标题',
-					summary: '测试摘要',
-					imagePath: '/images/icon/power.png',
-					// imagePath: 'https://cdn.ubaycn.com/upload/images/2019-06-04/c6e8b88b88810cc3a6ee2b5e48d588c5.png',
-					targetUrl: 'http://www.quickapp.cn',
-					success: function (data) {
-						console.log('handling success')
-					},
-					fail: function (data, code) {
-						console.log(`handling fail, code = ${code}`)
-						console.log(`data=${data}`)
-					}
-				})
-			} else {
-				let obj
-				if (name) {
-					obj = {
-						uri: url,
-						params: {
-							title: name
-						}
-					}
-				} else {
-					obj = {
-						uri: url
-					}
-				}
-				router.push(obj)
-			}
-		},
-		// 缴费类别点击事件
-		toJFDetail(url, name, type, icon, jfType) {
-			if (jfType == 'common') {
-				// 常用缴费
-				statis.statis('class_type_common_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
-			} else if (jfType == 'fast') {
-				// 快速缴费
-				statis.statis('class_type_fast_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
-			} else {
-				// 首页缴费
-				statis.statis('class_type_click', { typeName: name, cityName: this.cityName, external: this.external }, this)
-			}
-
-			// 页面埋点
-			fetch.fetch({
-				url: "https://t.ubaycn.com/ub/tatistics/quick?scene=3&phone=" + this.relaymobile + "&sourceType=" + this.external,
-				method: "GET",
-				success: function (res) {
-					// console.log("于哥出品"+res);
-				}
-			})
-
-			const obj = {
-				uri: url,
-				params: {
-					title: name,
-					type,
-					external: this.external,
-					icon,
-				}
-			}
-			if (name.indexOf("手机") != -1) {
-				obj.uri = "Home/Mobile"
-			}
-			if (this.isLogin) {
-				// 跳转缴费页
-				this.getJfTypeDetail(obj)
-			} else {
-				router.push({
-					uri: 'User/SmsLogin'
+					console.log(err)
+					this.showLoading = false;
+					this.showToast('网络错误');
 				})
 			}
-		},
-		goRechargeDetail(groupId, groupName, billitem) {
-			this.showLoading = true;
+		});
+	},
+	// 查询缴费项目
+	getJfTypeDetail(obj) {
+		var that = this;
+		// console.log("cityName", this.cityName);
+		if (obj.params.title.indexOf("手机") != -1) {
+			obj.uri = "Home/Mobile"
+			// console.clear();
+			console.log("before Home/Mobile");
+			console.log("obj", obj);
+			// return false;
+			router.push(obj)
+		} else {
 			// 缴费项目信息
 			storage.get({
 				key: "sessionId",
 				success: function (data) {
+					console.log("cityName of ptd", that.cityName);
+					// return false;
 					request.post('payment/pay-type-detail', {
 						sessionId: data,
-						cityName: billitem.cityName,
-						type: billitem.type,
+						cityName: that.cityName,
+						type: obj.params.type,
 					}).then(res => {
-						console.log("payment/pay-type-detail", res)
-						this.showLoading = false;
 						if (res.status == 200) {
 							const item = res.data.paymentItemPagingModel;
 							this.paymentItemList = res.data.paymentItemList;
 							if (this.paymentItemList.length > 1) {
-								const paymentItemModelList = item.paymentItemModelList;
-								let paymentList = []
-								console.log("paymentItemModelList from Home", paymentItemModelList);
-								for (let i = 0; i < paymentItemModelList.length; i++) {
-									const element = paymentItemModelList[i]
-									console.log("billitem", billitem)
-									console.log(element.paymentItemId, billitem.paymentItemId)
-									if (element.paymentItemId == billitem.paymentItemId) {
-										paymentList.push(element)
-									}
-								}
+								// 列表选择
 								router.push({
-									uri: 'Home/Recharge',
+									uri: 'Home/ProjectList',
 									params: {
-										payName: '1',
-										title: billitem.typeName,
-										type: billitem.type,
-										icon: billitem.imagUrl,
-										cityName: billitem.cityName,
-										paymentItemModelList: paymentList,//项目信息
-										groupName,
-										groupId,
-										billKey: billitem.houseNumber
+										title: obj.params.title,
+										type: obj.params.type,
+										icon: obj.params.icon,
+										cityName: that.cityName,
+										external: this.external,
+										paymentItemList: this.paymentItemList,//选择列表
+										paymentItemModelList: item.paymentItemModelList,//项目信息
 									}
 								})
 							} else {
@@ -1549,232 +1590,164 @@
 									uri: 'Home/Recharge',
 									params: {
 										payName: '1',
-										title: billitem.typeName,
-										type: billitem.type,
-										icon: billitem.imagUrl,
-										cityName: billitem.cityName,
+										title: obj.params.title,
+										type: obj.params.type,
+										icon: obj.params.icon,
+										external: this.external,
+										cityName: that.cityName,
 										paymentItemModelList: item.paymentItemModelList,//项目信息
-										groupName,
-										oldGroupName: groupName,
-										oldBill: billitem.bill
 									}
 								})
 							}
 						} else {
-							this.showToast(res.msg);
+							prompt.showToast({
+								message: res.msg
+							});
 						}
 					}).catch(err => {
-						console.log(err)
-						this.showLoading = false;
-						this.showToast('网络错误');
+						prompt.showToast({
+							message: '网络错误'
+						});
 					})
 				}
-			});
-		},
-		// 查询缴费项目
-		getJfTypeDetail(obj) {
-			var that = this;
-			// console.log("cityName", this.cityName);
-			if (obj.params.title.indexOf("手机") != -1) {
-				obj.uri = "Home/Mobile"
-				// console.clear();
-				console.log("before Home/Mobile");
-				console.log("obj", obj);
-				// return false;
-				router.push(obj)
-			} else {
-				// 缴费项目信息
-				storage.get({
-					key: "sessionId",
-					success: function (data) {
-						console.log("cityName of ptd", that.cityName);
-						// return false;
-						request.post('payment/pay-type-detail', {
-							sessionId: data,
-							cityName: that.cityName,
-							type: obj.params.type,
-						}).then(res => {
-							if (res.status == 200) {
-								const item = res.data.paymentItemPagingModel;
-								this.paymentItemList = res.data.paymentItemList;
-								if (this.paymentItemList.length > 1) {
-									// 列表选择
-									router.push({
-										uri: 'Home/ProjectList',
-										params: {
-											title: obj.params.title,
-											type: obj.params.type,
-											icon: obj.params.icon,
-											cityName: that.cityName,
-											external: this.external,
-											paymentItemList: this.paymentItemList,//选择列表
-											paymentItemModelList: item.paymentItemModelList,//项目信息
-										}
-									})
-								} else {
-									// 账单详情
-									router.push({
-										uri: 'Home/Recharge',
-										params: {
-											payName: '1',
-											title: obj.params.title,
-											type: obj.params.type,
-											icon: obj.params.icon,
-											external: this.external,
-											cityName: that.cityName,
-											paymentItemModelList: item.paymentItemModelList,//项目信息
-										}
-									})
-								}
-							} else {
-								prompt.showToast({
-									message: res.msg
-								});
-							}
-						}).catch(err => {
-							prompt.showToast({
-								message: '网络错误'
-							});
-						})
-					}
-				})
-			}
-		},
-		// 退出登录
-		logout() {
-			statis.statis('logout_click', { mobile: this.mobile }, this)
-			const that = this;
-			storage.delete({
-				key: 'sid',
-				success: function (data) {
-					// console.log('handling success')
-					that.pageSize = 10;
-					that.currentPage = 1;
-					that.sid = '';
-					that.mobile = '';
-					that.isLogin = false;
-					that.hasMoreData = false;
-					console.log(that.isLogin)
-					that.orderPagingH5Model = {
-						pageInfo: {},
-						recordsModel: []
-					}
-					prompt.showToast({
-						message: '退出登录成功'
-					});
-				},
-				fail: function (data, code) {
-					console.log(`handling fail, code = ${code}`)
+			})
+		}
+	},
+	// 退出登录
+	logout() {
+		statis.statis('logout_click', { mobile: this.mobile }, this)
+		const that = this;
+		storage.delete({
+			key: 'sid',
+			success: function (data) {
+				// console.log('handling success')
+				that.pageSize = 10;
+				that.currentPage = 1;
+				that.sid = '';
+				that.mobile = '';
+				that.isLogin = false;
+				that.hasMoreData = false;
+				console.log(that.isLogin)
+				that.orderPagingH5Model = {
+					pageInfo: {},
+					recordsModel: []
 				}
-			})
-			storage.delete({
-				key: 'mobile',
-			})
-			storage.delete({
-				key: '_id',
-			})
-			storage.delete({
-				key: 'external',
-			})
-		},
-		pagefinish() {
-			this.$page.setTitleBar({ text: this.name });
-		},
-		toPhone() {
-			storage.get({
-				key: "sid",
-				success: (data) => {
-					console.log(data);
-					if (!data) {
-						router.push({
-							uri: "User/SmsLogin"
-						})
+				prompt.showToast({
+					message: '退出登录成功'
+				});
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		storage.delete({
+			key: 'mobile',
+		})
+		storage.delete({
+			key: '_id',
+		})
+		storage.delete({
+			key: 'external',
+		})
+	},
+	pagefinish() {
+		this.$page.setTitleBar({ text: this.name });
+	},
+	toPhone() {
+		storage.get({
+			key: "sid",
+			success: (data) => {
+				console.log(data);
+				if (!data) {
+					router.push({
+						uri: "User/SmsLogin"
+					})
+				} else {
+					let newNum = "";
+					if (this.showShortcut == true) {
+						newNum = "1"
 					} else {
-						let newNum = "";
-						if (this.showShortcut == true) {
-							newNum = "1"
-						} else {
-							newNum = "2"
-						}
-						console.log(newNum);
-						router.push({
-							uri: "http://h5.ubaycn.com/mobileEvent/?Sessionid=" + data + "&showShortcut=" + newNum
-						})
+						newNum = "2"
 					}
+					console.log(newNum);
+					router.push({
+						uri: "http://h5.ubaycn.com/mobileEvent/?Sessionid=" + data + "&showShortcut=" + newNum
+					})
 				}
-			})
-		},
-		share() {
-			console.log("分享");
-			if (this.isLogin) {
-				let that = this;
-				console.log(share.getProvider())
-				share.getAvailablePlatforms({
-					success: function (data) {
-						let platformsList = ""
-						for (const i in data.platforms) {
-							console.log("platforms: " + data.platforms[i]);
-							platformsList += data.platforms[i] + ","
-						}
-						platformsList = platformsList.substring(0, platformsList.length - 1)
-						console.log(platformsList);
-						share.share({
-							shareType: 0,
-							title: '轻松云缴费，赢vivoNEX3手机',
-							summary: '轻轻点一下，你也可以赢价值5698元的5G智慧旗舰vivo NEX3手机，每天送3部，连送30天',
-							imagePath: '/images/logo.png',
-							targetUrl: 'hap://app/com.ubaycn.yjf/Home?external=vivoNEX3',
-							platforms: [platformsList],
-							success: function (data) {
-								console.log('handling success', data)
-								// 分享功能打点
-								fetch.fetch({
-									url: "https://t.ubaycn.com/ub/tatistics/quick?scene=6&phone=" + that.relaymobile + "&sourceType=" + that.external + "&sessionId=" + that.sid,
-									// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=6&phone="+that.relaymobile+"&sourceType="+that.external+"&sessionId="+that.sid,
-									method: "GET",
-									success: function (res) {
-										console.log("于哥出品" + res);
-									}
-								})
-							},
-							fail: function (data, code) {
-								console.log(`handling fail, failMess=${data},code=${code}`)
-							},
-							cancel: function (code) {
-								console.log(`handling fail, failMess=${data},code=${code}`)
-							}
-						})
-
-					},
-					fail: function (code) {
-						console.log("handling fail, code=" + code);
-					}
-				})
-			} else {
-				router.push({
-					uri: "User/SmsLogin"
-				})
 			}
-		},
-		device() {
-			let that = this
-			device.getId({
-				type: ['device', 'mac'],
+		})
+	},
+	share() {
+		console.log("分享");
+		if (this.isLogin) {
+			let that = this;
+			console.log(share.getProvider())
+			share.getAvailablePlatforms({
 				success: function (data) {
-					console.log("获取手机的唯一识别码", data, that.relaymobile, that.external);
-					fetch.fetch({
-						// url:"https://t.ubaycn.com/ub/tatistics/quick?scene=2&phone="+this.relaymobile+"&sourceType="+this.external+"&device="+data.device,
-						url: "http://192.168.1.140:8090/ub/tatistics/quick?scene=2&phone=" + that.relaymobile + "&sourceType=" + that.external + "&device=" + data.device,
-						method: "GET",
-						success: function (res) {
-							// console.log("获取到的手机号",this.relaymobile);
+					let platformsList = ""
+					for (const i in data.platforms) {
+						console.log("platforms: " + data.platforms[i]);
+						platformsList += data.platforms[i] + ","
+					}
+					platformsList = platformsList.substring(0, platformsList.length - 1)
+					console.log(platformsList);
+					share.share({
+						shareType: 0,
+						title: '轻松云缴费，赢vivoNEX3手机',
+						summary: '轻轻点一下，你也可以赢价值5698元的5G智慧旗舰vivo NEX3手机，每天送3部，连送30天',
+						imagePath: '/images/logo.png',
+						targetUrl: 'hap://app/com.ubaycn.yjf/Home?external=vivoNEX3',
+						platforms: [platformsList],
+						success: function (data) {
+							console.log('handling success', data)
+							// 分享功能打点
+							fetch.fetch({
+								url: "https://t.ubaycn.com/ub/tatistics/quick?scene=6&phone=" + that.relaymobile + "&sourceType=" + that.external + "&sessionId=" + that.sid,
+								// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=6&phone="+that.relaymobile+"&sourceType="+that.external+"&sessionId="+that.sid,
+								method: "GET",
+								success: function (res) {
+									console.log("于哥出品" + res);
+								}
+							})
+						},
+						fail: function (data, code) {
+							console.log(`handling fail, failMess=${data},code=${code}`)
+						},
+						cancel: function (code) {
+							console.log(`handling fail, failMess=${data},code=${code}`)
 						}
 					})
+
 				},
-				fail: function (data, code) {
-					console.log(`handling fail, code = ${code}`)
+				fail: function (code) {
+					console.log("handling fail, code=" + code);
 				}
 			})
-		},
-	})
+		} else {
+			router.push({
+				uri: "User/SmsLogin"
+			})
+		}
+	},
+	device() {
+		let that = this
+		device.getId({
+			type: ['device', 'mac'],
+			success: function (data) {
+				console.log("获取手机的唯一识别码", data, that.relaymobile, that.external);
+				fetch.fetch({
+					// url:"https://t.ubaycn.com/ub/tatistics/quick?scene=2&phone="+this.relaymobile+"&sourceType="+this.external+"&device="+data.device,
+					url: "http://192.168.1.140:8090/ub/tatistics/quick?scene=2&phone=" + that.relaymobile + "&sourceType=" + that.external + "&device=" + data.device,
+					method: "GET",
+					success: function (res) {
+						// console.log("获取到的手机号",this.relaymobile);
+					}
+				})
+			},
+			fail: function (data, code) {
+				console.log(`handling fail, code = ${code}`)
+			}
+		})
+	},
+})
 </script>
