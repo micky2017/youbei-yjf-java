@@ -926,9 +926,14 @@
 			storage.get({
 				key: "mobile",
 				success: (data) => {
-					const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
-					this.mobile = mobile;
-					this.relaymobile = data;
+					if(data){
+						const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
+						this.mobile = mobile;
+						this.relaymobile = data;
+						this.isLogin = true;
+					}else{
+						this.isLogin = false;
+					}
 				},
 				fail: function (data, code) {
 					console.log(`handling fail, code = ${code}`)

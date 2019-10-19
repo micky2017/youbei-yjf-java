@@ -342,10 +342,10 @@ export default Custom_page({
                         // res.data = JSON.parse(res.data);
                         if (res.status == 200) {
                             const data = res.data;
-                            console.log(data);
+                            console.log(data.length);
                             if (data.length != 0) {
                                 console.log("Prize Found!!!");
-                                this.noPrizeList = false;
+                                that.noPrizeList = false;
                                 for (let i = 0; i < data.length; i++) {
                                     // data[i].acquire_time 获取时间
                                     if (data[i].isExpire == false) {
@@ -358,11 +358,12 @@ export default Custom_page({
                                     data[i].expireTime = that.format(Date.parse(new Date(data[i].expireTime)))
                                 }
                             } else {
-                                this.noPrizeList = true;
+                                console.log("Prize No Found!!!");
+                                that.noPrizeList = true;
                             }
                             that.prizeList = data
                         } else {
-                            this.noPrizeList = true;
+                            that.noPrizeList = true;
                         }
                         console.log(that.prizeList)
                     }
