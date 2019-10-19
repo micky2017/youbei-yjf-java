@@ -324,14 +324,7 @@ export default Custom_page({
         })
     },
     onShow() {
-        // setInterval(() => {
-        //     this.groupName = new Date().getTime();
-        // }, 1000);
         var that = this;
-        // console.log("pre gn");
-        // this.groupName = "asdf";
-        // console.log("suf gn");
-        // return false;
         console.clear();
         console.log("recharge.onShow");
         console.log("this", this);
@@ -343,9 +336,6 @@ export default Custom_page({
                     storage.delete({
                         key: "groupId"
                     });
-                    // storage.delete({
-                    //     key: 'groupId'
-                    // })
                     storage.get({
                         key: "groupName",
                         success: (data) => {
@@ -365,9 +355,6 @@ export default Custom_page({
         })
     },
     onReady() {
-        // console.clear();
-        // console.log(this);
-        // return false;
         storage.get({
             key: 'external',
             success: (data) => {
