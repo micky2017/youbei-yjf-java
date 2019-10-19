@@ -131,7 +131,7 @@
 						<!-- 缴费类别 -->
 						<list-item>
 							<div class="fast-title">
-								<text class="fast-title_text">便捷缴费10191632</text>
+								<text class="fast-title_text">便捷缴费10191734</text>
 								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
 							</div>
 							<div class="no-network" if="!netWork">
@@ -471,6 +471,7 @@ export default Custom_page({
 		sourceType: "vivo"
 	},
 	onInit() {
+		console.log("Home.onInit");
 		console.log("首页获取到的external：", this.external)
 		// 获取当前来源
 		storage.set({
@@ -863,6 +864,7 @@ export default Custom_page({
 		})
 	},
 	onShow() {
+		console.log("Home.onShow");
 		// 获取分组
 		var that = this;
 		this.updateGroup();
@@ -899,8 +901,9 @@ export default Custom_page({
 					request.post('payment/pay-type-lst', {
 						cityName: this.cityName//,
 					}).then(res => {
+						console.log("paymentpayment/pay-type-lst", res);
 						if (res.status == 200) {
-							this.cebPaymentCategoriesList = res.data.data;
+							this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 						}
 					}).catch(err => {
 						this.netWork = false
@@ -930,29 +933,38 @@ export default Custom_page({
 		router.clear()
 	},
 	updateGroup() {
+		console.clear();
+		console.log("updateGroup");
 		var that = this;
 		storage.get({
 			key: "sessionId",
 			success(data) {
+				console.log(60);
 				if (data) {
+					console.log(61);
 					request.post('user/get-group', {
 						sessionId: data,
 						isHome: true
 					}).then(res => {
+						console.log(62);
 						// console.clear();
 						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
+							console.log(63);
 							that.isGroup = res.data.isGroup;
-							if(that.isGroup){
-								res.data.list = eval(res.data.list);
+							res.data.list = eval(res.data.list);
+							if (that.isGroup) {
+								console.log(64);
 								for (var i = res.data.list.length - 1; i >= 0; i--) {
 									if (res.data.list[i].children.length == 0) {
+										console.log(65);
 										res.data.list.splice(i, 1);
 									}
 								}
-								console.log(res.data.list);
-								that.groupList = res.data.list;
 							}
+							console.log(66);
+							console.log(res.data.list);
+							that.groupList = res.data.list;
 						}
 					})
 				}
@@ -1030,7 +1042,9 @@ export default Custom_page({
 		})
 	},
 	onReady() {
+		console.log("Home.onReady");
 		var that = this;
+		// this.updateGroup();
 		storage.get({
 			key: 'external',
 			success: (data) => {
@@ -1290,7 +1304,7 @@ export default Custom_page({
 							cityName: this.cityName//,
 							// environment: "test"
 						}).then(res => {
-							// console.log(res)
+							console.log("paymentpayment/pay-type-lst", res);
 							if (res.status == 200) {
 								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 							} else {
@@ -1313,7 +1327,7 @@ export default Custom_page({
 							cityName: this.cityName//,
 							// environment: "test"
 						}).then(res => {
-							// console.log(res)
+							console.log("paymentpayment/pay-type-lst", res);
 							if (res.status == 200) {
 								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 							}
@@ -1336,7 +1350,7 @@ export default Custom_page({
 					cityName: this.cityName//,
 					// environment: "test"
 				}).then(res => {
-					// console.log(res)
+					console.log("paymentpayment/pay-type-lst", res);
 					if (res.status == 200) {
 						this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 					}
@@ -1546,7 +1560,7 @@ export default Custom_page({
 							})
 						} else {
 							// 账单详情
-							console.clear();
+							// console.clear();
 							console.log("to recharge", {
 								payName: '1',
 								title: billitem.typeName,
