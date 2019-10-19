@@ -324,35 +324,7 @@ export default Custom_page({
         })
     },
     onShow() {
-        var that = this;
-        console.clear();
-        console.log("recharge.onShow");
-        console.log("this", this);
-        storage.get({
-            key: 'groupId',
-            success: (data) => {
-                if (data) {
-                    this.groupId = data;
-                    storage.delete({
-                        key: "groupId"
-                    });
-                    storage.get({
-                        key: "groupName",
-                        success: (data) => {
-                            // console.clear();
-                            console.log("groupName from storage", data);
-                            that.groupName = data;
-                            storage.delete({
-                                key: "groupName"
-                            });
-                        },
-                        fail: () => {
-
-                        }
-                    });
-                }
-            }
-        })
+        this.getGroup();
     },
     onReady() {
         storage.get({
@@ -448,25 +420,6 @@ export default Custom_page({
     },
     onInit() {
         console.log("recharge.init");
-        // this.billKey = this.oldBill;
-        var that = this;
-        storage.get({
-            key: "groupId",
-            success(gid) {
-                if (gid) {
-                    this.groupId = gid;
-                    storage.get({
-                        key: "groupName",
-                        success(gname) {
-                            console.log("gname from storage", gname);
-                            that.groupName = gname;
-                        }
-                    });
-                } else {
-                    that.getGroup();
-                }
-            }
-        });
     },
     getIcon() {
         const iconList = [
@@ -495,13 +448,45 @@ export default Custom_page({
         }
     },
     getGroup() {
-        console.log("recharge.get-group");
-        request.post("user/get-group").then(res => {
-            console.log("user/get-group", res);
-            res.data = eval(res.data.list);
-            console.log(res.data);
-            this.groupName = res.data[0].groupName;
-            this.groupId = res.data[0].id;
+        //*
+        console.clear();
+        console.log("enter recharge.get-group");
+        let that = this;
+        storage.get({
+            key: "groupId",
+            success(gid) {
+                if (gid) {
+                    console.log("storage.GroupId detected");
+                    that.groupId = gid;
+                    storage.delete({
+                        key: "groupId"
+                    });
+                    storage.get({
+                        key: "groupName",
+                        success(gname){
+                            that.groupName = gname;
+                            storage.delete({
+                                key: "groupName"
+                            });
+                        }
+                    });
+                } else {
+                    console.log("no groupId in storgae");
+                    if (!that.groupId) {
+                        console.log("no this.groupId");
+                        request.post("user/get-group").then(res => {
+                            console.log("user/get-group", res);
+                            res.data = eval(res.data.list);
+                            console.log("data", res.data);
+                            console.log("data.length", res.data.length);
+                            that.groupName = res.data[0].groupName;
+                            that.groupId = res.data[0].id;
+                        });
+                    }else{
+                        console.log("this.groupId exist, nothing todo");
+                    }
+                }
+            }
         });
     },
     // 获取历史记录
