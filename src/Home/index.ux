@@ -87,7 +87,7 @@
 												<text>分组管理</text>
 											</div>
 										</div>
-										<div @click="goRechargeDetail($item.groupId,$item.groupName,item)" class="group-item_cell" for="item in $item.children">
+										<div @click="goRechargeDetail($item.id,$item.groupName,item)" class="group-item_cell" for="item in $item.children">
 											<div class="group-cell_head">
 												<div class="group-head_left">
 													<image width="58" height="58" resize-mode="contain" src="{{item.imgUrl}}"></image>
@@ -131,7 +131,7 @@
 						<!-- 缴费类别 -->
 						<list-item>
 							<div class="fast-title">
-								<text class="fast-title_text">便捷缴费</text>
+								<text class="fast-title_text">便捷缴费10191632</text>
 								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
 							</div>
 							<div class="no-network" if="!netWork">
@@ -867,44 +867,23 @@ export default Custom_page({
 	onShow() {
 		// 获取分组
 		var that = this;
-		storage.get({
-			key: "sessionId",
-			success(data) {
-				if (data) {
-					request.post('user/get-group', {
-						sessionId: data,
-						isHome: true
-					}).then(res => {
-						// console.clear();
-						console.log("Home.user/get-group", res)
-						if (res.status == 200) {
-							that.isGroup = res.data.isGroup
-							res.data.list = eval(res.data.list);
-							for (var i = res.data.list.length - 1; i > 0; i--) {
-								if (res.data.list[i].children.length == 0) {
-									res.data.list.splice(i, 1);
-								}
-							}
-							that.groupList = res.data.list;
-						}
-					})
-
-				}
-			}
-		});
-
+		this.updateGroup();
+		storage.delete({ key: "groupId" });
+		storage.delete({ key: "groupName" });
+		// this.groupId = "";
+		// this.groupName = "";
 		// 页面初始化埋点
 		this.device()
 		// 获取手机号
 		storage.get({
 			key: "mobile",
 			success: (data) => {
-				if(data){
+				if (data) {
 					const mobile = data.substring(0, 3) + '****' + data.substring(7, 11)
 					this.mobile = mobile;
 					this.relaymobile = data;
 					this.isLogin = true;
-				}else{
+				} else {
 					this.isLogin = false;
 				}
 			},
@@ -952,6 +931,36 @@ export default Custom_page({
 		})
 		router.clear()
 	},
+	updateGroup() {
+		var that = this;
+		storage.get({
+			key: "sessionId",
+			success(data) {
+				if (data) {
+					request.post('user/get-group', {
+						sessionId: data,
+						isHome: true
+					}).then(res => {
+						// console.clear();
+						console.log("Home.user/get-group", res)
+						if (res.status == 200) {
+							that.isGroup = res.data.isGroup;
+							if(that.isGroup){
+								res.data.list = eval(res.data.list);
+								for (var i = res.data.list.length - 1; i >= 0; i--) {
+									if (res.data.list[i].children.length == 0) {
+										res.data.list.splice(i, 1);
+									}
+								}
+								console.log(res.data.list);
+								that.groupList = res.data.list;
+							}
+						}
+					})
+				}
+			}
+		});
+	},
 	//打电话
 	call() {
 		prompt.showDialog({
@@ -997,6 +1006,9 @@ export default Custom_page({
 		this.tabIndex = tab.index;
 		// APP_STATISTICS.track_event('tab_change_click', {tabName: arr[tab.index]});
 		statis.statis('tab_change_click', { tabName: arr[tab.index], external: this.external }, this)
+		if (tab.index == 0) {
+			this.updateGroup();
+		}
 	},
 	tip() {
 		prompt.showToast({
@@ -1558,6 +1570,7 @@ export default Custom_page({
 		}
 	},
 	goRechargeDetail(groupId, groupName, billitem) {
+		console.log("groupId in goRechargeDetail", groupId);
 		this.showLoading = true;
 		// 缴费项目信息
 		storage.get({
@@ -1585,6 +1598,21 @@ export default Custom_page({
 									paymentList.push(element)
 								}
 							}
+							console.log({
+								uri: 'Home/Recharge',
+								params: {
+									payName: '1',
+									title: billitem.typeName,
+									type: billitem.type,
+									icon: billitem.imagUrl,
+									cityName: billitem.cityName,
+									paymentItemModelList: paymentList,//项目信息
+									groupName,
+									groupId,
+									billKey: billitem.houseNumber
+								}
+							});
+							// return false;
 							router.push({
 								uri: 'Home/Recharge',
 								params: {
@@ -1601,6 +1629,20 @@ export default Custom_page({
 							})
 						} else {
 							// 账单详情
+							console.clear();
+							console.log("to recharge", {
+								payName: '1',
+								title: billitem.typeName,
+								type: billitem.type,
+								icon: billitem.imagUrl,
+								cityName: billitem.cityName,
+								paymentItemModelList: item.paymentItemModelList,//项目信息
+								groupName,
+								groupId,
+								oldGroupName: groupName,
+								oldBill: billitem.bill
+							});
+							// return false;
 							router.push({
 								uri: 'Home/Recharge',
 								params: {
@@ -1611,6 +1653,7 @@ export default Custom_page({
 									cityName: billitem.cityName,
 									paymentItemModelList: item.paymentItemModelList,//项目信息
 									groupName,
+									groupId,
 									oldGroupName: groupName,
 									oldBill: billitem.bill
 								}
