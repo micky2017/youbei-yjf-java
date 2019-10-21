@@ -477,27 +477,27 @@ export default Custom_page({
                     statis.statis('Huawei_login_click',{},this);
                 }
 
-                fetch.fetch({
-                    url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
-                    method:"GET",
-                    success:function(res){
-                        console.log("于哥出品"+res);
-                    }
-                })
-                // APP_STATISTICS.track_event("sms_login_click",{'mobile':this.sms_phone});
+                request.get("tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan)
+                .then(res => {console.log("scene1的返回结果",res)})
                 // fetch.fetch({
-                //     url:`${this.$app.$data.logUrl}?event=sms_login_click&data={'mobile':${this.sms_phone}}&tag=云缴费`,
+                //     url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
+                //     method:"GET",
+                //     success:function(res){
+                //         console.log("于哥出品"+res);
+                //     }
                 // })
                 console.log("成功返回：")
                 console.log(res)
-                fetch.fetch({
-                    url: "http://hello.ngrok2.xiaomiqiu.cn/ub/user/login/mobile",
-                    method: "post",
-                    data: {
-                        mobile: "15803486478"
-                        // mobile: "13552160710"
-                    }
-                });
+                request.post("user/login/mobile",{mobile:res.data.mobile})
+                .then(res=>{console.log("判断是否首次登陆的返回结果",res)})
+                // fetch.fetch({
+                //     url: "http://hello.ngrok2.xiaomiqiu.cn/ub/user/login/mobile",
+                //     method: "post",
+                //     data: {
+                //         mobile: "15803486478"
+                //         // mobile: "13552160710"
+                //     }
+                // });
                 if (res.data.isFirst) {
                     storage.set({
                         key: 'firstLogin',

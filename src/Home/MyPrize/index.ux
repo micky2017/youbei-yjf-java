@@ -328,46 +328,37 @@ export default Custom_page({
             key: "uid",
             success: function (uid) {
                 // console.log("uid", res);
-                fetch.fetch({
-                    // url: "http://hello.ngrok2.xiaomiqiu.cn/lottery/queryLotteryList",
-                    url: "http://hello.ngrok2.xiaomiqiu.cn/ub/lottery/queryLotteryList",
-                    method: "post",
-                    responseType: "json",
-                    data: {
-                        uid: uid
-                    },
-                    success: function (res) {
-                        res = res.data;
-                        console.log("/lottery/queryLotteryList", res);
-                        // res.data = JSON.parse(res.data);
-                        if (res.status == 200) {
-                            const data = res.data;
-                            console.log(data.length);
-                            if (data.length != 0) {
-                                console.log("Prize Found!!!");
-                                that.noPrizeList = false;
-                                for (let i = 0; i < data.length; i++) {
-                                    // data[i].acquire_time 获取时间
-                                    if (data[i].isExpire == false) {
-                                        data[i].isExpire = false
-                                    } else {
-                                        data[i].isExpire = true
-                                    }
-                                    // data[i].acquireTime = that.format(Number(data[i].acquireTime))
-                                    data[i].acquireTime = that.format(Date.parse(new Date(data[i].acquireTime)))
-                                    data[i].expireTime = that.format(Date.parse(new Date(data[i].expireTime)))
+                request.post("lottery/queryLotteryList",{uid: uid})
+                .then(res => {
+                    res = res.data;
+                    res.data = JSON.parse(res.data);
+                    console.log("/lottery/queryLotteryList", res,Object.prototype.toString.call(res));
+                    if (res.status == 200) {
+                        const data = res.data;
+                        if (data.length != 0) {
+                            console.log("Prize Found!!!");
+                            that.noPrizeList = false;
+                            for (let i = 0; i < data.length; i++) {
+                                // data[i].acquire_time 获取时间
+                                if (data[i].isExpire == false) {
+                                    data[i].isExpire = false
+                                } else {
+                                    data[i].isExpire = true
                                 }
-                            } else {
-                                console.log("Prize No Found!!!");
-                                that.noPrizeList = true;
+                                // data[i].acquireTime = that.format(Number(data[i].acquireTime))
+                                data[i].acquireTime = that.format(Date.parse(new Date(data[i].acquireTime)))
+                                data[i].expireTime = that.format(Date.parse(new Date(data[i].expireTime)))
                             }
-                            that.prizeList = data
                         } else {
+                            console.log("Prize No Found!!!");
                             that.noPrizeList = true;
                         }
-                        console.log(that.prizeList)
+                        that.prizeList = data
+                    } else {
+                        that.noPrizeList = true;
                     }
-                });
+                    console.log(that.prizeList)
+                })
             }
         });
         /*

@@ -3,7 +3,6 @@ import storage from "@system.storage";
 const md5 = require("md5");
 
 function sign(o) {
-  console.clear();
   console.log("sign.o", o);
   let pre = "22It1Z6035kDl94V0vRh";
   let suf = "Ju0TE3w57fiJ68C75WP0kpTXe17qXt";
@@ -12,28 +11,21 @@ function sign(o) {
   console.log("k", k);
   let t = "";
   for (var i = 0, j = k.length; i < j; i++) {
-    t += k[i] + (function(v){
+    t += k[i] + (function (v) {
       console.log("v", v);
-      if(Array.prototype.isPrototypeOf(v) && v.length == 0){
+      if (Array.prototype.isPrototypeOf(v) && v.length == 0) {
         return "[]";
-      }else{
+      } else {
         return v;
       }
     })(o.data[k[i]]);
   }
+  // console.log("t", t);
   let s = pre + t + suf;
-  // console.clear();
   console.log(o.url.replace(api, ""), s);
   let m = md5(s);
   o.data = Object.assign(o.data, { sign: m });
-  // switch(o.method.toUpperCase()){
-  //   case "POST":
-  //   o.data = Object.assign(o.data, { sign: m });
-  //   break;
-  //   case "GET":
-  //   o.data = Object.assign(o.data, { sign: m });
-  //   break;
-  // }
+  // console.log("o.data:",o.data)
   return o;
 }
 
@@ -46,7 +38,7 @@ const requestHandle = (params) => {
       key: "sessionId",
       success(res) {
         if (res) {
-          console.log("res", res);
+          // console.log("res", res);
           params.data = Object.assign(params.data, { sessionId: res });
         }
         // },
@@ -78,7 +70,7 @@ const requestHandle = (params) => {
           }
           return resolve(content)
         }).catch((error, code) => {
-          console.log(`🐛 request fail, code = ${code}`)
+          // console.log(`🐛 request fail, code = ${code}`)
           console.log("params.url", params.url);
           return reject(error)
         })
