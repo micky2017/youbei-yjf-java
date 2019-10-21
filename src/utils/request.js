@@ -29,15 +29,15 @@ function sign(o) {
 
 const requestHandle = (params) => {
   // console.log("requestHandle", params);
-  let sid;
+  // let sid;
   return new Promise((resolve, reject) => {
     // console.clear();
     storage.get({
       key: "sessionId",
       success(res) {
-        console.log("res from storage", res);
-        if (res.data) {
-          params.data = Object.assign(params.data, { sessionId: res.data });
+        if (res) {
+          console.log("res", res);
+          params.data = Object.assign(params.data, { sessionId: res });
         }
       },
       fail() {
@@ -111,6 +111,7 @@ export default {
     return requestHandle({
       method: 'get',
       url: queryString(api + url, params),
+      // url: api + url,
       data: params
     })
   },

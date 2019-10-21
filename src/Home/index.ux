@@ -131,7 +131,7 @@
 						<!-- 缴费类别 -->
 						<list-item>
 							<div class="fast-title">
-								<text class="fast-title_text">便捷缴费10191734</text>
+								<text class="fast-title_text">便捷缴费10211930</text>
 								<image if="activeSwitch == 'open'" width="300" resize-mode="contain" src="./images/activityImg/activity_count_icon.png"></image>
 							</div>
 							<div class="no-network" if="!netWork">
@@ -662,6 +662,7 @@ export default Custom_page({
 		this.showActiveModel = true;
 	},
 	closeActiveModel() {
+		console.log("cam");
 		this.showActiveModel = false;
 		this.showIqiyiActiveModel = false;
 		this.showJDEActiveModel = false;

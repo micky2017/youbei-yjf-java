@@ -239,7 +239,7 @@ export default Custom_page({
     getGroup() {
         var that = this;
         request.post('user/get-group').then(res => {
-            console.clear();
+            // console.clear();
             console.log("GM.user/get-group", res);
             if (res.status == 200) {
                 console.log("get-group.200");
