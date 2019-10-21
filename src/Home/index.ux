@@ -933,36 +933,36 @@ export default Custom_page({
 		router.clear()
 	},
 	updateGroup() {
-		console.clear();
-		console.log("updateGroup");
+		// console.clear();
+		// console.log("updateGroup");
 		var that = this;
 		storage.get({
 			key: "sessionId",
 			success(data) {
-				console.log(60);
+				// console.log(60);
 				if (data) {
-					console.log(61);
+					// console.log(61);
 					request.post('user/get-group', {
 						sessionId: data,
 						isHome: true
 					}).then(res => {
-						console.log(62);
+						// console.log(62);
 						// console.clear();
 						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
-							console.log(63);
+							// console.log(63);
 							that.isGroup = res.data.isGroup;
 							res.data.list = eval(res.data.list);
 							if (that.isGroup) {
-								console.log(64);
+								// console.log(64);
 								for (var i = res.data.list.length - 1; i >= 0; i--) {
 									if (res.data.list[i].children.length == 0) {
-										console.log(65);
+										// console.log(65);
 										res.data.list.splice(i, 1);
 									}
 								}
 							}
-							console.log(66);
+							// console.log(66);
 							console.log(res.data.list);
 							that.groupList = res.data.list;
 						}
