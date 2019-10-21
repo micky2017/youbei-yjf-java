@@ -2,30 +2,12 @@ import fetch from '@system.fetch';
 import storage from "@system.storage";
 
 const requestHandle = (params) => {
-    // // 独立环境
-    // let newData = params.data;
-    // newData = Object.assign(newData,{environment:'duli'})
-    // console.log(newData,params);
-    // if(params.data){
-    //   params.data.testpackage = "test";
-    // }else{
-    //   params.url = params.url.indexOf('?') != -1 ? `${params.url}&testpackage=test` : `${params.url}?testpackage=test`
-    // }
-    // if(params.data){
-    //   params.data.environment = "duli";
-    // }else{
-    //   params.url = params.url.indexOf('?') != -1 ? `${params.url}&environment=duli` : `${params.url}?environment=duli`
-    // }
   let sid;
   return new Promise((resolve, reject) => {
     storage.get({
       key: "sessionId",
     }).then(res => {
-      // console.log("request success");
       params.data = Object.assign(params.data, { sessionId: res.data });
-      // if(params.url.indexOf("weather") > 0){
-      //   alert("weather");
-      // }
       return fetch.fetch({
         url: params.url,
         header: {
@@ -35,7 +17,6 @@ const requestHandle = (params) => {
         data: params.data || {},
         responseType: 'json',
       }).then(response => {
-        // alert(params.url);
         const content = response.data.data;
         for (var i in content) {
           if (typeof content[i] == "string") {
@@ -46,18 +27,6 @@ const requestHandle = (params) => {
             }
           }
         }
-        // console.log(params.url + ".content", content);
-        // if (typeof content.data != "object") {
-        // if (typeof content.data == "string") {
-        //   content.data = JSON.parse(content.data);
-        // }
-        // console.log(params.url.indexOf("get-weather")>1);
-        // if(params.url.indexOf("get-weather") > 0){
-        //   console.clear();
-        //   console.log("request.weather", content.data);
-        // }else{
-        //   console.log("params.url", params.url);
-        // }
         return resolve(content)
       }).catch((error, code) => {
         console.log(`🐛 request fail, code = ${code}`)
@@ -82,7 +51,6 @@ const requestHandle = (params) => {
         return reject(error)
       })
     })
-
   })
 }
 function queryString(url, query) {
@@ -99,11 +67,12 @@ function queryString(url, query) {
 const environment = ["test", "yanzheng", "duli", "prod", ""][3];
 const api = [
   'https://api.ubaycn.com/',
+  'https://api0.ubaycn.com/',
   'https://test-api.ubaycn.com/',
   'http://192.168.1.157:7010/',
   'http://192.168.1.109:8090/',
   'http://192.168.43.187:8090/'
-][3] + "ub/";
+][1] + "ub/";
 export default {
   post: function (url, params) {
     params = Object.assign({ environment: environment }, params);
