@@ -187,6 +187,7 @@ export default Custom_page({
     // 获取资源位
     getResource() {
         request.get('payment/get-resource-img').then(res => {
+            console.log("payment/get-resource-img", res);
             if (res.status == 200) {
                 const data = res.data.pic_conf;
                 this.loginAdsList = data.login_ads.data
@@ -218,8 +219,7 @@ export default Custom_page({
     },
     showCaptchaFn(captchaImg) {
         this.showCaptcha = true;
-        // this.captcha = captchaImg;
-        this.captcha = request.api + "login/cap?" + new Date().getTime() + "&mobile=" + this.sms_phone;
+        this.captcha = request.cap(this.sms_phone);
     },
     // 监听密码输入
     changePassword(response) {

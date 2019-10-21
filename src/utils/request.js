@@ -3,17 +3,27 @@ import storage from "@system.storage";
 const md5 = require("md5");
 
 function sign(o) {
+  console.clear();
   console.log("sign.o", o);
   let pre = "22It1Z6035kDl94V0vRh";
   let suf = "Ju0TE3w57fiJ68C75WP0kpTXe17qXt";
   console.log("o.data from sign", o.data);
   let k = Object.keys(o.data).sort();
+  console.log("k", k);
   let t = "";
   for (var i = 0, j = k.length; i < j; i++) {
-    t += k[i] + o.data[k[i]];
+    t += k[i] + (function(v){
+      console.log("v", v);
+      if(Array.prototype.isPrototypeOf(v) && v.length == 0){
+        return "[]";
+      }else{
+        return v;
+      }
+    })(o.data[k[i]]);
   }
   let s = pre + t + suf;
-  // console.log(o.url.replace(api, ""), s);
+  // console.clear();
+  console.log(o.url.replace(api, ""), s);
   let m = md5(s);
   o.data = Object.assign(o.data, { sign: m });
   // switch(o.method.toUpperCase()){
@@ -39,12 +49,12 @@ const requestHandle = (params) => {
           console.log("res", res);
           params.data = Object.assign(params.data, { sessionId: res });
         }
-      },
-      fail() {
-        console.log("fail");
-      },
-      complete() {
-        console.log("complete", params);
+        // },
+        // fail() {
+        //   console.log("fail");
+        // },
+        // complete() {
+        //   console.log("complete", params);
         params = sign(params);
         // console.log(params);
         return fetch.fetch({
@@ -89,13 +99,13 @@ function queryString(url, query) {
 }
 const environment = ["test", "yanzheng", "duli", "prod", ""][3];
 const api = [
-  'https://api.ubaycn.com/',
-  'https://api0.ubaycn.com/',
-  'https://test-api.ubaycn.com/',
-  'http://192.168.1.157:7010/',
+  // 'https://api.ubaycn.com/',
+  // 'https://api0.ubaycn.com/',
+  // 'https://test-api.ubaycn.com/',
+  // 'http://192.168.1.157:7010/',
   'http://192.168.1.109:8090/',
-  'http://192.168.43.187:8090/'
-][1] + "ub/";
+  // 'http://192.168.43.187:8090/'
+][0] + "ub/";
 export default {
   post: function (url, params) {
     params = Object.assign({ environment: environment }, params);
@@ -110,10 +120,22 @@ export default {
     params = Object.assign({ environment: environment }, params);
     return requestHandle({
       method: 'get',
-      url: queryString(api + url, params),
-      // url: api + url,
+      // url: queryString(api + url, params),
+      url: api + url,
       data: params
     })
   },
-  api: api
+  // api: api,
+  cap(phone) {
+    console.log();
+    // return false;
+    // request.api + "login/cap?mobile=" + this.sms_phone;
+    var ts = new Date().getTime();
+    return api + "login/cap?time_stamp=" + ts + "&mobile=" + phone + "&sign=" + sign({
+      data: {
+        time_stamp: ts,
+        mobile: phone
+      }
+    }).data.sign
+  }
 }

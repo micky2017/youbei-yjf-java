@@ -724,6 +724,8 @@ export default Custom_page({
 		})
 	},
 	goUrl(item, source) {
+		console.clear();
+		console.log(item, source);
 		if (source) {
 			statis.statis("banner_click", { source: source, external: this.external }, this)
 		}
@@ -1793,6 +1795,13 @@ export default Custom_page({
 			type: ['device', 'mac'],
 			success: function (data) {
 				console.log("获取手机的唯一识别码", data, that.relaymobile, that.external);
+				request.get("tatistics/quick", {
+					scene: 2,
+					phone: that.relaymobile,
+					sourceType: that.external,
+					device: data.device
+				});
+				/*
 				fetch.fetch({
 					// url:"https://t.ubaycn.com/ub/tatistics/quick?scene=2&phone="+this.relaymobile+"&sourceType="+this.external+"&device="+data.device,
 					url: "http://192.168.1.140:8090/ub/tatistics/quick?scene=2&phone=" + that.relaymobile + "&sourceType=" + that.external + "&device=" + data.device,
@@ -1801,6 +1810,7 @@ export default Custom_page({
 						// console.log("获取到的手机号",this.relaymobile);
 					}
 				})
+				/**/
 			},
 			fail: function (data, code) {
 				console.log(`handling fail, code = ${code}`)
