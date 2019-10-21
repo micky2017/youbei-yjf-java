@@ -1888,7 +1888,8 @@ export default Custom_page({
 				// 		// console.log("获取到的手机号",this.relaymobile);
 				// 	}
 				// })
-				request.get("tatistics/quick?scene=2&phone="+this.relaymobile+"&sourceType="+this.external+"&device="+data.device)
+				// request.get("tatistics/quick?scene=2&phone="+that.relaymobile+"&sourceType="+that.external+"&device="+data.device)
+				request.post("tatistics/quick",{scene:"2",phone:that.relaymobile,sourceType:that.external,device:data.device})
 				.then(res => {
 					console.log("scene2埋点",res)
 				})
