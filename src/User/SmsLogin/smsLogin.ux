@@ -317,7 +317,7 @@ export default Custom_page({
         }
     },
     stopEvent() {
-        console.log(2)
+        // console.log(2)
     },
     // 请增加抽奖次数
     addChange(type) {
