@@ -1,55 +1,68 @@
 import fetch from '@system.fetch';
 import storage from "@system.storage";
+const md5 = require("md5");
+
+function sign(o) {
+  // console.log("sign.o", o);
+  let pre = "22It1Z6035kDl94V0vRh";
+  let suf = "Ju0TE3w57fiJ68C75WP0kpTXe17qXt";
+  let k = Object.keys(o.data).sort();
+  let t = "";
+  for (var i = 0, j = k.length; i < j; i++) {
+    t += k[i] + o.data[k[i]];
+  }
+  let s = pre + t + suf;
+  // console.log(o.url.replace(api, ""), s);
+  let m = md5(s);
+  o.data = Object.assign(o.data, { sign: m });
+  return o;
+}
 
 const requestHandle = (params) => {
   let sid;
   return new Promise((resolve, reject) => {
+    console.clear();
     storage.get({
       key: "sessionId",
-    }).then(res => {
-      params.data = Object.assign(params.data, { sessionId: res.data });
-      return fetch.fetch({
-        url: params.url,
-        header: {
-          cookie: `sid=${res.data}`
-        },
-        method: params.method,
-        data: params.data || {},
-        responseType: 'json',
-      }).then(response => {
-        const content = response.data.data;
-        for (var i in content) {
-          if (typeof content[i] == "string") {
-            try {
-              content[i] = JSON.parse(content[i]);
-            } catch (err) {
+      success(res) {
+        // console.log("res from storage", res);
+        if (res.data) {
+          params.data = Object.assign(params.data, { sessionId: res.data });
+        }
+      },
+      fail() {
+        console.log("fail");
+      },
+      complete() {
+        // console.log("complete");
+        params = sign(params);
+        // console.log(params);
+        return fetch.fetch({
+          url: params.url,
+          // header: {
+          //   cookie: "sid=" + params.data
+          // },
+          method: params.method,
+          data: params.data || {},
+          responseType: 'json',
+        }).then(response => {
+          const content = response.data.data;
+          for (var i in content) {
+            if (typeof content[i] != "object") {
+              try {
+                content[i] = JSON.parse(content[i]);
+              } catch (err) {
 
+              }
             }
           }
-        }
-        return resolve(content)
-      }).catch((error, code) => {
-        console.log(`🐛 request fail, code = ${code}`)
-        console.log("params.url", params.url);
-        return reject(error)
-      })
-    }).catch(res => {
-      return fetch.fetch({
-        url: params.url,
-        method: params.method,
-        data: params.data || {},
-        responseType: 'json',
-      }).then(response => {
-        const result = response.data
-        const content = result.data
-        if (typeof content.data != "object") {
-          content.data = JSON.parse(content.data);
-        }
-        return resolve(content)
-      }).catch((error, code) => {
-        console.log(`🐛 request fail, code = ${code}`)
-        return reject(error)
-      })
+          return resolve(content)
+        }).catch((error, code) => {
+          console.log(`🐛 request fail, code = ${code}`)
+          console.log("params.url", params.url);
+          return reject(error)
+        })
+      }
     })
   })
 }
