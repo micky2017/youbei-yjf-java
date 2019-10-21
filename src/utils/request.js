@@ -3,9 +3,10 @@ import storage from "@system.storage";
 const md5 = require("md5");
 
 function sign(o) {
-  // console.log("sign.o", o);
+  console.log("sign.o", o);
   let pre = "22It1Z6035kDl94V0vRh";
   let suf = "Ju0TE3w57fiJ68C75WP0kpTXe17qXt";
+  console.log("o.data from sign", o.data);
   let k = Object.keys(o.data).sort();
   let t = "";
   for (var i = 0, j = k.length; i < j; i++) {
@@ -15,17 +16,26 @@ function sign(o) {
   // console.log(o.url.replace(api, ""), s);
   let m = md5(s);
   o.data = Object.assign(o.data, { sign: m });
+  // switch(o.method.toUpperCase()){
+  //   case "POST":
+  //   o.data = Object.assign(o.data, { sign: m });
+  //   break;
+  //   case "GET":
+  //   o.data = Object.assign(o.data, { sign: m });
+  //   break;
+  // }
   return o;
 }
 
 const requestHandle = (params) => {
+  // console.log("requestHandle", params);
   let sid;
   return new Promise((resolve, reject) => {
-    console.clear();
+    // console.clear();
     storage.get({
       key: "sessionId",
       success(res) {
-        // console.log("res from storage", res);
+        console.log("res from storage", res);
         if (res.data) {
           params.data = Object.assign(params.data, { sessionId: res.data });
         }
@@ -34,7 +44,7 @@ const requestHandle = (params) => {
         console.log("fail");
       },
       complete() {
-        // console.log("complete");
+        console.log("complete", params);
         params = sign(params);
         // console.log(params);
         return fetch.fetch({
@@ -100,7 +110,8 @@ export default {
     params = Object.assign({ environment: environment }, params);
     return requestHandle({
       method: 'get',
-      url: queryString(api + url, params)
+      url: queryString(api + url, params),
+      data: params
     })
   },
   api: api
