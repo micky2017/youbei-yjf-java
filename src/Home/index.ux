@@ -793,7 +793,7 @@ export default Custom_page({
 							// 	method: "GET",
 							// 	success: function (res) { }
 							// })
-							request.get("tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid)
+							request.post("tatistics/quick",{scene:5,phone:this.relaymobile,sourceType:this.external,sessionId:this.sid})
 								.then(res => { console.log("scene5埋点", res) })
 							// this.showJDEActiveModel = true;				
 						},
@@ -1560,7 +1560,7 @@ export default Custom_page({
 		// 		// console.log("于哥出品"+res);
 		// 	}
 		// })
-		request.get("tatistics/quick?scene=3&phone=" + this.relaymobile + "&sourceType=" + this.external)
+		request.post("tatistics/quick",{scene:"3",phone:this.relaymobile,sourceType:this.external})
 			.then(res => {
 				console.log("scene3埋点", res)
 			})
@@ -1852,7 +1852,7 @@ export default Custom_page({
 							// 		console.log("于哥出品" + res);
 							// 	}
 							// })
-							request.get("tatistics/quick?scene=6&phone=" + that.relaymobile + "&sourceType=" + that.external + "&sessionId=" + that.sid)
+							request.get("tatistics/quick",{scene:6,phone:that.relaymobile,sourceType:that.external,sessionId:that.sid})
 								.then(res => {
 									console.log("scene6埋点", res)
 								})

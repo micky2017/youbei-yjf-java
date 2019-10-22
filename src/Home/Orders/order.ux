@@ -327,7 +327,7 @@
             // params.testpackage = 'test'
             statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
             // console.log("传输的sessionId：",this.sessionId)
-            request.get("tatistics/quick?scene=4&phone="+this.mobile+"&sourceType="+this.external+"&sessionId="+this.sessionId)
+            request.post("tatistics/quick",{scene:4,phone:this.mobile,sourceType:this.external,sessionId:this.sessionId})
             .then(res =>{ console.log(res) })
             // fetch.fetch({
             //     url:"https://t.ubaycn.com/ub/tatistics/quick?scene=4&phone="+this.mobile+"&sourceType="+this.external+"&sessionId="+this.sessionId,

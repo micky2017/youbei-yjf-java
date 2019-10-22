@@ -131,8 +131,8 @@ export default Custom_page({
         imgUrl: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/',
         show_toast: false,
         toast_text: '',
-        sms_phone: '15803486478',
-        sms_code: '8110',
+        sms_phone: '',
+        sms_code: '',
         showCaptcha: false,
         tab: 'i0',
         mobile: '',
@@ -348,7 +348,6 @@ export default Custom_page({
             return false;
         }
         // that.brand();
-        this.Loginmsg()
         device.getInfo({
             success: function (ret) {
                 console.log(ret);
@@ -362,6 +361,8 @@ export default Custom_page({
                 } else {
                     that.sourceType = "999"
                 }
+                
+                that.Loginmsg()
                 console.log("当前手机型号:" + that.sourceName, "当前手机传参：" + that.sourceType);
             }
         })
@@ -451,7 +452,8 @@ export default Custom_page({
             code: this.sms_code,
             shortcut: false,
             openId: this.vivoOpenid,
-            sourceType: this.sourceType
+            sourceType: this.external,
+            phoneType: this.sourceType,
         }
         shortcut.hasInstalled({
             success: (ret) => {
@@ -479,7 +481,8 @@ export default Custom_page({
                     statis.statis('Huawei_login_click',{},this);
                 }
 
-                request.get("tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan)
+                // request.get("tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan)
+                request.post("tatistics/quick",{scene:"1",phone:this.sms_phone,sourceType:laiyuan})
                 .then(res => {console.log("scene1的返回结果",res)})
                 // fetch.fetch({
                 //     url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
