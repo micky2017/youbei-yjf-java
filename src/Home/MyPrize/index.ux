@@ -330,11 +330,12 @@ export default Custom_page({
                 // console.log("uid", res);
                 request.post("lottery/queryLotteryList",{uid: uid})
                 .then(res => {
-                    res = res.data;
-                    res.data = JSON.parse(res.data);
+                    let str;
+                    str = res.data;
+                    // res.data = JSON.parse(res.data);
                     console.log("/lottery/queryLotteryList", res,Object.prototype.toString.call(res));
                     if (res.status == 200) {
-                        const data = res.data;
+                        const data = str;
                         if (data.length != 0) {
                             console.log("Prize Found!!!");
                             that.noPrizeList = false;
