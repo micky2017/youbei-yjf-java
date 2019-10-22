@@ -358,6 +358,20 @@ export default Custom_page({
                     that.sourceType = "2"
                 } else if (that.sourceName == "Xiaomi") {
                     that.sourceType = "3"
+                } else if (that.sourceName == "ZTE") {
+                    that.sourceType = "4"
+                } else if (that.sourceName == "Lenovo") {
+                    that.sourceType = "5"
+                } else if (that.sourceName == "Meizu") {
+                    that.sourceType = "6"
+                } else if (that.sourceName == "Gionee") {
+                    that.sourceType = "7"
+                } else if (that.sourceName == "OPPO") {
+                    that.sourceType = "8"
+                }else if (that.sourceName == "Nubia") {
+                    that.sourceType = "9"
+                }else if (that.sourceName == "OnePlus") {
+                    that.sourceType = "10"
                 } else {
                     that.sourceType = "999"
                 }

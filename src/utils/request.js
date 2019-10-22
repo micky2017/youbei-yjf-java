@@ -92,10 +92,10 @@ function queryString(url, query) {
 const environment = ["test", "yanzheng", "duli", "prod", ""][3];
 const api = [
   // 'https://api.ubaycn.com/',
-  // 'https://api0.ubaycn.com/',
+  'https://api0.ubaycn.com/',
   // 'https://test-api.ubaycn.com/',
   // 'http://192.168.1.157:7010/',
-  'http://192.168.1.109:8090/',
+  // 'http://192.168.1.109:8090/',
   // 'http://192.168.43.187:8090/'
 ][0] + "ub/";
 export default {
