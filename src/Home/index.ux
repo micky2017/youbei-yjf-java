@@ -712,7 +712,7 @@ export default Custom_page({
 			city: this.cityName
 		}).then(res => {
 			console.log("user/get-weather", res);
-			return false;
+			// return false;
 			if (res.data.data.forecast) {
 				const weather = res.data.data.forecast[0].type;
 				const wendu = res.data.data.wendu;
