@@ -219,6 +219,7 @@ export default Custom_page({
     },
     showCaptchaFn(captchaImg) {
         this.showCaptcha = true;
+        // alert(request.cap(this.sms_phone));
         this.captcha = request.cap(this.sms_phone);
     },
     // 监听密码输入
@@ -387,14 +388,16 @@ export default Custom_page({
             }).then((res) => {
             /**/
             request.post('login/sms', params).then((res) => {
-                console.log(res)
+                console.log("login/sms in smslogin", res)
                 if (res.status == 200) {
+                    console.log(71);
                     this.closeCaptcha()
                     this.showToast("验证码发送成功！");
                     statis.statis('sms_code_click_success', { mobile: this.sms_phone }, this)
                 } else if (res.status == 400) {
+                    console.log(72, res.msg);
                     this.showToast(res.msg);
-                    this.showCaptchaFn(res.data.data);
+                    this.showCaptchaFn();
                     clearInterval(this.timer);
                     this.clickable = true;
                     this.codeText = "再次发送"
@@ -404,7 +407,6 @@ export default Custom_page({
                     this.clickable = true;
                     this.codeText = "再次发送"
                 }
-
             }).catch(err => {
                 this.showToast("网络错误");
             })
