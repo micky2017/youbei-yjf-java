@@ -478,16 +478,17 @@ export default Custom_page({
                         bid: billitem.id,
                         groupId,
                         groupName,
+						billKey: billitem.houseNumber,
                         oldGroupId: groupId,
                         // oldBill: billitem.bill
                         oldBill: billitem.houseNumber
                     });
                     console.log(billitem);
-                    // return false;
                     storage.set({
                         key: "bid",
                         value: billitem.id
                     });
+                    // return false;
                     router.push({
                         uri: 'User/Recharge',
                         params: {
@@ -499,6 +500,7 @@ export default Custom_page({
                             cityName: billitem.cityName,
                             paymentItemModelList: paymentList,//项目信息
                             bid: billitem.bid,
+    						billKey: billitem.houseNumber,
                             groupId,
                             groupName,
                             oldGroupId: groupId,
@@ -508,6 +510,28 @@ export default Custom_page({
                     })
                 } else {
                     // 账单详情
+                    console.log({
+                        uri: 'User/Recharge',
+                        params: {
+                            payName: '1',
+                            title: billitem.typeName,
+                            type: billitem.type,
+                            icon: billitem.imagUrl,
+                            cityName: billitem.cityName,
+                            paymentItemModelList: item.paymentItemModelList,//项目信息
+                            bid: billitem.bid,
+                            groupId,
+                            groupName,
+    						billKey: billitem.houseNumber,
+                            oldGroupName: groupName,
+                            oldBill: billitem.houseNumber
+                        }
+                    });
+                    storage.set({
+                        key: "bid",
+                        value: billitem.id
+                    });
+                    // return false;
                     router.push({
                         uri: 'User/Recharge',
                         params: {
@@ -517,9 +541,12 @@ export default Custom_page({
                             icon: billitem.imagUrl,
                             cityName: billitem.cityName,
                             paymentItemModelList: item.paymentItemModelList,//项目信息
+                            bid: billitem.bid,
+                            groupId,
                             groupName,
+    						billKey: billitem.houseNumber,
                             oldGroupName: groupName,
-                            oldBill: billitem.bill
+                            oldBill: billitem.houseNumber
                         }
                     })
                 }

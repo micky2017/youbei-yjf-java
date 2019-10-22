@@ -1587,7 +1587,10 @@ export default Custom_page({
 		}
 	},
 	goRechargeDetail(groupId, groupName, billitem) {
-		console.log("groupId in goRechargeDetail", groupId);
+		console.clear();
+		console.log(groupId, groupName, billitem);
+		// return false;
+		// console.log("groupId in goRechargeDetail", groupId);
 		this.showLoading = true;
 		// 缴费项目信息
 		storage.get({
@@ -1615,6 +1618,7 @@ export default Custom_page({
 									paymentList.push(element)
 								}
 							}
+							// console.clear();
 							console.log({
 								uri: 'Home/Recharge',
 								params: {
@@ -1656,8 +1660,7 @@ export default Custom_page({
 								paymentItemModelList: item.paymentItemModelList,//项目信息
 								groupName,
 								groupId,
-								oldGroupName: groupName,
-								oldBill: billitem.bill
+								billKey: billitem.houseNumber
 							});
 							// return false;
 							router.push({
@@ -1671,8 +1674,7 @@ export default Custom_page({
 									paymentItemModelList: item.paymentItemModelList,//项目信息
 									groupName,
 									groupId,
-									oldGroupName: groupName,
-									oldBill: billitem.bill
+									billKey: billitem.houseNumber
 								}
 							})
 						}
