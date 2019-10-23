@@ -159,11 +159,11 @@ export default Custom_page({
                 console.log("登录页面取到的external：",data)
                 if(data){
                     this.external = data
-                    console.log("登录页面传出去的external：",this.external)
-                    storage.set({
-                        key:'external',
-                        value:data
-                    })
+                    // console.log("登录页面传出去的external：",this.external)
+                    // storage.set({
+                    //     key:'external',
+                    //     value:data
+                    // })
                 }
             }
         })
@@ -358,7 +358,9 @@ export default Custom_page({
                     that.sourceType = "2"
                 } else if (that.sourceName == "Xiaomi") {
                     that.sourceType = "3"
-                } else if (that.sourceName == "ZTE") {
+                } else if (that.sourceName == "xiaomi") {
+                    that.sourceType = "3"
+                }else if (that.sourceName == "ZTE") {
                     that.sourceType = "4"
                 } else if (that.sourceName == "Lenovo") {
                     that.sourceType = "5"
@@ -546,7 +548,7 @@ export default Custom_page({
                     key: 'sessionId',
                     value: res.data.sessionId,
                     success: function () {
-                        router.back({
+                        router.replace({
                             uri: "/"
                         })
                         // router.back({

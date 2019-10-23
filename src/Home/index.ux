@@ -468,16 +468,12 @@ export default Custom_page({
 		tq: [],
 		scene: "1",
 		phone: "",
-		sourceType: "vivo"
+		sourceType: "vivo",
 	},
 	onInit() {
 		console.log("Home.onInit");
 		console.log("首页获取到的external：", this.external)
 		// 获取当前来源
-		storage.set({
-			key: "external",
-			value: this.external
-		})
 		storage.get({
 			key: "external",
 			success: (data) => {
@@ -489,7 +485,11 @@ export default Custom_page({
 						value: data
 					})
 				} else {
-					this.external = "master"
+					storage.set({
+						key: "external",
+						value: this.external
+					})
+					console.log("storage传出去的external：", data)
 				}
 			}
 		})
