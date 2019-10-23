@@ -109,9 +109,9 @@
 							<!-- <div if="activeSwitch == 'open'" class="notification">
 					
 					</div> -->
-							<div class="huodong-img">
+							<!-- <div class="huodong-img">
 								<image @click="toPhone" src="./images/banner_phone.jpg" alt=""></image>
-							</div>
+							</div> -->
 
 							<!-- 首页广告位 -->
 							<div if="homeAdsList.length > 0" class="notification-body">
@@ -1842,7 +1842,7 @@ export default Custom_page({
 						summary: '轻轻点一下，你也可以赢价值5698元的5G智慧旗舰vivo NEX3手机，每天送3部，连送30天',
 						imagePath: '/images/logo.png',
 						targetUrl: 'hap://app/com.ubaycn.yjf/Home?external=vivoNEX3',
-						platforms: [platformsList],
+						platforms: ["WEIXIN","WEIXIN_CIRCLE","SYSTEM"],
 						success: function (data) {
 							console.log('handling success', data)
 							// 分享功能打点

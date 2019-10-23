@@ -306,7 +306,7 @@ export default Custom_page({
         })
     },
     onShow() {
-        // this.getGroup()
+        this.getGroup()
     },
     // 显示toast
     showToast(text) {
