@@ -322,7 +322,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="item" if="isLogin" @click="share">
+								<div class="item" if="isLogin && isPhone" @click="share">
 									<div class="inner">
 										<image height="30" src="./images/share1.png"></image>
 										<text>分享</text>
@@ -462,6 +462,7 @@ export default Custom_page({
 			pageInfo: {},
 			recordsModel: []
 		},
+		isPhone:false,
 	},
 	private: {
 		detail: null,
@@ -1086,9 +1087,9 @@ export default Custom_page({
 		// 数据获取 sessionId
 		if (this.external == "vivoNegative") {
 			storage.get({
-				key: "sid",
+				key: "sessionId",
 				success: (data) => {
-					console.log('sid' + data)
+					console.log('sessionId' + data)
 					this.sid = data;
 					if (this.sid) {
 						this.isLogin = true;
@@ -1147,12 +1148,12 @@ export default Custom_page({
 																	console.log("一键登录成功的data值", data);
 																	console.log("获取到的sid", data.data.sessionId)
 																	storage.set({
-																		key: '_id',
-																		value: res.data.mid
+																		key: 'uid',
+																		value: res.data.id,
 																	})
 																	storage.set({
-																		key: "sid",
-																		value: data.data.sessionId
+																		key:"sessionId",
+																		value:data.data.sessionId
 																	})
 																	storage.set({
 																		key: "mobile",
@@ -1202,103 +1203,6 @@ export default Custom_page({
 									.catch(err => {
 
 									})
-								// fetch.fetch({
-								// 	url: 'https://t.ubaycn.com/vivo/getAccessToken?code=' + postCode,
-								// 	// url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
-								// 	success: function (response) {
-								// 		console.log("第二步返回的data", response)
-								// 		const strToObj = JSON.parse(response.data)
-								// 		console.log(strToObj);
-								// 		let postToken = strToObj.data.accessToken
-								// 		console.log(postToken);
-								// 		account.getProfile({
-								// 			token: postToken,
-								// 			success: function (data) {
-								// 				console.log(data)
-								// 				// this.vivoOpenid = data.openid;
-								// 				// that.Loginmsg();
-								// 				account.getPhoneNumber({
-								// 					success: function (data) {
-								// 						console.log(`handling success phoneNumber: `, data.phoneNumber)
-								// 						fetch.fetch({
-								// 							url: 'https://t.ubaycn.com/ub/user/login/oneClick',
-								// 							// url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
-								// 							method: "post",
-								// 							data: {
-								// 								environment: "zhengshi",
-								// 								mobile: data.phoneNumber,
-								// 							},
-								// 							success: function (res) {
-								// 								console.log("vivo一键登录成功", res);
-								// 								if (res.code == 200) {
-								// 									let data = JSON.parse(res.data);
-								// 									console.log("一键登录成功的data值", data);
-								// 									console.log("获取到的sid", data.data.sessionId)
-								// 									storage.set({
-								// 										key: '_id',
-								// 										value: res.data.mid
-								// 									})
-								// 									storage.set({
-								// 										key: "sid",
-								// 										value: data.data.sessionId
-								// 									})
-								// 									storage.set({
-								// 										key: "mobile",
-								// 										value: data.data.mobile
-								// 									})
-								// 									request.post('order/payment-records', {
-								// 										pageSize: 10,
-								// 										currentPage: 1
-								// 									}).then(res => {
-								// 										that.isLogin = true;
-								// 										if (res.status == 200) {
-								// 											this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-								// 											const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-								// 											if (recordsModel.length > 0) {
-								// 												const paymentDate = recordsModel[0].paymentDate
-								// 												const date = this.format(Date.parse(new Date()))
-								// 												// if (paymentDate.split(' ')[0] == date) {
-								// 												// 	this.addChange('pay');
-								// 												// }
-								// 											}
-								// 											if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-								// 												this.hasMoreData = false;
-								// 											}
-								// 										} else {
-								// 											that.hasMoreData = false;
-								// 										}
-								// 									}).catch(err => {
-								// 										console.log(22)
-								// 										that.hasMoreData = false;
-								// 									})
-								// 								}
-								// 							},
-								// 							fail: function (err) {
-								// 								console.log(err);
-								// 							}
-								// 						})
-								// 					},
-								// 					fail: function (data, code) {
-								// 						router.replace({
-								// 							uri: 'User/SmsLogin',
-								// 							params: {
-								// 								external: this.external,
-								// 							}
-								// 						})
-								// 						console.log(`handling fail, code = ${code}`)
-								// 					}
-								// 				})
-								// 			},
-								// 			fail: function (data, code) {
-								// 				console.log(`handling fail, code = ${code}`)
-								// 			}
-								// 		})
-								// 	},
-								// 	fail: function (data, code) {
-								// 		console.log(`handling fail, errMsg = ${data}`)
-								// 		console.log(`handling fail, errCode = ${code}`)
-								// 	}
-								// })
 							},
 							fail: function (data, code) {
 								console.log(`handling fail, code = ${code}`)
@@ -1823,60 +1727,45 @@ export default Custom_page({
 		})
 	},
 	share() {
-		console.log("分享");
-		if (this.isLogin) {
-			let that = this;
-			console.log(share.getProvider())
-			share.getAvailablePlatforms({
-				success: function (data) {
-					let platformsList = ""
-					for (const i in data.platforms) {
-						console.log("platforms: " + data.platforms[i]);
-						platformsList += data.platforms[i] + ","
-					}
-					platformsList = platformsList.substring(0, platformsList.length - 1)
-					console.log(platformsList);
-					share.share({
-						shareType: 0,
-						title: '轻松云缴费，赢vivoNEX3手机',
-						summary: '轻轻点一下，你也可以赢价值5698元的5G智慧旗舰vivo NEX3手机，每天送3部，连送30天',
-						imagePath: '/images/logo.png',
-						targetUrl: 'hap://app/com.ubaycn.yjf/Home?external=vivoNEX3',
-						platforms: ["WEIXIN","WEIXIN_CIRCLE","SYSTEM"],
-						success: function (data) {
-							console.log('handling success', data)
-							// 分享功能打点
-							// fetch.fetch({
-							// 	url: "https://t.ubaycn.com/ub/tatistics/quick?scene=6&phone=" + that.relaymobile + "&sourceType=" + that.external + "&sessionId=" + that.sid,
-							// 	// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=6&phone="+that.relaymobile+"&sourceType="+that.external+"&sessionId="+that.sid,
-							// 	method: "GET",
-							// 	success: function (res) {
-							// 		console.log("于哥出品" + res);
-							// 	}
-							// })
-							request.get("tatistics/quick",{scene:6,phone:that.relaymobile,sourceType:that.external,sessionId:that.sid})
-								.then(res => {
-									console.log("scene6埋点", res)
-								})
-						},
-						fail: function (data, code) {
-							console.log(`handling fail, failMess=${data},code=${code}`)
-						},
-						cancel: function (code) {
-							console.log(`handling fail, failMess=${data},code=${code}`)
-						}
-					})
-
-				},
-				fail: function (code) {
-					console.log("handling fail, code=" + code);
+		let that = this;
+		console.log(share.getProvider())
+		share.getAvailablePlatforms({
+			success: function (data) {
+				let platformsList = ""
+				for (const i in data.platforms) {
+					console.log("platforms: " + data.platforms[i]);
+					platformsList += data.platforms[i] + ","
 				}
-			})
-		} else {
-			router.push({
-				uri: "User/SmsLogin"
-			})
-		}
+				platformsList = platformsList.substring(0, platformsList.length - 1)
+				console.log(platformsList);
+				share.share({
+					shareType: 0,
+					title: '轻松云缴费',
+					summary: '这里缴费更便捷，无需下载秒开即用！',
+					imagePath: '/images/logo.png',
+					targetUrl: 'http://h5.ubaycn.com/lead/lead.html',
+					platforms: ["WEIXIN","WEIXIN_CIRCLE","SYSTEM"],
+					success: function (data) {
+						console.log('handling success', data)
+						// 分享功能打点
+						request.get("tatistics/quick",{scene:6,phone:that.relaymobile,sourceType:that.external,sessionId:that.sid})
+							.then(res => {
+								console.log("scene6埋点", res)
+							})
+					},
+					fail: function (data, code) {
+						console.log(`handling fail, failMess=${data},code=${code}`)
+					},
+					cancel: function (code) {
+						console.log(`handling fail, failMess=${data},code=${code}`)
+					}
+				})
+
+			},
+			fail: function (code) {
+				console.log("handling fail, code=" + code);
+			}
+		})
 	},
 	device() {
 		let that = this
@@ -1901,6 +1790,16 @@ export default Custom_page({
 			},
 			fail: function (data, code) {
 				console.log(`handling fail, code = ${code}`)
+			}
+		})
+		device.getInfo({
+            success: function (ret) {
+                console.log("手机型号",ret,this.isPhone);
+                if(ret.brand == "vivo" || ret.brand == "Xiaomi" || ret.brand == "xiaomi" || ret.brand == "Lenovo" || ret.brand == "Meizu" || ret.brand == "OPPO"){
+					that.isPhone = true;
+				}else{
+					that.isPhone = false;
+				}
 			}
 		})
 	},

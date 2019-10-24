@@ -149,11 +149,11 @@ export default Custom_page({
                                                             console.log("一键登录成功的data值",data);
                                                             console.log("获取到的sid",data.data.sessionId)
                                                             storage.set({
-                                                                key:'_id',
-                                                                value:res.data.mid
+                                                                key: 'uid',
+                                                                value: res.data.id,
                                                             })
                                                             storage.set({
-                                                                key:"sid",
+                                                                key:"sessionId",
                                                                 value:data.data.sessionId
                                                             })
                                                             storage.set({
