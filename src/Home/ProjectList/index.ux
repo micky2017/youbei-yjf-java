@@ -45,7 +45,7 @@ export default Custom_page({
         itemValue: '',
     },
     onInit() {
-        console.clear();
+        // console.clear();
         console.log("PL.init");
         console.log(this.cityName);
         // console.log("paymentItemList", this.paymentItemList);

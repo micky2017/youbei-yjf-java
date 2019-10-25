@@ -534,7 +534,7 @@ export default Custom_page({
 				} else {
 					this.getGuidePage()
 					this.showGuide = true;
-					this.createShortcut()
+					// this.createShortcut()
 					// util.createShortcut();
 					storage.set({
 						key: 'showGuide',
@@ -725,7 +725,7 @@ export default Custom_page({
 		})
 	},
 	goUrl(item, source) {
-		console.clear();
+		// console.clear();
 		console.log(item, source);
 		if (source) {
 			statis.statis("banner_click", { source: source, external: this.external }, this)
@@ -1491,7 +1491,7 @@ export default Custom_page({
 		}
 	},
 	goRechargeDetail(groupId, groupName, billitem) {
-		console.clear();
+		// console.clear();
 		console.log(groupId, groupName, billitem);
 		// return false;
 		// console.log("groupId in goRechargeDetail", groupId);
@@ -1794,7 +1794,7 @@ export default Custom_page({
 		})
 		device.getInfo({
             success: function (ret) {
-                console.log("手机型号",ret,this.isPhone);
+                // console.log("手机型号",ret,that.isPhone);
                 if(ret.brand == "vivo" || ret.brand == "Xiaomi" || ret.brand == "xiaomi" || ret.brand == "Lenovo" || ret.brand == "Meizu" || ret.brand == "OPPO"){
 					that.isPhone = true;
 				}else{

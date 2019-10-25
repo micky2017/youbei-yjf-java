@@ -448,8 +448,7 @@ export default Custom_page({
         }
     },
     getGroup() {
-        //*
-        console.clear();
+        // console.clear();
         console.log("enter recharge.get-group");
         let that = this;
         storage.get({
@@ -558,7 +557,7 @@ export default Custom_page({
         })
     },
     saveGroup(params) {
-        console.clear();
+        // console.clear();
         console.log("recharge.saveGroup");
         console.log("this.groupId", this.groupId);
         console.log("params from event", params);

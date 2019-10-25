@@ -38,7 +38,7 @@ export default Custom_page({
         trustedurl: [],
     },
     onInit() {
-        console.clear();
+        // console.clear();
         if (this.title != '') {
             this.headTitle = this.title
         }

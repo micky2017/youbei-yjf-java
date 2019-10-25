@@ -33,7 +33,6 @@ const requestHandle = (params) => {
   // console.log("requestHandle", params);
   // let sid;
   return new Promise((resolve, reject) => {
-    // console.clear();
     storage.get({
       key: "sessionId",
       success(res) {
@@ -41,14 +40,7 @@ const requestHandle = (params) => {
           // console.log("res", res);
           params.data = Object.assign(params.data, { sessionId: res });
         }
-        // },
-        // fail() {
-        //   console.log("fail");
-        // },
-        // complete() {
-        //   console.log("complete", params);
         params = sign(params);
-        // console.log(params);
         return fetch.fetch({
           url: params.url,
           // header: {

@@ -18,15 +18,15 @@
                     <div if="tab_index == 0" class="tab-bar_item">
                         <text class="tab-text">短信登录</text>
                     </div>
-                    <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
+                    <!-- <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
                         <text class="tab-text">密码登录</text>
-                    </div>
+                    </div> -->
                     <div @click="selectTab(0)" if="tab_index == 1" class="tab-bar_item no-selece_item">
                         <text class="tab-text">短信登录</text>
                     </div>
-                    <div if="tab_index == 1" class="tab-bar_item">
+                    <!-- <div if="tab_index == 1" class="tab-bar_item">
                         <text class="tab-text">密码登录</text>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="tab-content">
                     <div if="tab_index == 0" class="tab-content-section">
@@ -484,7 +484,6 @@ export default Custom_page({
         request.post('user/login/sms', params).then(res => {
             if (res.status == 200) {
                 this.showToast("登录成功");
-                // console.clear();
                 console.log("user/login/sms", res);
                 statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
 
