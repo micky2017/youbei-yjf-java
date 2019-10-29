@@ -510,16 +510,8 @@ export default Custom_page({
                 // })
                 console.log("成功返回：")
                 console.log(res)
-                request.post("user/login/mobile",{mobile:res.data.mobile})
-                .then(res=>{console.log("判断是否首次登陆的返回结果",res)})
-                // fetch.fetch({
-                //     url: "http://hello.ngrok2.xiaomiqiu.cn/ub/user/login/mobile",
-                //     method: "post",
-                //     data: {
-                //         mobile: "15803486478"
-                //         // mobile: "13552160710"
-                //     }
-                // });
+                // request.post("user/login/mobile",{mobile:res.data.mobile})
+                // .then(res=>{console.log("判断是否首次登陆的返回结果",res)})
                 if (res.data.isFirst) {
                     storage.set({
                         key: 'firstLogin',

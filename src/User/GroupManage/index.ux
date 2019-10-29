@@ -445,9 +445,10 @@ export default Custom_page({
         this.showDeleteBill = true;
     },
     goRecharge(groupId, groupName, billitem) {
+        const that = this
         console.log(groupId, groupName, billitem);
         // return false;
-        this.showLoading = true;
+        that.showLoading = true;
         // 缴费项目信息
         request.post('payment/pay-type-detail', {
             cityName: billitem.cityName,
@@ -455,11 +456,11 @@ export default Custom_page({
         }).then(res => {
             console.log("payment/pay-type-detail", res)
             // return false;
-            this.showLoading = false;
+            that.showLoading = false;
             if (res.status == 200) {
                 const item = res.data.paymentItemPagingModel;
-                this.paymentItemList = res.data.paymentItemList;
-                if (this.paymentItemList.length > 1) {
+                that.paymentItemList = res.data.paymentItemList;
+                if (that.paymentItemList.length > 1) {
                     const paymentItemModelList = item.paymentItemModelList;
                     let paymentList = []
                     for (let i = 0; i < paymentItemModelList.length; i++) {
@@ -553,12 +554,12 @@ export default Custom_page({
                     })
                 }
             } else {
-                this.showToast(res.msg);
+                that.showToast(res.msg);
             }
         }).catch(err => {
             console.log(err)
-            this.showLoading = false;
-            this.showToast('网络错误');
+            that.showLoading = false;
+            that.showToast('网络错误');
         })
     },
     closeWindow() {
