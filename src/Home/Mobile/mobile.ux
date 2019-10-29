@@ -191,7 +191,9 @@ export default Custom_page({
         }, 1500)
     },
     inputFocus() {
-        this.$element('mobile').focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            this.$element('mobile').focus({ focus: false })
+        }
         // 检查手机号 并查询信息
         this.getPaymentDetail()
 
@@ -227,7 +229,9 @@ export default Custom_page({
                     }).then(res => {
                         console.log("payment/mobile-pay", res)
                         if (res.status == 200) {
-                            that.$element('mobile').focus({ focus: false })
+                            if(that.external != "vivoNegative"){
+                                that.$element('mobile').focus({ focus: false })
+                            }
                             const item = res.data.mobileRechargeModel;
                             console.log("res.data", res.data);
                             that.paymentItemName = res.data.paymentItemList[0];

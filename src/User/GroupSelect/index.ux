@@ -85,8 +85,10 @@ export default Custom_page({
         return false;
     },
     inputFocus() {
-        if (this.$element('groupValue')) {
-            this.$element('groupValue').focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            if (this.$element('groupValue')) {
+                this.$element('groupValue').focus({ focus: false })
+            }
         }
     },
     changeGroupId(response) {

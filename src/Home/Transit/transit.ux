@@ -212,7 +212,7 @@
             let that = this
             account.authorize({
                 type: 'code',
-                redirectUri: 'https://t.ubaycn.com/',
+                redirectUri: 'https://api0.ubaycn.com/',
                 success: function(data) {
                     console.log("第一步返回的data",data)
                     let postCode = data.code

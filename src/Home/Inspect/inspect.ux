@@ -281,8 +281,10 @@ export default Custom_page({
         }
     },
     inputFocus() {
-        if (this.$element('payAmount')) {
-            // this.$element('payAmount').focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            if (this.$element('payAmount')) {
+                this.$element('payAmount').focus({ focus: false })
+            }
         }
     },
     // 处理输入框金额限制

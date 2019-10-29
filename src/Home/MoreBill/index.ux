@@ -50,7 +50,9 @@
             console.log(this.paymentItemList)
         },
         inputFocus(){
+            if(this.external != "vivoNegative"){
                 this.$element('search').focus({ focus: false })
+            }
         },
         affirmItem(item){
             const index = this.billQueryList.indexOf(item);

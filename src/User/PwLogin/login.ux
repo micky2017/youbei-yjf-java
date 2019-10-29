@@ -130,10 +130,12 @@
             })
         },
         inputFocus() {
-            // this.$element('sms_code').focus({ focus: false })
-            // this.$element('sms_phone').focus({ focus: false })
-            this.$element('mobile').focus({ focus: false })
-            this.$element('password').focus({ focus: false })
+            if(this.external != "vivoNegative"){
+                // this.$element('sms_code').focus({ focus: false })
+                // this.$element('sms_phone').focus({ focus: false })
+                this.$element('mobile').focus({ focus: false })
+                this.$element('password').focus({ focus: false })
+            }
         },
         stopEvent() {
             console.log(2)

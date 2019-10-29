@@ -204,13 +204,14 @@ export default Custom_page({
 
     },
     inputFocus() {
-        const list = this.paymentItem.queryPaymentBillParamModelList
-        for (let i = 0; i < list.length; i++) {
-            if (this.$element(list[i].nameType)) {
-                this.$element(list[i].nameType).focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            const list = this.paymentItem.queryPaymentBillParamModelList
+            for (let i = 0; i < list.length; i++) {
+                if (this.$element(list[i].nameType)) {
+                    this.$element(list[i].nameType).focus({ focus: false })
+                }
             }
         }
-
     },
     pushSelect() {
         router.push({

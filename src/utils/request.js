@@ -3,16 +3,16 @@ import storage from "@system.storage";
 const md5 = require("md5");
 
 function sign(o) {
-  console.log("sign.o", o);
+  // console.log("sign.o", o);
   let pre = "22It1Z6035kDl94V0vRh";
   let suf = "Ju0TE3w57fiJ68C75WP0kpTXe17qXt";
-  console.log("o.data from sign", o.data);
+  // console.log("o.data from sign", o.data);
   let k = Object.keys(o.data).sort();
-  console.log("k", k);
+  // console.log("k", k);
   let t = "";
   for (var i = 0, j = k.length; i < j; i++) {
     t += k[i] + (function (v) {
-      console.log("v", v);
+      // console.log("v", v);
       if (Array.prototype.isPrototypeOf(v) && v.length == 0) {
         return "[]";
       } else {
@@ -63,7 +63,7 @@ const requestHandle = (params) => {
           return resolve(content)
         }).catch((error, code) => {
           // console.log(`🐛 request fail, code = ${code}`)
-          console.log("params.url", params.url);
+          // console.log("params.url", params.url);
           return reject(error)
         })
       }
@@ -109,7 +109,7 @@ export default {
       data: params
     })
   },
-  // api: api,
+  api: api,
   cap(phone) {
     console.log();
     // return false;

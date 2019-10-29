@@ -121,7 +121,7 @@ export default Custom_page({
                     if(this.external == "vivoNegative"){
                         account.authorize({
                             type: 'code',
-                            redirectUri: 'https://t.ubaycn.com/',
+                            redirectUri: 'https://api0.ubaycn.com/',
                             success: function(data) {
                                 console.log("第一步返回的data",data)
                                 let postCode = data.code
@@ -336,8 +336,10 @@ export default Custom_page({
         })
     },
     inputFocus() {
-        if (this.$element('groupValue')) {
-            this.$element('groupValue').focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            if (this.$element('groupValue')) {
+                this.$element('groupValue').focus({ focus: false })
+            }
         }
     },
     // 保存分组信息

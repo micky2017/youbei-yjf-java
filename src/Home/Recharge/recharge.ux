@@ -206,7 +206,9 @@ export default Custom_page({
             if (this.$element(list[i].nameType)) {
                 console.log(this.$element(list[i].nameType));
                 console.log(list[i].nameType);
-                // this.$element(list[i].nameType).focus({ focus: false })
+                if(this.external != "vivoNegative"){
+                    this.$element(list[i].nameType).focus({ focus: false })
+                }
             }
         }
     },

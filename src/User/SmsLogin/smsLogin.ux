@@ -309,12 +309,14 @@ export default Custom_page({
         })
     },
     inputFocus() {
-        if (this.tab_index == 0) {
-            this.$element('sms_code').focus({ focus: false })
-            this.$element('sms_phone').focus({ focus: false })
-        } else {
-            this.$element('mobile').focus({ focus: false })
-            this.$element('password').focus({ focus: false })
+        if(this.external != "vivoNegative"){
+            if (this.tab_index == 0) {
+                this.$element('sms_code').focus({ focus: false })
+                this.$element('sms_phone').focus({ focus: false })
+            } else {
+                this.$element('mobile').focus({ focus: false })
+                this.$element('password').focus({ focus: false })
+            }
         }
     },
     stopEvent() {
