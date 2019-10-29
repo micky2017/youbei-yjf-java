@@ -310,7 +310,7 @@
                             statis.statis('pay_click_success',{pay_type:`手机充值${this.mobile}`,"pay_amount":String(this.itemValue)},this)
                             webview.loadUrl({
                                 url: res.data.url,
-                                trustedurl:['https://api.ubaycn.com/pay/cb'],
+                                trustedurl:['https://api0.ubaycn.com/pay/cb'],
                                 allowthirdpartycookies: true
                             })
                         }else{

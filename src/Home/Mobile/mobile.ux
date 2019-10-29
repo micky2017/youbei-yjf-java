@@ -324,7 +324,7 @@ export default Custom_page({
                         // alert(res.data.url);
                         webview.loadUrl({
                             url: res.data.url,
-                            trustedurl: ['https://api.ubaycn.com/pay/cb'],
+                            trustedurl: ['https://api0.ubaycn.com/pay/cb'],
                             allowthirdpartycookies: true
                         })
                     } else {
