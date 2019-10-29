@@ -282,7 +282,7 @@ export default Custom_page({
     },
     inputFocus() {
         if (this.$element('payAmount')) {
-            this.$element('payAmount').focus({ focus: false })
+            // this.$element('payAmount').focus({ focus: false })
         }
     },
     // 处理输入框金额限制
@@ -314,6 +314,7 @@ export default Custom_page({
                 return false;
             }
         }
+        console.log("当前输入金额",this.payAmountValue,"当前扣费金额",this.info_list,this.info_list.info_value)
         // 查缴
         // request.post('jiaofei/generate-bill',params).then(res => {
         const params = {
@@ -326,8 +327,7 @@ export default Custom_page({
         if (this.inputValue) {
             params.payAmount = this.payAmountValue;
         } else {
-
-params.payAmount = this.money;
+            params.payAmount = this.money;
         }
         params.reqData = this.reqData;
 
@@ -365,7 +365,7 @@ params.payAmount = this.money;
                     }
 
                 } else {
-                    this.showToast(res.data.msg)
+                    this.showToast(res.msg)
                 }
             }).catch(err => {
                 this.showLoading = false;

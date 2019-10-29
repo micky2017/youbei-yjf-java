@@ -905,11 +905,11 @@ export default Custom_page({
 					that.cityName = data;
 					// 缴费类别
 					request.post('payment/pay-type-lst', {
-						cityName: this.cityName//,
+						cityName: that.cityName//,
 					}).then(res => {
 						console.log("paymentpayment/pay-type-lst", res);
 						if (res.status == 200) {
-							this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+							that.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 						}
 					}).catch(err => {
 						this.netWork = false
@@ -1165,17 +1165,17 @@ export default Custom_page({
 																	}).then(res => {
 																		that.isLogin = true;
 																		if (res.status == 200) {
-																			this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+																			that.orderPagingH5Model = res.data.hkPaymentRecordsModel;
 																			const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
 																			if (recordsModel.length > 0) {
 																				const paymentDate = recordsModel[0].paymentDate
-																				const date = this.format(Date.parse(new Date()))
+																				const date = that.format(Date.parse(new Date()))
 																				// if (paymentDate.split(' ')[0] == date) {
 																				// 	this.addChange('pay');
 																				// }
 																			}
-																			if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-																				this.hasMoreData = false;
+																			if (res.data.hkPaymentRecordsModel.recordsModel.length < that.pageSize) {
+																				that.hasMoreData = false;
 																			}
 																		} else {
 																			that.hasMoreData = false;
@@ -1191,7 +1191,7 @@ export default Custom_page({
 														router.replace({
 															uri: 'User/SmsLogin',
 															params: {
-																external: this.external,
+																external: that.external,
 															}
 														})
 													}
@@ -1227,23 +1227,23 @@ export default Custom_page({
 						}).then(res => {
 							console.log("order/payment-records", res);
 							if (res.status == 200) {
-								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+								that.orderPagingH5Model = res.data.hkPaymentRecordsModel;
 								const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
 								if (recordsModel.length > 0) {
 									const paymentDate = recordsModel[0].paymentDate
-									const date = this.format(Date.parse(new Date()))
+									const date = that.format(Date.parse(new Date()))
 									// if (paymentDate.split(' ')[0] == date) {
 									// 	this.addChange('pay');
 									// }
 								}
-								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-									this.hasMoreData = false;
+								if (res.data.hkPaymentRecordsModel.recordsModel.length < that.pageSize) {
+									that.hasMoreData = false;
 								}
 							} else {
-								this.hasMoreData = false;
+								that.hasMoreData = false;
 							}
 						}).catch(err => {
-							this.hasMoreData = false;
+							that.hasMoreData = false;
 						})
 					}
 				},
@@ -1287,14 +1287,14 @@ export default Custom_page({
 						that.cityName = city;
 						// 缴费类别
 						request.post('payment/pay-type-lst', {
-							cityName: this.cityName//,
+							cityName: that.cityName//,
 							// environment: "test"
 						}).then(res => {
 							console.log("paymentpayment/pay-type-lst", res);
 							if (res.status == 200) {
-								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+								that.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 							} else {
-								this.showToast(res.msg)
+								that.showToast(res.msg)
 							}
 						}).catch(err => {
 							that.netWork = false
@@ -1310,12 +1310,12 @@ export default Custom_page({
 						that.cityName = city;
 						// 缴费类别
 						request.post('payment/pay-type-lst', {
-							cityName: this.cityName//,
+							cityName: that.cityName//,
 							// environment: "test"
 						}).then(res => {
 							console.log("paymentpayment/pay-type-lst", res);
 							if (res.status == 200) {
-								this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+								that.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 							}
 						}).catch(err => {
 							that.netWork = false
@@ -1333,12 +1333,12 @@ export default Custom_page({
 				that.cityName = city;
 				// 缴费类别
 				request.post('payment/pay-type-lst', {
-					cityName: this.cityName//,
+					cityName: that.cityName//,
 					// environment: "test"
 				}).then(res => {
 					console.log("paymentpayment/pay-type-lst", res);
 					if (res.status == 200) {
-						this.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
+						that.cebPaymentCategoriesList = res.data.paymentCitiesForClientModel.cebPaymentCategoriesList;
 					}
 				}).catch(err => {
 					that.netWork = false
@@ -1491,10 +1491,8 @@ export default Custom_page({
 		}
 	},
 	goRechargeDetail(groupId, groupName, billitem) {
-		// console.clear();
+		const that = this
 		console.log(groupId, groupName, billitem);
-		// return false;
-		// console.log("groupId in goRechargeDetail", groupId);
 		this.showLoading = true;
 		// 缴费项目信息
 		storage.get({
@@ -1506,11 +1504,11 @@ export default Custom_page({
 					type: billitem.type,
 				}).then(res => {
 					console.log("payment/pay-type-detail", res)
-					this.showLoading = false;
+					that.showLoading = false;
 					if (res.status == 200) {
 						const item = res.data.paymentItemPagingModel;
-						this.paymentItemList = res.data.paymentItemList;
-						if (this.paymentItemList.length > 1) {
+						that.paymentItemList = res.data.paymentItemList;
+						if (that.paymentItemList.length > 1) {
 							const paymentItemModelList = item.paymentItemModelList;
 							let paymentList = []
 							console.log("paymentItemModelList from Home", paymentItemModelList);
@@ -1583,12 +1581,12 @@ export default Custom_page({
 							})
 						}
 					} else {
-						this.showToast(res.msg);
+						that.showToast(res.msg);
 					}
 				}).catch(err => {
 					console.log(err)
-					this.showLoading = false;
-					this.showToast('网络错误');
+					that.showLoading = false;
+					that.showToast('网络错误');
 				})
 			}
 		});
@@ -1609,17 +1607,17 @@ export default Custom_page({
 			storage.get({
 				key: "sessionId",
 				success: function (data) {
-					console.log("cityName of ptd", that.cityName);
-					// return false;
+					console.log("查询缴费项目传参：", "sessionId",data, "cityName",that.cityName, "type",obj.params.type);
 					request.post('payment/pay-type-detail', {
 						sessionId: data,
 						cityName: that.cityName,
 						type: obj.params.type,
 					}).then(res => {
+						console.log("查询缴费项目成功之后的参数：", "sessionId",data, "cityName",that.cityName, "type",obj.params.type);
 						if (res.status == 200) {
 							const item = res.data.paymentItemPagingModel;
-							this.paymentItemList = res.data.paymentItemList;
-							if (this.paymentItemList.length > 1) {
+							that.paymentItemList = res.data.paymentItemList;
+							if (that.paymentItemList.length > 1) {
 								// 列表选择
 								router.push({
 									uri: 'Home/ProjectList',
@@ -1628,8 +1626,8 @@ export default Custom_page({
 										type: obj.params.type,
 										icon: obj.params.icon,
 										cityName: that.cityName,
-										external: this.external,
-										paymentItemList: this.paymentItemList,//选择列表
+										external: that.external,
+										paymentItemList: that.paymentItemList,//选择列表
 										paymentItemModelList: item.paymentItemModelList,//项目信息
 									}
 								})
@@ -1642,7 +1640,7 @@ export default Custom_page({
 										title: obj.params.title,
 										type: obj.params.type,
 										icon: obj.params.icon,
-										external: this.external,
+										external: that.external,
 										cityName: that.cityName,
 										paymentItemModelList: item.paymentItemModelList,//项目信息
 									}
@@ -1654,6 +1652,7 @@ export default Custom_page({
 							});
 						}
 					}).catch(err => {
+						console.log("查询缴费项目失败之后的参数：", "sessionId",data, "cityName",that.cityName, "type",obj.params.type);
 						prompt.showToast({
 							message: '网络错误'
 						});
@@ -1771,16 +1770,9 @@ export default Custom_page({
 		let that = this
 		device.getId({
 			type: ['device', 'mac'],
+		// device.getSerial({
 			success: function (data) {
 				console.log("获取手机的唯一识别码", data, that.relaymobile, that.external);
-				// fetch.fetch({
-				// 	url:"https://t.ubaycn.com/ub/tatistics/quick?scene=2&phone="+this.relaymobile+"&sourceType="+this.external+"&device="+data.device,
-				// 	// url: "http://192.168.1.140:8090/ub/tatistics/quick?scene=2&phone=" + that.relaymobile + "&sourceType=" + that.external + "&device=" + data.device,
-				// 	method: "GET",
-				// 	success: function (res) {
-				// 		// console.log("获取到的手机号",this.relaymobile);
-				// 	}
-				// })
 				// request.get("tatistics/quick?scene=2&phone="+that.relaymobile+"&sourceType="+that.external+"&device="+data.device)
 				request.post("tatistics/quick", { scene: "2", phone: that.relaymobile, sourceType: that.external, device: data.device })
 					.then(res => {
@@ -1792,6 +1784,7 @@ export default Custom_page({
 				console.log(`handling fail, code = ${code}`)
 			}
 		})
+
 		device.getInfo({
             success: function (ret) {
                 // console.log("手机型号",ret,that.isPhone);
