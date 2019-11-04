@@ -21,11 +21,6 @@
                 const list = that.$element('syt');
                 list.reload();
              },5000)
-              
-            //  webview.loadUrl({
-            //     url: this.src,
-            //     allowthirdpartycookies: true
-            // })
          },
      })
 </script>

@@ -56,9 +56,6 @@
             console.log(this.picker);
         },
         toFinish(){
-            // router.push({
-            //     uri:"Home/Finish"
-            // })
             this.pickerShow()
         },
         pickerShow(){

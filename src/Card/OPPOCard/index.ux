@@ -280,43 +280,6 @@
        request.post('payment/pay-type-lst', { cityName: city }).then(res => {
           this.loading = false;
         if (res.status == 200) {
-      //     const paymentTypeList = []
-      //     // 数据处理
-      //     for (let i = 0; i < res.data.length; i++) {
-      //       const element = res.data[i];
-      //       res.data[i].name = element.typeName
-      //       res.data[i].uri = `${this.hapUrl}Home/Central`
-      //       res.data[i].params = {
-      //         cityName:city,
-      //         type: res.data[i].type,
-      //         external:'oppo-card',
-      //         title: res.data[i].name,
-      //         icon:res.data[i].icon
-      //       }
-      //       if (element.typeName.indexOf('水费') != -1) {
-      //         res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_water.png'
-      //         res.data[i].name = '交水费'
-      //         paymentTypeList.push(res.data[i])
-      //       }else if(element.typeName.indexOf('电费') != -1){
-      //         res.data[i].name = '交电费'
-      //         res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_power.png'
-      //         paymentTypeList.push(res.data[i])
-      //       }else if(element.typeName.indexOf('燃气') != -1){
-      //         res.data[i].icon = 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_gas.png'
-      //         paymentTypeList.push(res.data[i])
-      //       }
-      //     }
-      //     paymentTypeList.push({
-      //           name: '更多',
-      //           icon: 'https://ubaycn.oss-cn-beijing.aliyuncs.com/assets/images/youbei-yjf/oppo/oppo_card_icon_more.png',
-      //           uri: `${this.hapUrl}Home`,
-      //           params:{
-      //             cityName:city,
-      //             external:'oppo-card',
-      //             title: '主页',
-      //           }
-      //     })
-      
           this.cebPaymentCategoriesList = data;
           this.loading = false;
         }else{
@@ -388,14 +351,9 @@
               })
             }
           } else {
-
-            // prompt.showToast({
-            //   message: '缴费信息拉取失败'
-            // })
             router.push({
               uri:`${this.hapUrl}Home`
             })
-            // this.showToast(res.msg, "back")
           }
         })
       }

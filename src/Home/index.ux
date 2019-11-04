@@ -3,12 +3,6 @@
 	<div class="yjf-home">
 		<!-- 引导页 -->
 		<div if="showGuide" class="guide-page">
-			<!-- <div if="showGuide" class="guide-page_btn" >
-				<text onclick="skip()">{{guideSecond}}s&nbsp;&nbsp;&nbsp;跳过</text>
-			</div> -->
-			<!-- <div class="go-app" if="showGuide && swIndex == 2 && guideList.length <=0">
-				<text onclick="skip()">立即体验</text>
-			</div> -->
 			<swiper indicator-selected-color="#9A70C2" @change="lanuchChange" loop="false" if="showGuide && guideList.length>0">
 				<image @click="goUrl(item)" class="guide-page_image" width="100%" for="item in guideList" src="{{imgUrl}}{{item.imgPath}}" alt="">
 			</swiper>
@@ -58,12 +52,7 @@
 									<text if="{{isLogin}}">{{weather}}</text>
 									<text else></text>
 								</div>
-								<!-- <div if="{{!isLogin}}" class="weather no-login" >
-						</div> -->
-								<!-- <text if="{{!isLogin}}" class="login-explain">登陆后即可体验一键缴费</text> -->
-								<!-- <text style="height:36px;" if="{{isLogin}}" class="login-explain">&nbsp;&nbsp;</text> -->
 								<div if="!isGroup" class="common-content">
-									<!-- <div class="common-content"> -->
 									<text class="common-content_title">常用缴费</text>
 									<div class="common-content_body">
 										<div class="item" if="$item.typeName == '水费' || $item.typeName == '电费' || $item.typeName == '燃气费' || $item.typeName == '手机充值'" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,'common')">
@@ -96,19 +85,10 @@
 												<!-- <text>▼</text> -->
 												<text>{{item.houseNumber}}</text>
 											</div>
-											<!-- <div class="group-cell_content">
-										<div class="group-cell_item">
-											<text>{{item.bill}}</text> -->
-											<!--<text>*秀儿</text> -->
-											<!-- </div>
-									</div> -->
 										</div>
 									</div>
 								</div>
 							</div>
-							<!-- <div if="activeSwitch == 'open'" class="notification">
-					
-					</div> -->
 							<!-- <div class="huodong-img">
 								<image @click="toPhone" src="./images/banner_phone.jpg" alt=""></image>
 							</div> -->
@@ -117,8 +97,8 @@
 							<div class="notification-body">
 								<div if="notificationList.length > 0" class="notification-content">
 									<image resize-mode="contain" src="./images/notification_icon.png"></image>
-									<swiper loop="true" autoplay="true" interval="10000" indicator="false" duration="1000" vertical="false">
-										<text lines="1" for="item in notificationList">{{item.content}}</text>
+									<swiper loop="true" autoplay="true" interval="4000" indicator="false" duration="1000" vertical="true" nextmargin="5%">
+										<text for="item in notificationList">{{item.content}}</text>
 									</swiper>
 								</div>
 								<div if="homeAdsList.length > 0" class="activity-entry-banner">
@@ -161,9 +141,6 @@
 
 						<image height="50px" src="./images/add_icon_source.png"></image>
 					</div>
-					<!-- <div class="add-icon" if="showShortcut && tabIndex == 0 && !isLogin">
-						<image class="jde-add_img" @click="createShortcut()" width="550" resize-mode="contain" src="./images/activityImg/JDE_add_img.png" />
-					</div> -->
 					<div if="showActiveModel" @click="closeActiveModel" class="activity-model-body">
 						<div>
 							<image @click="closeActiveModel" class="activity-model_close" width="60" height="60" src="./images/activityImg/model_close_btn.png"></image>
@@ -204,29 +181,6 @@
 						<!-- 无缴费记录时 -->
 						<div class="no-records_body" if="orderPagingH5Model.recordsModel.length == 0">
 							<image src="./images/no_payment_records.png" width="452" height="498" resize-mode="contain"></image>
-							<!-- <div if="{{!isLogin}}" @click="toDetail('User/SmsLogin')" class="no-records_title">
-								<div><text style="color:#9A70C2;font-weight:bold;">登录</text><text>后可查看您的缴费记录呦</text></div>
-							</div>
-							<div if="{{isLogin}}" class="no-records_title">
-								<text>暂无记录</text>
-							</div>
-							<div class="pay-type_body">
-								<div class="select-pay_type">
-									<text class="select-city" @click="orderToDetail()">{{cityName}}&nbsp;&nbsp;▼</text>
-									<text class="pay-type_title">快速缴费</text>
-								</div>
-
-							</div>
-							<div class="grids">
-								<div class="item" for="{{cebPaymentCategoriesList}}" @click="toJFDetail('Home/Recharge',$item.typeName,$item.type,$item.icon,'fast')">
-									<div class="icon">
-										<image resize-mode="contain" src="{{$item.icon}}"></image>
-									</div>
-									<div class="text">
-										<text>{{$item.typeName}}</text>
-									</div>
-								</div>
-							</div> -->
 						</div>
 						<!-- 缴费记录列表 -->
 						<refresh class="refresh" if="orderPagingH5Model.recordsModel.length > 0" progress-color="#9A70C2" onrefresh="refreshingTop" refreshing="{{refreshing}}" type="auto">
@@ -303,16 +257,6 @@
 										</div>
 									</div>
 								</div>
-								<!-- <div class="item" @click="copyWx">
-									<div class="inner">
-										<image height="30" src="./images/feedback.png"></image>
-										<text>反馈建议</text>
-										<div class="inner-body">
-											<text class="inner-body_title">微信公众号 ubaycn</text>
-											<text class="inner-body_pleacehoder">真诚期待您的建议</text>
-										</div>
-									</div>
-								</div> -->
 								<div class="item" @click="call">
 									<div class="inner">
 										<image height="30" src="./images/kefu_mobile.png"></image>
@@ -334,18 +278,6 @@
 										<text>帮助中心</text>
 									</div>
 								</div>
-								<!-- <div class="item" if="isLogin" @click="toPrize('Home/Suggest')">
-									<div class="inner inner-arrow">
-										<image height="30" src="./images/suggest_icon.png"></image>
-										<text>建议反馈</text>
-									</div>
-								</div> -->
-								<!-- <div class="item" @click="toDetail('User/About')">
-									<div class="inner inner-arrow">
-										<image height="30" src="./images/about.png"></image>
-										<text>关于云缴费</text>
-									</div>
-								</div> -->
 							</div>
 							<div class="list" if="showShortcut">
 								<div class="item" style="margin-top:22px;" @click="createShortcut()">
@@ -694,20 +626,6 @@ export default Custom_page({
 			uri: 'User/Helpcenter'
 		})
 	},
-	toPrize(url) {
-		statis.statis('my_prize_click', { external: this.external }, this)
-		this.showIqiyiActiveModel = false;
-		this.showJDEActiveModel = false;
-		if (this.isLogin) {
-			router.push({
-				uri: url
-			})
-		} else {
-			router.push({
-				uri: 'User/SmsLogin'
-			})
-		}
-	},
 	// 天气
 	getWeather() {
 		var that = this;
@@ -787,15 +705,8 @@ export default Custom_page({
 							prompt.showToast({
 								message: '成功创建桌面图标'
 							})
-							// this.addChange('add');
 							this.showShortcut = false;
 							// 添加到桌面功能打点
-							// fetch.fetch({
-							// 	url: "https://t.ubaycn.com/ub/tatistics/quick?scene=5&phone=" + this.relaymobile + "&sourceType=" + this.external + "&sessionId=" + this.sid,
-							// 	// url:"http://192.168.1.140:8090/ub/tatistics/quick?scene=5&phone="+this.relaymobile+"&sourceType="+this.external+"&sessionId="+this.sid,
-							// 	method: "GET",
-							// 	success: function (res) { }
-							// })
 							request.post("tatistics/quick",{scene:5,phone:this.relaymobile,sourceType:this.external,sessionId:this.sid})
 								.then(res => { console.log("scene5埋点", res) })
 							// this.showJDEActiveModel = true;				
@@ -878,8 +789,6 @@ export default Custom_page({
 		this.updateGroup();
 		storage.delete({ key: "groupId" });
 		storage.delete({ key: "groupName" });
-		// this.groupId = "";
-		// this.groupName = "";
 		// 页面初始化埋点
 		this.device()
 		// 获取手机号
@@ -954,8 +863,6 @@ export default Custom_page({
 						sessionId: data,
 						isHome: true
 					}).then(res => {
-						// console.log(62);
-						// console.clear();
 						console.log("Home.user/get-group", res)
 						if (res.status == 200) {
 							// console.log(63);
@@ -1087,134 +994,134 @@ export default Custom_page({
 			this.netWork = false
 		})
 		// 数据获取 sessionId
-		if (this.external == "vivoNegative") {
-			storage.get({
-				key: "sessionId",
-				success: (data) => {
-					console.log('sessionId' + data)
-					this.sid = data;
-					if (this.sid) {
-						this.isLogin = true;
-						// 缴费记录
-						request.post('order/payment-records', {
-							pageSize: 10,
-							currentPage: 1
-						}).then(res => {
-							if (res.status == 200) {
-								this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-								const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-								if (recordsModel.length > 0) {
-									const paymentDate = recordsModel[0].paymentDate
-									const date = this.format(Date.parse(new Date()))
-									// if (paymentDate.split(' ')[0] == date) {
-									// 	this.addChange('pay');
-									// }
-								}
-								if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-									this.hasMoreData = false;
-								}
-							} else {
-								this.hasMoreData = false;
-							}
-						}).catch(err => {
-							console.log(22)
-							this.hasMoreData = false;
-						})
-					} else {
-						account.authorize({
-							type: 'code',
-							redirectUri: 'https://api0.ubaycn.com/',
-							success: function (data) {
-								console.log("第一步返回的data", data)
-								let postCode = data.code
-								console.log(postCode);
-								request.post("vivo/getAccessToken", { code: postCode })
-									.then(res => {
-										console.log("返回值类型", res, Object.prototype.toString.call(res))
-										const strToObj = JSON.parse(res.data)
-										console.log(strToObj);
-										let postToken = strToObj.data.accessToken
-										console.log(postToken);
-										account.getProfile({
-											token: postToken,
-											success: function (data) {
-												console.log(data)
-												let vivoOpenid = data.openid
-												account.getPhoneNumber({
-													success: function (data) {
-														request.post("user/login/oneClick", { environment: "zhengshi", mobile: data.phoneNumber, openId: vivoOpenid })
-															.then(res => {
-																console.log("vivo一键登录成功", res);
-																if (res.code == 200) {
-																	let data = JSON.parse(res.data);
-																	console.log("一键登录成功的data值", data);
-																	console.log("获取到的sid", data.data.sessionId)
-																	storage.set({
-																		key: 'uid',
-																		value: res.data.id,
-																	})
-																	storage.set({
-																		key:"sessionId",
-																		value:data.data.sessionId
-																	})
-																	storage.set({
-																		key: "mobile",
-																		value: data.data.mobile
-																	})
-																	request.post('order/payment-records', {
-																		pageSize: 10,
-																		currentPage: 1
-																	}).then(res => {
-																		that.isLogin = true;
-																		if (res.status == 200) {
-																			that.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-																			const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-																			if (recordsModel.length > 0) {
-																				const paymentDate = recordsModel[0].paymentDate
-																				const date = that.format(Date.parse(new Date()))
-																				// if (paymentDate.split(' ')[0] == date) {
-																				// 	this.addChange('pay');
-																				// }
-																			}
-																			if (res.data.hkPaymentRecordsModel.recordsModel.length < that.pageSize) {
-																				that.hasMoreData = false;
-																			}
-																		} else {
-																			that.hasMoreData = false;
-																		}
-																	}).catch(err => {
-																		console.log(22)
-																		that.hasMoreData = false;
-																	})
-																}
-															})
-													},
-													fail: function (data) {
-														router.replace({
-															uri: 'User/SmsLogin',
-															params: {
-																external: that.external,
-															}
-														})
-													}
-												})
-											},
-											fail: function (err) { }
-										})
-									})
-									.catch(err => {
+		// if (this.external == "vivoNegative") {
+		// 	storage.get({
+		// 		key: "sessionId",
+		// 		success: (data) => {
+		// 			console.log('sessionId' + data)
+		// 			this.sid = data;
+		// 			if (this.sid) {
+		// 				this.isLogin = true;
+		// 				// 缴费记录
+		// 				request.post('order/payment-records', {
+		// 					pageSize: 10,
+		// 					currentPage: 1
+		// 				}).then(res => {
+		// 					if (res.status == 200) {
+		// 						this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+		// 						const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+		// 						if (recordsModel.length > 0) {
+		// 							const paymentDate = recordsModel[0].paymentDate
+		// 							const date = this.format(Date.parse(new Date()))
+		// 							// if (paymentDate.split(' ')[0] == date) {
+		// 							// 	this.addChange('pay');
+		// 							// }
+		// 						}
+		// 						if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
+		// 							this.hasMoreData = false;
+		// 						}
+		// 					} else {
+		// 						this.hasMoreData = false;
+		// 					}
+		// 				}).catch(err => {
+		// 					console.log(22)
+		// 					this.hasMoreData = false;
+		// 				})
+		// 			} else {
+		// 				account.authorize({
+		// 					type: 'code',
+		// 					redirectUri: 'https://api0.ubaycn.com/',
+		// 					success: function (data) {
+		// 						console.log("第一步返回的data", data)
+		// 						let postCode = data.code
+		// 						console.log(postCode);
+		// 						request.post("vivo/getAccessToken", { code: postCode })
+		// 							.then(res => {
+		// 								console.log("返回值类型", res, Object.prototype.toString.call(res))
+		// 								const strToObj = JSON.parse(res.data)
+		// 								console.log(strToObj);
+		// 								let postToken = strToObj.data.accessToken
+		// 								console.log(postToken);
+		// 								account.getProfile({
+		// 									token: postToken,
+		// 									success: function (data) {
+		// 										console.log(data)
+		// 										let vivoOpenid = data.openid
+		// 										account.getPhoneNumber({
+		// 											success: function (data) {
+		// 												request.post("user/login/oneClick", { environment: "zhengshi", mobile: data.phoneNumber, openId: vivoOpenid })
+		// 													.then(res => {
+		// 														console.log("vivo一键登录成功", res);
+		// 														if (res.code == 200) {
+		// 															let data = JSON.parse(res.data);
+		// 															console.log("一键登录成功的data值", data);
+		// 															console.log("获取到的sid", data.data.sessionId)
+		// 															storage.set({
+		// 																key: 'uid',
+		// 																value: res.data.id,
+		// 															})
+		// 															storage.set({
+		// 																key:"sessionId",
+		// 																value:data.data.sessionId
+		// 															})
+		// 															storage.set({
+		// 																key: "mobile",
+		// 																value: data.data.mobile
+		// 															})
+		// 															request.post('order/payment-records', {
+		// 																pageSize: 10,
+		// 																currentPage: 1
+		// 															}).then(res => {
+		// 																that.isLogin = true;
+		// 																if (res.status == 200) {
+		// 																	that.orderPagingH5Model = res.data.hkPaymentRecordsModel;
+		// 																	const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
+		// 																	if (recordsModel.length > 0) {
+		// 																		const paymentDate = recordsModel[0].paymentDate
+		// 																		const date = that.format(Date.parse(new Date()))
+		// 																		// if (paymentDate.split(' ')[0] == date) {
+		// 																		// 	this.addChange('pay');
+		// 																		// }
+		// 																	}
+		// 																	if (res.data.hkPaymentRecordsModel.recordsModel.length < that.pageSize) {
+		// 																		that.hasMoreData = false;
+		// 																	}
+		// 																} else {
+		// 																	that.hasMoreData = false;
+		// 																}
+		// 															}).catch(err => {
+		// 																console.log(22)
+		// 																that.hasMoreData = false;
+		// 															})
+		// 														}
+		// 													})
+		// 											},
+		// 											fail: function (data) {
+		// 												router.replace({
+		// 													uri: 'User/SmsLogin',
+		// 													params: {
+		// 														external: that.external,
+		// 													}
+		// 												})
+		// 											}
+		// 										})
+		// 									},
+		// 									fail: function (err) { }
+		// 								})
+		// 							})
+		// 							.catch(err => {
 
-									})
-							},
-							fail: function (data, code) {
-								console.log(`handling fail, code = ${code}`)
-							}
-						})
-					}
-				}
-			})
+		// 							})
+		// 					},
+		// 					fail: function (data, code) {
+		// 						console.log(`handling fail, code = ${code}`)
+		// 					}
+		// 				})
+		// 			}
+		// 		}
+		// 	})
 
-		} else {
+		// } else {
 			storage.get({
 				key: "sessionId",
 				success: (data) => {
@@ -1253,7 +1160,7 @@ export default Custom_page({
 					console.log(`handling fail, code = ${code}`)
 				}
 			})
-		}
+		// }
 		getUserInfo((data) => {
 			// prompt.showToast({
 			// 	message: data.sid
@@ -1378,13 +1285,11 @@ export default Custom_page({
 			// 缴费记录
 			request.post('order/payment-records', {
 				pageSize: this.pageSize,
-				currentPage: this.currentPage//,
-				// environment: "test"
+				currentPage: this.currentPage
 			}).then(res => {
 				if (res.status == 200) {
 					this.orderPagingH5Model.pageInfo = res.data.hkPaymentRecordsModel.pageInfo
 					this.orderPagingH5Model.recordsModel = this.orderPagingH5Model.recordsModel.concat(res.data.hkPaymentRecordsModel.recordsModel)
-					console.log("this.orderPagingH5Model", this.orderPagingH5Model)
 					if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
 						this.hasMoreData = false;
 					}
@@ -1418,7 +1323,6 @@ export default Custom_page({
 				title: '测试标题',
 				summary: '测试摘要',
 				imagePath: '/images/icon/power.png',
-				// imagePath: 'https://cdn.ubaycn.com/upload/images/2019-06-04/c6e8b88b88810cc3a6ee2b5e48d588c5.png',
 				targetUrl: 'http://www.quickapp.cn',
 				success: function (data) {
 					console.log('handling success')
@@ -1459,13 +1363,6 @@ export default Custom_page({
 		}
 
 		// 页面埋点
-		// fetch.fetch({
-		// 	url: "https://t.ubaycn.com/ub/tatistics/quick?scene=3&phone=" + this.relaymobile + "&sourceType=" + this.external,
-		// 	method: "GET",
-		// 	success: function (res) {
-		// 		// console.log("于哥出品"+res);
-		// 	}
-		// })
 		request.post("tatistics/quick",{scene:"3",phone:this.relaymobile,sourceType:this.external})
 			.then(res => {
 				console.log("scene3埋点", res)
@@ -1522,7 +1419,6 @@ export default Custom_page({
 									paymentList.push(element)
 								}
 							}
-							// console.clear();
 							console.log({
 								uri: 'Home/Recharge',
 								params: {
@@ -1554,7 +1450,6 @@ export default Custom_page({
 							})
 						} else {
 							// 账单详情
-							// console.clear();
 							console.log("to recharge", {
 								payName: '1',
 								title: billitem.typeName,
@@ -1566,7 +1461,6 @@ export default Custom_page({
 								groupId,
 								billKey: billitem.houseNumber
 							});
-							// return false;
 							router.push({
 								uri: 'Home/Recharge',
 								params: {
@@ -1596,13 +1490,9 @@ export default Custom_page({
 	// 查询缴费项目
 	getJfTypeDetail(obj) {
 		var that = this;
-		// console.log("cityName", this.cityName);
 		if (obj.params.title.indexOf("手机") != -1) {
 			obj.uri = "Home/Mobile"
-			// console.clear();
-			console.log("before Home/Mobile");
 			console.log("obj", obj);
-			// return false;
 			router.push(obj)
 		} else {
 			// 缴费项目信息
@@ -1775,12 +1665,10 @@ export default Custom_page({
 		// device.getSerial({
 			success: function (data) {
 				console.log("获取手机的唯一识别码", data, that.relaymobile, that.external);
-				// request.get("tatistics/quick?scene=2&phone="+that.relaymobile+"&sourceType="+that.external+"&device="+data.device)
 				request.post("tatistics/quick", { scene: "2", phone: that.relaymobile, sourceType: that.external, device: data.device })
 					.then(res => {
 						console.log("scene2埋点", res)
 					})
-				/**/
 			},
 			fail: function (data, code) {
 				console.log(`handling fail, code = ${code}`)
@@ -1789,7 +1677,6 @@ export default Custom_page({
 
 		device.getInfo({
             success: function (ret) {
-                // console.log("手机型号",ret,that.isPhone);
                 if(ret.brand == "vivo" || ret.brand == "Xiaomi" || ret.brand == "xiaomi" || ret.brand == "Lenovo" || ret.brand == "Meizu" || ret.brand == "OPPO"){
 					that.isPhone = true;
 				}else{

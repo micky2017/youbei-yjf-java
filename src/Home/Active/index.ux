@@ -34,7 +34,6 @@ export default Custom_page({
     },
     private: {
         webUrl: '',
-        // trustedurl:['https://api.ubaycn.com/lottery'],
         trustedurl: [],
     },
     onInit() {

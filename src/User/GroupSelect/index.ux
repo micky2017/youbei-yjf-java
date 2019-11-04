@@ -66,20 +66,13 @@ export default Custom_page({
         this.getGroup()
     },
     getGroup() {
-        // storage.get({
-        //     key: 'session',
-        //     success: (data) => {
-        //         this._id = data;
         request.post('user/get-group').then(res => {
-            // console.clear();
             console.log("GS.user/get-group", res);
             if (res.status == 200) {
                 res.data = eval(res.data.list);
                 this.groupList = res.data
             }
         })
-        //     }
-        // })
     },
     voidFn() {
         return false;
@@ -102,21 +95,18 @@ export default Custom_page({
         this.inputFocus()
         //新增
         request.post('user/add-group', {
-            // sid: this._id,
-            // groupId: this.groupIdValue
             groupName: this.groupIdValue
         }).then(res => {
             this.closeWindow();
             this.item = {}
             this.groupIdValue = ''
             if (res.status == 200) {
-                // this.showToast('新增分组成功');
                 this.getGroup();
             } else {
-                // this.showToast('新增分组失败');
+                this.showToast('新增分组失败');
             }
         }).catch(err => {
-            // this.showToast('网络错误');
+            this.showToast('网络错误');
         })
     },
     showModificationFn() {
@@ -126,8 +116,6 @@ export default Custom_page({
         this.showModification = false;
     },
     selectGroup(groupId, groupName) {
-        // console.log("id", "name", groupId, groupName)
-        // alert(groupId + " - " + groupName);
         this.groupId = groupId;
         this.groudName = groupName;
         storage.set({
@@ -138,9 +126,7 @@ export default Custom_page({
                     key: 'groupName',
                     value: groupName,
                     success: (res) => {
-                        // setTimeout(function(){
                         router.back();
-                        // }, 0);
                     }
                 });
             }

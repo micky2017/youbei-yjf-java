@@ -79,25 +79,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 是否显示历史户号 -->
-            <!-- <div class="history-billkey">
-                <div>
-                    <div class="history-title">
-                        <image width="32" height='38' resize-mode="contain" src='../images/history-title_icon.png'></image>
-                        <text>历史缴费记录</text>
-                    </div>
-                    <div class="history-content">
-                        <div @click="changeBillkey(item)" if="billkeys.length > 0" class="{{historyBillkey == item ? 'se-his' : 'nse-his'}}" for="{{item in billkeys}}">
-                            <text class="{{historyBillkey == item ? 'se-his_text' : 'nse-his_text'}}">{{item}}</text>
-                        </div>
-                        <div if="billkeys.length <= 0">
-                            <text>暂无历史缴费记录</text>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
-
         <div class="payment-content group-manage">
             <text if="paymentItem.createPaymentBillParamsModelList && paymentItem.createPaymentBillParamsModelList[0].payTimeTips">{{paymentItem.createPaymentBillParamsModelList[0].payTimeTips}}</text>
             <div class="group-manage_content">
@@ -695,18 +677,6 @@ export default Custom_page({
             this.showToast("网络错误")
             console.log("网络错误", err);
         })
-        // if(this.itemValue){
-        // router.push({
-        //     uri: "Home/Inspect",
-        //     params:{
-        //         paymentItem:this.paymentItem,
-        //         itemValue:this.itemValue,
-        //         reqData:this.reqData
-        //     }
-        // })
-        // }else{
-        //     this.showToast('您有信息未填写')
-        // }
     }
 })
 </script>

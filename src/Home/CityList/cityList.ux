@@ -97,10 +97,6 @@ export default Custom_page({
         request.get("payment/get-city-list").then(res => {
             console.log("payment/get-city-list", res);
             if (res.status == 200) {
-                // cityRenCategoryModelList  最近常用城市
-                // cityHotCategoryModelList  热门城市
-                // cityCategoryModelList  城市列表
-                // this.section = res.data.section;
                 this.cityHotCategoryModelList = res.data.cityHotCategoryModelList[0].cityModelList;
                 this.cityModelList = res.data.cityCategoryModelList;
                 this.cityRenCategoryModelList = res.data.cityRenCategoryModelList;
@@ -108,11 +104,6 @@ export default Custom_page({
             }
         }).catch(err => {
             this.showToast("网络错误", 'back');
-            // setTimeout(() => {
-            //     router.push({
-            //         uri:"/"
-            //     })
-            // },1500)
         })
     },
     showProptFn(cityFlag, time) {

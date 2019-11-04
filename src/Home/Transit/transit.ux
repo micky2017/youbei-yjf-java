@@ -65,15 +65,12 @@
                         // 缴费类别
                         console.log('transit'+this.cityName)
 						request.post('payment/pay-type-lst',{cityName:decodeURI(this.cityName)}).then(res => {
-                            console.log(res)
-							console.log('transit',this.type);
 							if(res.status == 200){
                                 for(let i = 0;i<res.data.length;i++){
                                     const item = res.data[i];
                                     // console.log(item);
                                     if(item.typeName.indexOf(this.type) != -1){
                                         if(item.typeName.indexOf('手机') != -1){
-                                            console.log("手机",item.typeName.indexOf('手机'))
                                             router.replace({
                                                 uri:'Home/Mobile',
                                                 params:{
@@ -83,16 +80,7 @@
                                                 }
                                             })
                                         }else{
-                                            console.log("非手机",item.type)
                                             this.toRecharge(item.type)
-                                            // router.replace({
-                                            //     uri:'Home/Recharge',
-                                            //     params:{
-                                            //         title:item.typeName,
-                                            //         type:item.type,
-                                            //         external:this.external,
-                                            //     }
-                                            // })
                                         }
                                         
                                     }
@@ -108,41 +96,29 @@
                             })
                         })
                     }else{
-                        // router.replace({
-                        //     uri:'User/SmsLogin',
-                        //     params:{
-                        //         external:this.external,
-                        //     }
-                        // })
-                        if(this.external == "vivoNegative"){
-                            this.empower();
-                        }else{
+                        // if(this.external == "vivoNegative"){
+                        //     this.empower();
+                        // }else{
                             router.replace({
                                 uri:'User/SmsLogin',
                                 params:{
                                     external:this.external,
                                 }
                             })
-                        }
+                        // }
                     }
                 },
                 error:(err) => {
-                    // router.replace({
-                    //     uri:'User/SmsLogin',
-                    //     params:{
-                    //         external:this.external,
-                    //     }
-                    // })
-                    if(this.external == "vivoNegative"){
-                        this.empower();
-                    }else{
+                    // if(this.external == "vivoNegative"){
+                    //     this.empower();
+                    // }else{
                         router.replace({
                             uri:'User/SmsLogin',
                             params:{
                                 external:this.external,
                             }
                         })
-                    }
+                    // }
                 }
             })
             
@@ -304,110 +280,6 @@
                             }
                         })
                     })
-                    // fetch.fetch({
-                    //     url: 'https://t.ubaycn.com/vivo/getAccessToken?code='+postCode,
-                    //     // url: 'http://192.168.1.109:8090/vivo/getAccessToken?code='+postCode,
-                    //     success: function (response) {
-                    //         console.log("第二步返回的data",response)
-                    //         const strToObj = JSON.parse(response.data)
-                    //         console.log(strToObj);
-                    //         let postToken = strToObj.data.accessToken
-                    //         console.log(postToken);
-                    //         account.getProfile({
-                    //             token: postToken,
-                    //             success: function(data) {
-                    //                 console.log(data)
-                    //                 that.vivoOpenid = data.openid;
-                    //                 // that.Loginmsg();
-                    //                 account.getPhoneNumber({
-                    //                     success: function(data) {
-                    //                         console.log(`handling success phoneNumber: `,data.phoneNumber)
-                    //                         fetch.fetch({
-                    //                             url: 'https://t.ubaycn.com/ub/user/login/oneClick',
-                    //                             // url: 'http://192.168.1.109:8090/ub/user/login/oneClick',
-                    //                             method:"post",
-                    //                             data:{
-                    //                                 environment: "zhengshi",
-                    //                                 mobile:data.phoneNumber,
-                    //                                 openId:that.vivoOpenid
-                    //                             },
-                    //                             success:function(res){
-                    //                                 console.log("vivo一键登录成功",res);
-                    //                                 if(res.code == 200){
-                    //                                     let data = JSON.parse(res.data);
-                    //                                     console.log("一键登录成功的data值",data);
-                    //                                     console.log("获取到的sid",data.data.sessionId)
-                    //                                     storage.set({
-                    //                                         key:'_id',
-                    //                                         value:res.data.mid
-                    //                                     })
-                    //                                     storage.set({
-                    //                                         key:"sid",
-                    //                                         value:data.data.sessionId
-                    //                                     })
-                    //                                     storage.set({
-                    //                                         key:"mobile",
-                    //                                         value:data.data.mobile
-                    //                                     })
-                    //                                     if(res.data.isFirst){
-                    //                                         storage.set({
-                    //                                             key:'firstLogin',
-                    //                                             value:'true'
-                    //                                         })
-                    //                                     }
-                    //                                     if(res.data.regIqy){
-                    //                                         storage.set({
-                    //                                             key:'regIqy',
-                    //                                             value:'true'
-                    //                                         })
-                    //                                     }
-                    //                                     if(res.data.regGiving){
-                    //                                         storage.set({
-                    //                                             key:'regGiving',
-                    //                                             value:res.data.regGiving
-                    //                                         })
-                    //                                     }
-                    //                                     console.log("传出去的手机号",data.data.mobile)
-                    //                                     that.toRechange();
-                    //                                 }
-                    //                             },
-                    //                             fail:function(err){
-                    //                                 console.log(err);
-                    //                             }
-                    //                         })
-                    //                     },
-                    //                     fail: function(data, code) {
-                    //                         router.replace({
-                    //                             uri:'User/SmsLogin',
-                    //                             params:{
-                    //                                 external:that.external,
-                    //                             }
-                    //                         })
-                    //                         console.log(`手机号授权错误返回, code = ${code}`)
-                    //                     }
-                    //                 })
-                    //             },
-                    //             fail: function(data, code) {
-                    //                 console.log(`OAuth授权错误返回, code = ${code}`)
-                    //                 router.replace({
-                    //                     uri:'User/SmsLogin',
-                    //                     params:{
-                    //                         external:that.external,
-                    //                     }
-                    //                 })
-                    //             }
-                    //         })
-                    //     },
-                    //     fail: function (data, code) {
-                    //         console.log(`获取token错误返回, errMsg = ${data}`)
-                    //         router.replace({
-                    //             uri:'User/SmsLogin',
-                    //             params:{
-                    //                 external:that.external,
-                    //             }
-                    //         })
-                    //     }
-                    // })
                 },
                 fail: function(data, code) {
                     console.log(`第一步错误返回, code = ${code}`)

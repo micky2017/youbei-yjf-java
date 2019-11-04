@@ -24,7 +24,6 @@
                     </div>
                     <div class="prize-item_price">
                         <div class="prize-item_price--body">
-                            <!-- <image src="../images/activityImg/money_icon.png"></image> -->
                             <text class="price-identify">￥</text>
                             <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
@@ -35,7 +34,6 @@
                 </div>
                 <!--  -->
                 <div if="{{$item.isExpire && $item.code != 'iqiyicode' && $item.code != 'storeCode'}}" class="prize-item_body prize-item_past">
-                    <!-- <div if="false" class="prize-item_body prize-item_past"> -->
                     <div class="prize-item_content">
                         <div class="prize-item_name">
                             <image width="30" height="30" src='../images/activityImg/prize_item_icon_default.png'></image>
@@ -53,7 +51,6 @@
                     </div>
                     <div class="prize-item_price">
                         <div class="prize-item_price--body">
-                            <!-- <image src="../images/activityImg/money_icon.png"></image> -->
                             <text class="price-identify">￥</text>
                             <text class="price-value">{{$item.prizeNum}}</text>
                         </div>
@@ -69,7 +66,6 @@
                         </div>
                         <div class="prize-item_time rules">
                             <text>领取时间: {{$item.acquireTime}}</text>
-                            <!-- <text>领取时间: {{$item.expireTime}}</text> -->
                             <div class="prize-content_btn" @click="showIqyPrizeRulesFn($item)">
                                 <text>使用规则</text>
                             </div>
@@ -86,9 +82,7 @@
                     </div>
                     <div if="$item.passwd" class="prize-item_price copy-password">
                         <div class="prize-item_price--body">
-                            <!-- <text class="price-identify">1234treefsddsvdsssdf</text> -->
                             <text class="price-identify">{{$item.passwd}}</text>
-                            <!-- <text class="price-value">{{$item.prizeNum}}</text> -->
                         </div>
                         <div class="prize-item_btn" @click="copyValue($item.passwd)">
                             <text>复制</text>
@@ -169,8 +163,6 @@
         <div class="no-prize" if="noPrizeList">
             <image width="268px" height="163px" src="../images/activityImg/money_icon.png"></image>
             <text class="no-prize_text">暂无奖券</text>
-            <!-- <text class="no-prize_propt">悄悄告诉你，缴费成功</text>
-            <text class="no-prize_propt">可以获得一次抽奖机会哦～</text> -->
             <div class="no-prize_btn" @click="goHome">
                 <text>我要云缴费</text>
             </div>
@@ -294,9 +286,6 @@ export default Custom_page({
     toIqiyi() {
         storage.set({
             key: 'activeUrl',
-            // value:'http://192.168.1.101:7010/iqiyi',
-            // value: 'https://api.ubaycn.com/iqiyi',
-            // value: 'http://47.95.147.237/iqiyi',
             value: "http://h5.ubaycn.com/iqiyi",
             success: () => {
                 router.push({
@@ -346,7 +335,6 @@ export default Custom_page({
                                 } else {
                                     data[i].isExpire = true
                                 }
-                                // data[i].acquireTime = that.format(Number(data[i].acquireTime))
                                 data[i].acquireTime = that.format(Date.parse(new Date(data[i].acquireTime)))
                                 data[i].expireTime = that.format(Date.parse(new Date(data[i].expireTime)))
                             }
@@ -362,39 +350,6 @@ export default Custom_page({
                 })
             }
         });
-        /*
-        storage.get({
-            key:'_id',
-            success:(res) => {
-                request.post('lottery/list',{sid:res}).then(res => {
-                    if(res.status == 0){
-                        const data = res.data;
-                        if(data.length != 0){
-                            this.noPrizeList = false;
-                            for(let i = 0; i< data.length;i++){
-                                // data[i].acquire_time 获取时间
-                                if(data[i].isExpire == 'false'){
-                                    data[i].isExpire = false
-                                }else{
-                                    data[i].isExpire = true
-                                }
-                                data[i].acquire_time = that.format(Number(data[i].acquire_time))
-                                data[i].expire_time = that.format(Date.parse(new Date(data[i].expire_time)))
-                            }
-                        }else{
-                            this.noPrizeList = true;
-                        }
-                        that.prizeList = data
-                    }else{
-                        this.noPrizeList = true;
-                    }
-                    console.log(that.prizeList)
-                }).catch(res => {
-                    this.noPrizeList = true;
-                })
-            }
-        })
-        /**/
     },
     add0(m) { return m < 10 ? '0' + m : m },
     format(shijianchuo) {

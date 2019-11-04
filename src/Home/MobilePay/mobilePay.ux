@@ -7,21 +7,10 @@
         <TitleBar title='确认信息' color="#fff"></TitleBar>
         <YjfLoading if="showLoading" />
         <div class="explain" if="{{paymentItem.description}}">
-
-            <!-- <div class="explain-left">
-                <text>！</text>
-            </div> -->
             <div class="explain-right" >
                 <text>{{paymentItem.description}}</text>
-                <!-- <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
-                <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
-                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div> -->
             </div>
         </div>
-        <!-- <div class="input-body">
-            <text>充值号码</text>
-            <input type="tel" placeholder="请输入充值号码" />
-        </div> -->
         <div class="payment-body">
             <div class="payment-item">
                 <div class="payment-item_name">
@@ -31,14 +20,6 @@
                     <text>{{mobile}}</text>
                 </div>
             </div>
-            <!-- <div class="payment-item">
-                <div class="payment-item_name">
-                    <text>缴费金额:</text>
-                </div>
-                <div class="payment-item_content">
-                    <input type="text" />
-                </div>
-            </div> -->
             <div class="payment-item">
                 <div class="payment-item_name">
                     <text>运营商:</text>
@@ -71,26 +52,10 @@
                 <div class="payment-item_content">
                     <div if="!item.rechargeLimit">
                         <input id="mobile" onchange="changeItem(item.name)" type="number" placeholder="{{item.description}}" />
-                        <!-- <input type="number" placeholder="item.description" if="item.inputType == 1">
-                        <input type="date" placeholder="item.description" if="item.inputType == 2"> -->
                     </div>
                     <div onclick="changeItem1(item)" if="item.rechargeLimit">
                         <text if="billItem != null">{{itemValue}}元▼</text>
                         <text if="billItem == null">{{item.rechargeLimit.split('|')[0]}}元▼</text>
-
-                        <!-- <select>
-                            <option value="$item" for="item.listBoxOptions.split('|')">{{$item}}</option>
-                        </select> -->
-                    </div>
-                    <!-- <div elif="item.filedType == 2">
-                        <input type="checkbox" name="" id="" />
-                    </div>
-                    <div elif="item.filedType == 3">
-                        <input type="radio" name="" id="" />
-                    </div>
-                    <div else>
-                        <text>{{item.filedType}}</text>
-                    </div> -->
                 </div>
             </div>
         </div>

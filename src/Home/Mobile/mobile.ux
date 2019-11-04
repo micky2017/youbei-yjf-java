@@ -34,20 +34,9 @@
             </div>
 
         </div>
-        <!-- <div class="input-body">
-            <text>充值号码</text>
-            <input id="mobile" onchange="changeItem" value="{{itemValue}}" type="tel" placeholder="请输入充值号码" />
-        </div> -->
         <div class="next-btn" @click="toInspect()">
             <text>下一步</text>
         </div>
-        <!-- <div class="explain" >
-            <div class="explain-right" >
-                <div><text>1. 支持全国范围内的移动、联通、电信所有手机充值。</text></div>
-                <div><text>2. 月初和月末运营商系统繁忙，可能出现话费延迟到账或未到账等情况，您可以联系运营商确认话费到账情况，或联系云缴费客服进行处理。</text></div>
-                <div><text>3. 中国移动限定每个手机号每天最多充值3次，每月最多充值5次。</text></div>
-            </div>
-        </div> -->
         <toast if="{{show_toast}}" text="{{toast_text}}"></toast>
 
     </div>
@@ -221,36 +210,31 @@ export default Custom_page({
         } else {
             this.showMobileError = false;
             // 缴费项目信息
-            // storage.get({
-            //     key: "sessionId",
-            //     success: function (data) {
-                    request.post('payment/mobile-pay', {
-                        mobile: that.itemValue
-                    }).then(res => {
-                        console.log("payment/mobile-pay", res)
-                        if (res.status == 200) {
-                            if(that.external != "vivoNegative"){
-                                that.$element('mobile').focus({ focus: false })
-                            }
-                            const item = res.data.mobileRechargeModel;
-                            console.log("res.data", res.data);
-                            that.paymentItemName = res.data.paymentItemList[0];
-                            that.paymentItemModel = item.paymentItemModelList[0];
-                            that.operator = that.paymentItemModel.paymentItemName;
-                            that.paymentList = that.paymentItemModel.createPaymentBillParamsModelList[0].rechargeLimit.split('|');
-                            console.log("item", item);
-                            console.log("paymentItemModel", that.paymentItemModel);
-                            if (!that.selectItem) {
-                                that.selectItem = that.paymentList[0];
-                            }
-                        } else {
-                            that.showToast(res.msg);
-                            that.showMobileError = true;
-                            that.errInfo = '暂不支持';
-                        }
-                    })
-                // }
-            // });
+            request.post('payment/mobile-pay', {
+                mobile: that.itemValue
+            }).then(res => {
+                console.log("payment/mobile-pay", res)
+                if (res.status == 200) {
+                    if(that.external != "vivoNegative"){
+                        that.$element('mobile').focus({ focus: false })
+                    }
+                    const item = res.data.mobileRechargeModel;
+                    console.log("res.data", res.data);
+                    that.paymentItemName = res.data.paymentItemList[0];
+                    that.paymentItemModel = item.paymentItemModelList[0];
+                    that.operator = that.paymentItemModel.paymentItemName;
+                    that.paymentList = that.paymentItemModel.createPaymentBillParamsModelList[0].rechargeLimit.split('|');
+                    console.log("item", item);
+                    console.log("paymentItemModel", that.paymentItemModel);
+                    if (!that.selectItem) {
+                        that.selectItem = that.paymentList[0];
+                    }
+                } else {
+                    that.showToast(res.msg);
+                    that.showMobileError = true;
+                    that.errInfo = '暂不支持';
+                }
+            })
         }
     },
     toInspect() {

@@ -14,7 +14,6 @@
             </div>
             <div class="item">
                 <div class="item-name"><text>缴费状态：</text></div>
-                <!-- <div class="item-content"><text class="purple">{{detail.status == 0 ? "处理中" : (detail.status == 1? "缴费成功" :(detail.status == 2 ? "缴费失败" : "退款成功"))}}</text></div> -->
                 <div class="item-content"><text class="purple">{{["处理中", "缴费成功", "缴费失败", "退款成功"][detail.status]}}</text></div>
             </div>
             <div class="item-point" if="{{detail.status == 2}}"><img src="reason.png" @click="isShow"/><text>资金将会在1-3个工作日内退还到原支付宝账户</text></div>
@@ -34,10 +33,6 @@
                 <div class="item-name"><text>缴费号码：</text></div>
                 <div class="item-content"><text>{{detail.billKey}}</text></div>
             </div>
-            <!-- <div class="item">
-                <div class="item-name"><text>用户名：</text></div>
-                <div class="item-content"><text>{{detail.payAmount}}</text></div>
-            </div> -->
             <div class="item">
                 <div class="item-name"><text>缴费类别：</text></div>
                 <div class="item-content"><text>{{detail.paymentType}}</text></div>
@@ -114,13 +109,8 @@
 			request.post('order/detail',{orderNo:this.detail.orderNo,tranDate:this.detail.tranDate}).then(res => {
                 console.log("order/detail", res)
 				if(res.status == 200){
-                    console.log("order/detail.200");
-                    // res.data.detail.paymentType = this.detail.paymentType
                     res.data.hkPaymentRecordsInfo.paymentType = this.detail.paymentType;
                     this.detail = res.data.hkPaymentRecordsInfo;
-                    // const detail = Object.assign(this.detail,res.data.detail)
-                    // this.detail = detail
-                    console.log(this.detail)
 				}
             })
            

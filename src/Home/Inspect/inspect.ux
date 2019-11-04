@@ -38,35 +38,6 @@
                 <text class="info-value">{{item.info_value}}</text>
             </div>
         </div>
-        <!-- <div if="!inputValue" class="top-up_amount">
-            <text>选择充值金额</text>
-            <div @click="pickerShow('选择金额')">
-                <text>{{money}} ▼</text>
-            </div>
-        </div>
-        <div if="inputValue" class="top-up_amount">
-            <text if="billObj.payAmount == '0'">输入充值金额</text>
-            <text if="billObj.payAmount != '0'">缴费金额</text>
-            <div if="billObj.payAmount == '0'">
-                <input id="payAmount" value="{{payAmountValue}}" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
-                <text>元</text>
-            </div>
-            <div if="billObj.payAmount != '0'">
-                <input id="payAmount" value="{{payAmountValue}}" disabled="true" placeholder="{{description}}" onchange="payAmount" type="number" name="payAmount" />
-                <text>元</text>
-            </div>
-        </div> -->
-        <!-- 多账单 -->
-        <!-- <div class="info-list_body" style="margin-bottom:20px" if="this.billQueryList.length > 1">
-            <div class="info-list_item" @click="pickerShow('选择账单')">
-                <text class="info-name">选择账单</text>
-                <text class="info-value">{{bill ? bill : '请选择'}}▼</text>
-            </div>
-        </div> -->
-        <!-- <Info infoList="{{info_list}}"></Info> -->
-        <!-- <text class="invoice">
-            {{data.printAddress}}
-        </text> -->
         <div class="next-btn" @click="toOrders()">
             <text>下一步</text>
         </div>
@@ -213,13 +184,6 @@ export default Custom_page({
                 info_value: billDate,
             })
         }
-        // if(billObj.beginDate.indexOf("/") != -1 || billObj.endDate.indexOf("/") != -1){
-        //     newInfo.push({
-        //         info_name:"账期",
-        //         info_value:billDate,
-        //     })
-        // }
-
         if (this.fieldInfoKey != '') {
             newInfo.push({
                 info_name: "账单说明",
@@ -250,8 +214,6 @@ export default Custom_page({
                 }
             }
         }
-
-
         this.billQueryList = this.data.billQueryResultDataModelList.map(item => {
             return item.beginDate
         })
@@ -347,11 +309,9 @@ export default Custom_page({
                 this.showLoading = false;
                 console.log("payment/generate-bill", res);
                 if (res.status == 200) {
-                    // if (res.data.msg.indexOf("成功") != -1) {
                     if (res.msg.indexOf("成功") != -1) {
                         params.data = res.data.billQueryResultModel
                         params.billObj = res.data.billQueryResultModel.billQueryResultDataModelList[0]
-                        // this.data.billQueryResultDataModelList[0]
                         params.qryAcqSsn = res.data.qryAcqSsn
                         statis.statis('pending_order_click', {
                             itemCode: this.paymentItem.paymentItemId,
@@ -404,8 +364,6 @@ export default Custom_page({
     // 选择框确定选项
     pickerSelect() {
         if (this.pickerTitle.indexOf("账单") != -1) {
-            // this.rangeData = this.billQueryList;
-            // this.billObj = 
             for (let i = 0; i < this.billQueryList.length; i++) {
                 if (this.billQueryList[i].indexOf(this.selectMoney) != -1) {
                     this.billObj = this.billQueryResultDataModelList[i]
@@ -427,19 +385,6 @@ export default Custom_page({
     // 选择框更换选项
     changeMoney(value) {
         this.selectMoney = value;
-        // if(this.pickerTitle.indexOf("账单") != -1){
-        //     // this.rangeData = this.billQueryList;
-        //     // this.billObj = 
-        //     for(let i = 0;i<this.billQueryList.length;i++){
-        //         if(this.billQueryList.indexOf(value) != -1){
-        //             this.billObj = this.billQueryResultDataModelList[i]
-        //             this.setInfo(this.billObj)
-        //         }
-        //     }
-        // }else{
-        //     this.selectMoney = value;
-        // }
-
     },
     // 显示toast
     showToast(text, back) {

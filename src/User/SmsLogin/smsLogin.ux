@@ -18,15 +18,6 @@
                     <div if="tab_index == 0" class="tab-bar_item">
                         <text class="tab-text">短信登录</text>
                     </div>
-                    <!-- <div @click="selectTab(1)" if="tab_index == 0" class="tab-bar_item no-selece_item">
-                        <text class="tab-text">密码登录</text>
-                    </div> -->
-                    <div @click="selectTab(0)" if="tab_index == 1" class="tab-bar_item no-selece_item">
-                        <text class="tab-text">短信登录</text>
-                    </div>
-                    <!-- <div if="tab_index == 1" class="tab-bar_item">
-                        <text class="tab-text">密码登录</text>
-                    </div> -->
                 </div>
                 <div class="tab-content">
                     <div if="tab_index == 0" class="tab-content-section">
@@ -62,33 +53,10 @@
                             <input @click="smsLogin" type="button" value="登录">
                         </div>
                     </div>
-                    <div if="tab_index == 1" class="tab-content-section">
-                        <div class="input" onclick="stopEvent()">
-                            <!-- <div class="name"><text>手机号</text></div> -->
-                            <div class="content">
-                                <input id="mobile" value="{{mobile}}" @change="changeMobile" type="number" placeholder="请输入手机号">
-                            </div>
-                        </div>
-                        <div class="input password-input" onclick="stopEvent()">
-                            <!-- <div class="name"><text>登录密码</text></div> -->
-                            <div class="content">
-                                <input id="password" value="{{password}}" @change="changePassword" type="password" placeholder="请输入登录密码">
-                            </div>
-                        </div>
-                        <div class="btn">
-                            <input @click="login" type="button" value="登录">
-                        </div>
-                    </div>
                 </div>
             </div>
             <image if="reg_pic" class="reg_pic" src="{{imgUrl}}{{reg_pic}}"></image>
         </div>
-        <!-- <div class="tab-select">
-                <div @click="toDetail('User/PwLogin')">
-                    <text>密码登录</text>
-                </div>
-            </div> -->
-
         <!-- 图形验证码 -->
         <div class="img-captcha_body" if="showCaptcha">
             <div class="img-captcha_content">
@@ -159,11 +127,6 @@ export default Custom_page({
                 console.log("登录页面取到的external：",data)
                 if(data){
                     this.external = data
-                    // console.log("登录页面传出去的external：",this.external)
-                    // storage.set({
-                    //     key:'external',
-                    //     value:data
-                    // })
                 }
             }
         })
@@ -227,10 +190,7 @@ export default Custom_page({
         this.password = response ? response.value : this.password;
     },
     onReady() {
-        // request.get('user/captcha').then(res => {
-        //     this.captcha = res.data
-        //     console.log(this.captcha)
-        // })
+        
     },
     selectTab(index) {
         return false;
@@ -261,52 +221,6 @@ export default Custom_page({
         setTimeout(() => {
             this.show_toast = false;
         }, 1500)
-    },
-    // 登录
-    login() {
-        this.showToast("暂不可用");
-        return false;
-        if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
-            this.showToast("手机号码有误，请重填");
-            return false;
-        }
-        if (!this.password) {
-            this.showToast("请输入密码");
-            return false;
-        }
-        const params = {
-            mobile: this.mobile,
-            password: this.password
-        }
-        statis.statis('login_click', { mobile: this.mobile }, this)
-
-        request.post('user/login', params).then(res => {
-            console.info("user/login", res)
-            if (res.status == 200) {
-                statis.statis('login_click_success', { mobile: this.mobile }, this)
-                this.showToast("登录成功");
-                storage.set({
-                    key: 'sid',
-                    value: res.data.sessionId,
-                })
-                storage.set({
-                    key: '_id',
-                    value: res.data._id,
-                })
-                storage.set({
-                    key: 'mobile',
-                    value: res.data.mobile,
-                })
-                router.replace({
-                    uri: "/"
-                })
-            } else {
-                this.showToast(`${res.msg},请尝试短信登录`);
-            }
-
-        }).catch(err => {
-            this.showToast("网络错误");
-        })
     },
     inputFocus() {
         if(this.external != "vivoNegative"){
@@ -395,17 +309,9 @@ export default Custom_page({
         } else {
             var params = {
                 mobile: this.sms_phone,
-                // name: "云缴费"// \b bug
                 name: '云缴费'
             };
             params = this.captchaValue ? Object.assign({ captcha: this.captchaValue }, params) : params;
-            /*
-            request.post('login/sms', {
-                mobile: this.sms_phone,
-                // name: "云缴费"// \b bug
-                name: '云缴费'
-            }).then((res) => {
-            /**/
             request.post('login/sms', params).then((res) => {
                 console.log("login/sms in smslogin", res)
                 if (res.status == 200) {
@@ -453,7 +359,6 @@ export default Custom_page({
                     this.codeText = (sec < 10 ? '0' + sec : sec) + "s"
                 }
             }, 1000)
-
         }
     },
     // 跳转toDetail
@@ -485,10 +390,7 @@ export default Custom_page({
         console.log("当前手机型号:" + this.sourceName, "当前手机传参：" + this.sourceType);
         request.post('user/login/sms', params).then(res => {
             if (res.status == 200) {
-                this.showToast("登录成功");
-                console.log("user/login/sms", res);
                 statis.statis('sms_login_click_success', { mobile: this.sms_phone }, this)
-
                 // 轻粒子打点
                 if(this.external == "vivoNegative"){
                     statis.statis('vivo_login_click',{},this);
@@ -497,21 +399,10 @@ export default Custom_page({
                 }else if(this.external == "Huawei"){
                     statis.statis('Huawei_login_click',{},this);
                 }
-
-                // request.get("tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan)
                 request.post("tatistics/quick",{scene:"1",phone:this.sms_phone,sourceType:laiyuan})
                 .then(res => {console.log("scene1的返回结果",res)})
-                // fetch.fetch({
-                //     url:"https://t.ubaycn.com/ub/tatistics/quick?scene=1&phone="+this.sms_phone+"&sourceType="+laiyuan,
-                //     method:"GET",
-                //     success:function(res){
-                //         console.log("于哥出品"+res);
-                //     }
-                // })
                 console.log("成功返回：")
                 console.log(res)
-                // request.post("user/login/mobile",{mobile:res.data.mobile})
-                // .then(res=>{console.log("判断是否首次登陆的返回结果",res)})
                 if (res.data.isFirst) {
                     storage.set({
                         key: 'firstLogin',
@@ -544,9 +435,6 @@ export default Custom_page({
                         router.replace({
                             uri: "/"
                         })
-                        // router.back({
-                        //     path: '/Home'
-                        // })
                     }
                 })
                 storage.set({
@@ -556,7 +444,6 @@ export default Custom_page({
             } else {
                 this.showToast(res.msg);
             }
-
         }).catch(err => {
             this.showToast("网络错误");
         })

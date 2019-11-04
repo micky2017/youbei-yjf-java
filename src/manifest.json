@@ -34,7 +34,7 @@
     { "origin": "*" }
   ],
   "config": {
-    "logLevel": "off",
+    "logLevel": "debug",
     "designWidth": 750,
     "data":{
       "logUrl":"https://ms.ubaycn.com/api/log"

@@ -19,18 +19,6 @@
                 <text class="seconds" if="{{!clickable}}" >{{codeText}}</text>
             </div>
         </div>
-		<!-- <div class="input top">
-            <div class="name"><text>登录密码</text></div>
-            <div class="content">
-                <input type="password" placeholder="请输入登录密码">
-            </div>
-        </div>
-		<div class="input">
-            <div class="name"><text>登录密码</text></div>
-            <div class="content">
-                <input type="password" placeholder="请输入登录密码">
-            </div>
-        </div> -->
         <div class="btn">
             <input type="button" value="绑定手机" @click="nextTo()" />
         </div>

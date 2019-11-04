@@ -30,25 +30,9 @@
                 <text class="info-value">{{item.info_value}}</text>
             </div>
         </div>
-
-        <!-- <div style="height:40px;"></div>
-        <InfoList style="margin-top:40px" infoList="{{info_list}}"></InfoList>
-        <text class="invoice">
-            {{address}}
-        </text> -->
         <div class="next-btn" @click="toFinish()">
             <text>立即缴费</text>
         </div>
-
-
-
-
-
-
-
-
-        <!-- <PayTypeList /> -->
-        <!-- <div class="payType-body"> -->
             <div class="picker-body" show="{{picker}}" @click="pickerShow()">
                 <div class="picker-content" show="{{picker}}">
                     <div class="picker-title">
@@ -267,9 +251,6 @@
             this.data = JSON.parse(this.data);
             const data = this.data;
             this.getIcon()
-            // const billObj = this.billObj
-            // this.address = data.item7 || "";
-            // printAddress
             this.info_list = [
                 {
                     info_name: "缴费号码",
@@ -292,7 +273,6 @@
         // 拉起收银台
         toFinish(){
             this.showLoading = true;
-            // this.pickerShow()
             // merOrderNo  merOrderDate  payAmount  paymentItemCode  paymentItemId  billKey   billAmount  queryAcqSsn  contractNo  filed
             const data = this.data;
             const date = new Date();
@@ -324,29 +304,13 @@
             }
             console.log(params)
             Object.assign(params,JSON.parse(this.reqData))
-            // params.testpackage = 'test'
             statis.statis('pay_click',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
-            // console.log("传输的sessionId：",this.sessionId)
             request.post("tatistics/quick",{scene:4,phone:this.mobile,sourceType:this.external,sessionId:this.sessionId})
             .then(res =>{ console.log(res) })
-            // fetch.fetch({
-            //     url:"https://t.ubaycn.com/ub/tatistics/quick?scene=4&phone="+this.mobile+"&sourceType="+this.external+"&sessionId="+this.sessionId,
-            //     method:"GET",
-            //     success:function(res){
-            //         console.log("于哥出品"+res);
-            //     }
-            // })
-
             request.post('pay/creat',params).then(res => {
                 console.log(res)
                 this.showLoading = false;
                 if(res.status == 200){
-                    // router.push({
-                    //     uri:'Home/Checkstand',
-                    //     params:{
-                    //         src:res.data.url
-                    //     }
-                    // })
                 statis.statis('pay_click_success',{pay_type:this.data.paymentItemName,pay_amount:String(this.payAmount)},this)
                      if(res.data.url){
                             webview.loadUrl({

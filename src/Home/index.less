@@ -278,19 +278,21 @@
             .notification-content{
                 width: 652px;
                 height: 56px;
-                align-items: center;
                 justify-content: space-around;
-                background-color: rgba(255, 255, 255, 0.74);
+                // background-color: rgba(255, 255, 255, 0.74);
+                background-color: #fff !important;
                 border-radius:14px;
-                // padding-left: 48px;
+                overflow: hidden;
                 >image{
                     height: 42px;
                     width: 54px;
                 }
                 >swiper{
+                    width: 590px;
                     height: 38px;
-                    flex: 1;
-                    // margin-left: 10px;
+                    animation-name: translateX;
+                    animation-duration: 3000ms;
+                    animation-iteration-count:infinite;
                     >text{
                         width: 100%;
                         text-align: left;
@@ -298,6 +300,14 @@
                         font-family:'SourceHanSansCN-Regular';
                         font-weight:400;
                         color: #333333;
+                    }
+                }
+                @keyframes translateX {
+                    from {
+                      transform: translateY(38px);
+                    }
+                    to {
+                      transform: translateY(-100px);
                     }
                 }
             }
