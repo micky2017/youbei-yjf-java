@@ -204,14 +204,13 @@ export default Custom_page({
 
     },
     inputFocus() {
-        if(this.external != "vivoNegative"){
-            const list = this.paymentItem.queryPaymentBillParamModelList
-            for (let i = 0; i < list.length; i++) {
-                if (this.$element(list[i].nameType)) {
-                    this.$element(list[i].nameType).focus({ focus: false })
-                }
+        const list = this.paymentItem.queryPaymentBillParamModelList
+        for (let i = 0; i < list.length; i++) {
+            if (this.$element(list[i].nameType)) {
+                this.$element(list[i].nameType).focus({ focus: false })
             }
         }
+
     },
     pushSelect() {
         router.push({
@@ -331,36 +330,9 @@ export default Custom_page({
     onShow() {
         console.log("recharge.onshow");
         this.getGroup();
-        // console.log(this);
-        // alert(this.groupName);
-        // this.groupName = "";
-        /*
-        var that = this;
-        storage.get({
-            key: 'groupId',
-            success: (gid) => {
-                console.log("recharge.storage.groupId", gid);
-                if (gid) {
-                    this.groupId = gid;
-                    storage.get({
-                        key: "groupName",
-                        success(gname){
-                            // if(gname){
-                                that.groupName = gname;
-                            // }
-                        }
-                    });
-                    // storage.delete({
-                    //     key: 'groupName'
-                    // })
-                }
-            }
-        })
-        /**/
     },
     onReady() {
         console.log("recharge.ready");
-        // alert(this.bid);
         var that = this;
         storage.get({
             key: "bid",
@@ -386,9 +358,6 @@ export default Custom_page({
                 })
             }
         })
-        // console.clear();
-        // console.log("console cleared in recharge.ready");
-        console.log(this);
         console.log("this.payName", this.payName);
         if (this.payName) {
             this.paymentItemModelList = JSON.parse(this.paymentItemModelList);
@@ -400,8 +369,6 @@ export default Custom_page({
         }
     },
     getGroup() {
-        //*
-        // console.clear();
         console.log("enter recharge.get-group");
         let that = this;
         storage.get({
@@ -509,14 +476,7 @@ export default Custom_page({
         })
     },
     onInit() {
-        // console.clear();
-        console.log("this in init", this);
-        // alert(this.bid);
         this.billKey = this.oldBill;
-        // this.bid = 
-        console.log("this.groupId", this.groupId);
-        console.log("this.oldGroupId", this.oldGroupId);
-        // this.billKey = 9090;
     },
     getIcon() {
         const iconList = [
@@ -684,26 +644,14 @@ export default Custom_page({
         })
     },
     saveGroup() {
-        console.log(111111)
-        // alert("this.billKey = " + this.billKey);
-        // storage.get({
-        //     key:'_id',
-        //     success:(data) => {
         const obj = {
-            // sid:data,
             paymentItemId: this.paymentItemModelList[0].paymentItemId,
-            // groupName: this.oldGroupName,
             id: this.bid,
             gid: this.groupId,
             cityName: this.cityName,
             type: this.type,
             houseNumber: this.billKey,
-            // newGroupName: this.groupName,
-            // newBill: this.billKey,
         }
-        console.log("obj", obj)
-        console.log(this);
-        // return false;
         request.post('user/reset-bill', obj).then(res => {
             console.log("user/reset-bill", res);
             if (res.status == 200) {
@@ -716,8 +664,6 @@ export default Custom_page({
             thisshowToast('网络错误')
 
         })
-        //     }
-        // })
     },
     // 查询缴费账单
     toInspect() {

@@ -993,139 +993,9 @@ export default Custom_page({
 		}).catch(err => {
 			this.netWork = false
 		})
-		// 数据获取 sessionId
-		// if (this.external == "vivoNegative") {
-		// 	storage.get({
-		// 		key: "sessionId",
-		// 		success: (data) => {
-		// 			console.log('sessionId' + data)
-		// 			this.sid = data;
-		// 			if (this.sid) {
-		// 				this.isLogin = true;
-		// 				// 缴费记录
-		// 				request.post('order/payment-records', {
-		// 					pageSize: 10,
-		// 					currentPage: 1
-		// 				}).then(res => {
-		// 					if (res.status == 200) {
-		// 						this.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-		// 						const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-		// 						if (recordsModel.length > 0) {
-		// 							const paymentDate = recordsModel[0].paymentDate
-		// 							const date = this.format(Date.parse(new Date()))
-		// 							// if (paymentDate.split(' ')[0] == date) {
-		// 							// 	this.addChange('pay');
-		// 							// }
-		// 						}
-		// 						if (res.data.hkPaymentRecordsModel.recordsModel.length < this.pageSize) {
-		// 							this.hasMoreData = false;
-		// 						}
-		// 					} else {
-		// 						this.hasMoreData = false;
-		// 					}
-		// 				}).catch(err => {
-		// 					console.log(22)
-		// 					this.hasMoreData = false;
-		// 				})
-		// 			} else {
-		// 				account.authorize({
-		// 					type: 'code',
-		// 					redirectUri: 'https://api0.ubaycn.com/',
-		// 					success: function (data) {
-		// 						console.log("第一步返回的data", data)
-		// 						let postCode = data.code
-		// 						console.log(postCode);
-		// 						request.post("vivo/getAccessToken", { code: postCode })
-		// 							.then(res => {
-		// 								console.log("返回值类型", res, Object.prototype.toString.call(res))
-		// 								const strToObj = JSON.parse(res.data)
-		// 								console.log(strToObj);
-		// 								let postToken = strToObj.data.accessToken
-		// 								console.log(postToken);
-		// 								account.getProfile({
-		// 									token: postToken,
-		// 									success: function (data) {
-		// 										console.log(data)
-		// 										let vivoOpenid = data.openid
-		// 										account.getPhoneNumber({
-		// 											success: function (data) {
-		// 												request.post("user/login/oneClick", { environment: "zhengshi", mobile: data.phoneNumber, openId: vivoOpenid })
-		// 													.then(res => {
-		// 														console.log("vivo一键登录成功", res);
-		// 														if (res.code == 200) {
-		// 															let data = JSON.parse(res.data);
-		// 															console.log("一键登录成功的data值", data);
-		// 															console.log("获取到的sid", data.data.sessionId)
-		// 															storage.set({
-		// 																key: 'uid',
-		// 																value: res.data.id,
-		// 															})
-		// 															storage.set({
-		// 																key:"sessionId",
-		// 																value:data.data.sessionId
-		// 															})
-		// 															storage.set({
-		// 																key: "mobile",
-		// 																value: data.data.mobile
-		// 															})
-		// 															request.post('order/payment-records', {
-		// 																pageSize: 10,
-		// 																currentPage: 1
-		// 															}).then(res => {
-		// 																that.isLogin = true;
-		// 																if (res.status == 200) {
-		// 																	that.orderPagingH5Model = res.data.hkPaymentRecordsModel;
-		// 																	const recordsModel = res.data.hkPaymentRecordsModel.recordsModel;
-		// 																	if (recordsModel.length > 0) {
-		// 																		const paymentDate = recordsModel[0].paymentDate
-		// 																		const date = that.format(Date.parse(new Date()))
-		// 																		// if (paymentDate.split(' ')[0] == date) {
-		// 																		// 	this.addChange('pay');
-		// 																		// }
-		// 																	}
-		// 																	if (res.data.hkPaymentRecordsModel.recordsModel.length < that.pageSize) {
-		// 																		that.hasMoreData = false;
-		// 																	}
-		// 																} else {
-		// 																	that.hasMoreData = false;
-		// 																}
-		// 															}).catch(err => {
-		// 																console.log(22)
-		// 																that.hasMoreData = false;
-		// 															})
-		// 														}
-		// 													})
-		// 											},
-		// 											fail: function (data) {
-		// 												router.replace({
-		// 													uri: 'User/SmsLogin',
-		// 													params: {
-		// 														external: that.external,
-		// 													}
-		// 												})
-		// 											}
-		// 										})
-		// 									},
-		// 									fail: function (err) { }
-		// 								})
-		// 							})
-		// 							.catch(err => {
-
-		// 							})
-		// 					},
-		// 					fail: function (data, code) {
-		// 						console.log(`handling fail, code = ${code}`)
-		// 					}
-		// 				})
-		// 			}
-		// 		}
-		// 	})
-
-		// } else {
 			storage.get({
 				key: "sessionId",
 				success: (data) => {
-					// console.log('sid' + data)
 					this.sid = data;
 					if (this.sid) {
 						this.isLogin = true;
@@ -1160,11 +1030,7 @@ export default Custom_page({
 					console.log(`handling fail, code = ${code}`)
 				}
 			})
-		// }
-		getUserInfo((data) => {
-			// prompt.showToast({
-			// 	message: data.sid
-			// });				
+		getUserInfo((data) => {			
 		});
 		let me = this;
 	},

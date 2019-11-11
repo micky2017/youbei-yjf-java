@@ -73,7 +73,9 @@ const requestHandle = (params) => {
 function queryString(url, query) {
   let str = []
   for (let key in query) {
-    if (typeof query[key] === 'object') {
+    // if (typeof query[key] === 'object') {
+    // if (Object.prototype.toString.call(query[key]) == "object") {
+    if (Object.prototype.toString.call(query[key]).replace(/(\[|\])/g, "").split(" ")[1].toLowerCase() == "object") {
       query[key] = JSON.stringify(query[key])
     }
     str.push(key + '=' + query[key])
